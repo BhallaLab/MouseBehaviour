@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python
 
 """analyze_trial.py: 
 
@@ -18,7 +18,7 @@ __status__           = "Development"
 import os
 import sys
 import analyze_trial_video 
-import cPickle as pickle
+import pickle
 import numpy as np
 import config
 
@@ -63,7 +63,7 @@ def process( trialdir ):
         blinks = d[ 'blinks' ]
         tvec = d['time']
         cs = d['cs']
-        tvec = map(lambda x: (x - cs[0]).total_seconds( ), tvec)
+        tvec = list( map(lambda x: (x - cs[0]).total_seconds( ), tvec) )
         duration = 1000 * (tvec[-1] - tvec[0])
         if duration < 900:
             print( 
@@ -106,7 +106,7 @@ def process( trialdir ):
             otherData.append( row )
 
     numTicks = 10
-    stepSize = (len(newTVec) / numTicks)
+    stepSize = int(len(newTVec) / numTicks)
     xlabels = [ '%d' % int(1000 * x) for x in newTVec[::stepSize] ]
 
     plt.figure( figsize=(8,10) )
@@ -153,7 +153,7 @@ def process( trialdir ):
 
     outfile = os.path.join( resdir, 'summary.png' )
     plt.tight_layout( pad = 2 )
-    trialName = filter(None, trialdir.split( '/' ))[-1]
+    trialName = list( filter(None, trialdir.split( '/' )))[-1] 
     plt.suptitle( 'Trial: %s' % trialName, x = 0.1)
     plt.savefig( outfile )
     print( 'Wrote summary to %s' % outfile )
@@ -172,14 +172,16 @@ def compute_performance_index( perfs ):
 
 def compute_baseline( d ):
     baseline = filter( lambda x : x[0] < 0 and x[0] > -0.200, d )
-    signal = map( lambda x: x[1], baseline )
+    signal = list( map( lambda x: x[1], baseline ) )
     return np.mean( signal ), np.std( signal )
 
 def compute_learning( d, baseline ):
     tsignal = filter( lambda x : x[0] > 0.0 and x[0] < 0.300, d )
     # Subtract mean of baseline i.e. baseline.
-    signal = map( lambda x: abs(x[1] - baseline[0]), tsignal )
+    signal = list( map( lambda x: abs(x[1] - baseline[0]), tsignal ) )
     # Return mean and std of signal and variance of baseline.
+    if len( signal ) == 0:
+        return 0, 0, baseline
     return max( signal ), np.std( signal ), baseline[1]
 
 def compute_performance( data ):
