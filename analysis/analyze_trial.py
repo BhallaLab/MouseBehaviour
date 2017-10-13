@@ -34,6 +34,26 @@ plt.rc('font', family='serif')
 
 trial_data_ = [ ]
 
+def computeXTicks( time, tstep = 100 ):
+    """
+    Put a tick at 100ms
+    """
+    time = 1000 * time
+    xticks = np.arange( 0, len(time), 1 )
+    nticks = int( ( time.max() - time.min( ) ) / tstep )
+
+    step = int( len( time ) / nticks)
+
+    xticks = xticks[::step]
+    labels = time[::step]
+
+    newrange = np.int32( [ time.min( ) /100.0, time.max( )/100.0 ] ) * 100.0
+    newlabels = np.arange( newrange[0], newrange[1], tstep )
+
+    newIndex = np.rint( np.interp( newlabels, labels, xticks ) )
+    return newIndex, newlabels
+    
+
 def process( trialdir ):
     global trial_data_
     tiffs = [ ]
@@ -113,7 +133,8 @@ def process( trialdir ):
     ax1 = plt.subplot( 311 )
     plt.imshow( img, interpolation = 'none', aspect = 'auto' )
     plt.title( 'CS+' )
-    plt.xticks( range(0, len(newTVec), stepSize), xlabels, fontsize=10)
+    ticks, labels = computeXTicks( newTVec, tstep = 200 )
+    plt.xticks( ticks, [ '%d' % x for x in labels] )
     plt.colorbar( )
 
     meanOfTrials = np.mean( img, axis = 0 )
@@ -130,7 +151,6 @@ def process( trialdir ):
     ax2 = plt.subplot( 312, sharex = ax1 )
     plt.imshow( probeImg, interpolation = 'none', aspect = 'auto' )
     plt.title( 'Probe' )
-    plt.xticks( range(0, len(newTVec), stepSize), xlabels, fontsize=10)
     plt.colorbar( )
 
 
