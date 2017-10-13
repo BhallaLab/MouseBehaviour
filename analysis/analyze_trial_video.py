@@ -17,7 +17,7 @@ import sys
 import os
 import datetime
 import numpy as np
-import cPickle as pickle 
+import pickle 
 from libtiff import TIFF
 import matplotlib as mpl
 import matplotlib.pyplot as plt
@@ -38,7 +38,7 @@ def parse_timestamp( tstamp ):
     return date
 
 def get_status_timeslice( data, status ):
-    status = filter( lambda x: x[-2] == status, data )
+    status = list( filter( lambda x: x[-2] == status, data ) )
     if not status:
         return 0.0, 0.0
     if len( status ) > 2:
@@ -77,6 +77,7 @@ def process( tifffile, plot = True ):
         binline = frame[0,:]
         txtline = (''.join(( [ chr( x ) for x in binline ] ))).rstrip()
         data = txtline.split( ',' )
+        print( txtline )
         if len( data ) > 1:
             datalines.append( data )
         if len( data ) > 2:
@@ -93,7 +94,11 @@ def process( tifffile, plot = True ):
         except Exception as e:
             print( '[WARN] Failed to parse data line %s. Ignoring' % l )
             print( '\t Error was %s' % e )
+
     mean_,min_,max_ = sum(blinkVec)/len(blinkVec), min( blinkVec ), max(blinkVec)
+
+    #for l in arduinoData:
+    #    print( l )
 
     cspST, cspET = get_status_timeslice( arduinoData, 'CS+' )
     usST, usET = get_status_timeslice( arduinoData, 'PUFF' )
