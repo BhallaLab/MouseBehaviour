@@ -29,7 +29,7 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 mpl.style.use( 'seaborn-talk' )
 mpl.rcParams['axes.linewidth'] = 0.2
-mpl.rcParams['text.usetex'] = True
+mpl.rcParams['text.usetex'] = False
 
 trial_data_ = [ ]
 
