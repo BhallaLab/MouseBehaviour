@@ -18,7 +18,10 @@ __status__           = "Development"
 import os
 import sys
 import analyze_trial_video 
-import pickle
+try:
+    import cPickle as pickle
+except ImportError as e:
+    import pickle
 import numpy as np
 import config
 
@@ -33,6 +36,9 @@ plt.rc('font', family='serif')
 
 
 trial_data_ = [ ]
+
+def tick_for_label( label, labels, ticks ):
+    return np.interp( label, labels, ticks )
 
 def computeXTicks( time, tstep = 100 ):
     """
@@ -101,7 +107,6 @@ def process( trialdir ):
         tmaxs.append( t[-1] )
 
     minT, maxT = np.mean(tmins), np.mean(tmaxs)
-    #minT, maxT = -0.500, 0.850
     newTVec = np.linspace( minT, maxT, len(allBlinks[-1]) )
 
     allLens = [ len(x) for x in allBlinks ]
@@ -130,17 +135,21 @@ def process( trialdir ):
     xlabels = [ '%d' % int(1000 * x) for x in newTVec[::stepSize] ]
 
     plt.figure( figsize=(8,10) )
-    ax1 = plt.subplot( 311 )
+    ax1 = plt.subplot( 411 )
     plt.imshow( img, interpolation = 'none', aspect = 'auto' )
     plt.title( 'CS+' )
     ticks, labels = computeXTicks( newTVec, tstep = 200 )
     plt.xticks( ticks, [ '%d' % x for x in labels] )
     plt.colorbar( )
 
+    # Collect for final summary.
+    summaryData = { }
+    
     meanOfTrials = np.mean( img, axis = 0 )
     stdOfTrials = np.std( img, axis = 0 )
+    summaryData[ 'CS+' ] = ( meanOfTrials, stdOfTrials )
 
-    ax3 = plt.subplot( 313, sharex = ax1 )
+    ax3 = plt.subplot( 413, sharex = ax1 )
     idx = range( len( meanOfTrials ) )
     plt.plot( idx, meanOfTrials, color = 'blue', label = 'CS+' ) 
     plt.fill_between( idx, meanOfTrials - stdOfTrials, meanOfTrials + stdOfTrials
@@ -148,7 +157,7 @@ def process( trialdir ):
             , alpha = 0.2
             ) 
 
-    ax2 = plt.subplot( 312, sharex = ax1 )
+    ax2 = plt.subplot( 412, sharex = ax1 )
     plt.imshow( probeImg, interpolation = 'none', aspect = 'auto' )
     plt.title( 'Probe' )
     plt.colorbar( )
@@ -158,7 +167,7 @@ def process( trialdir ):
     perfs = compute_performance( alignedData )
     pI, piList = compute_performance_index( perfs )
 
-    ax3 = plt.subplot( 313, sharex = ax1 )
+    ax3 = plt.subplot( 413, sharex = ax1 )
     meanOfProbeTrials = np.mean( probeImg, axis = 0 )
     stdOfProbeTrials = np.std( probeImg, axis = 0 )
     idx = range( len( meanOfProbeTrials ) )
@@ -169,11 +178,41 @@ def process( trialdir ):
             , alpha = 0.2
             ) 
     ax3.legend( framealpha = 0.1 )
-    plt.xlabel( 'Time (ms)' )
+    summaryData[ 'PROBE' ] = ( meanOfProbeTrials, stdOfProbeTrials )
+
+    # Plot the normalized curves
+    ax4 = plt.subplot( 414, sharex = ax1 )
+    csM, csU = summaryData[ 'CS+' ]
+    baseline = np.mean( csM[:20] )
+    y = baseline - csM
+    normFact = 1.0 / y.max( )
+    for l in summaryData:
+        ym, yu = summaryData[ l ]
+        ym -= baseline
+        ym = np.abs( ym )
+        ym *= normFact
+        yerr = yu * normFact
+        ax4.plot( idx, ym, label = l )
+        ax4.legend( )
+        plt.fill_between( idx, ym - yerr, ym + yerr, alpha = 0.2) 
+
+        # Mark CS and PUFF areas
+        x1, x2 = tick_for_label( 0, labels, ticks ), tick_for_label( 50, labels, ticks)
+        x3, x4 = tick_for_label( 300, labels, ticks ), tick_for_label( 350, labels, ticks)
+        plt.plot( [ x1, x2 ], [ -0.2,-0.2 ] , color = 'black')
+        plt.text( x1, -0.35, 'CS' )
+        plt.plot( [ x3, x4 ], [ -0.2,-0.2 ] , color = 'black')
+        plt.ylim( ymin = -0.5, ymax = 1.5 )
+        plt.xlim( xmin = tick_for_label( -200, labels, ticks ) )
+        plt.yticks( [0, 0.5, 1.0], [0, 0.5, 1.0 ] )
+        plt.text( x3, -0.35, 'PUFF' )
+
 
     outfile = os.path.join( resdir, 'summary.png' )
     plt.tight_layout( pad = 2 )
     trialName = list( filter(None, trialdir.split( '/' )))[-1] 
+    plt.xlabel( 'Time (ms)' )
+
     plt.suptitle( 'Trial: %s' % trialName, x = 0.1)
     plt.savefig( outfile )
     print( 'Wrote summary to %s' % outfile )
