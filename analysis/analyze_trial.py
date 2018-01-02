@@ -134,7 +134,7 @@ def process( trialdir ):
     stepSize = int(len(newTVec) / numTicks)
     xlabels = [ '%d' % int(1000 * x) for x in newTVec[::stepSize] ]
 
-    plt.figure( figsize=(8,10) )
+    #plt.figure( figsize=(8,5) )
     ax1 = plt.subplot( 221 )
     plt.imshow( img, interpolation = 'none', aspect = 'auto' )
     plt.title( 'CS+' )
@@ -178,7 +178,7 @@ def process( trialdir ):
             , alpha = 0.2
             ) 
     ax3.legend( framealpha = 0.1 )
-    summaryData[ 'PROBE' ] = ( meanOfProbeTrials, stdOfProbeTrials )
+    summaryData[ 'Probe' ] = ( meanOfProbeTrials, stdOfProbeTrials )
 
     # Plot the normalized curves
     ax4 = plt.subplot( 224, sharex = ax1 )
@@ -193,7 +193,7 @@ def process( trialdir ):
         ym *= normFact
         yerr = yu * normFact
         ax4.plot( idx, ym, label = l )
-        ax4.legend( )
+        ax4.legend( framealpha = 0.1 )
         plt.fill_between( idx, ym - yerr, ym + yerr, alpha = 0.2) 
 
         # Mark CS and PUFF areas
@@ -209,7 +209,7 @@ def process( trialdir ):
 
 
     outfile = os.path.join( resdir, 'summary.png' )
-    plt.tight_layout( pad = 2 )
+    plt.tight_layout( pad = 4 )
     trialName = list( filter(None, trialdir.split( '/' )))[-1] 
     plt.xlabel( 'Time (ms)' )
 
