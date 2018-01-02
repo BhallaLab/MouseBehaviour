@@ -135,7 +135,7 @@ def process( trialdir ):
     xlabels = [ '%d' % int(1000 * x) for x in newTVec[::stepSize] ]
 
     plt.figure( figsize=(8,10) )
-    ax1 = plt.subplot( 411 )
+    ax1 = plt.subplot( 221 )
     plt.imshow( img, interpolation = 'none', aspect = 'auto' )
     plt.title( 'CS+' )
     ticks, labels = computeXTicks( newTVec, tstep = 200 )
@@ -149,7 +149,7 @@ def process( trialdir ):
     stdOfTrials = np.std( img, axis = 0 )
     summaryData[ 'CS+' ] = ( meanOfTrials, stdOfTrials )
 
-    ax3 = plt.subplot( 413, sharex = ax1 )
+    ax3 = plt.subplot( 223, sharex = ax1 )
     idx = range( len( meanOfTrials ) )
     plt.plot( idx, meanOfTrials, color = 'blue', label = 'CS+' ) 
     plt.fill_between( idx, meanOfTrials - stdOfTrials, meanOfTrials + stdOfTrials
@@ -157,7 +157,7 @@ def process( trialdir ):
             , alpha = 0.2
             ) 
 
-    ax2 = plt.subplot( 412, sharex = ax1 )
+    ax2 = plt.subplot( 222, sharex = ax1 )
     plt.imshow( probeImg, interpolation = 'none', aspect = 'auto' )
     plt.title( 'Probe' )
     plt.colorbar( )
@@ -167,7 +167,7 @@ def process( trialdir ):
     perfs = compute_performance( alignedData )
     pI, piList = compute_performance_index( perfs )
 
-    ax3 = plt.subplot( 413, sharex = ax1 )
+    ax3 = plt.subplot( 223, sharex = ax1 )
     meanOfProbeTrials = np.mean( probeImg, axis = 0 )
     stdOfProbeTrials = np.std( probeImg, axis = 0 )
     idx = range( len( meanOfProbeTrials ) )
@@ -181,7 +181,7 @@ def process( trialdir ):
     summaryData[ 'PROBE' ] = ( meanOfProbeTrials, stdOfProbeTrials )
 
     # Plot the normalized curves
-    ax4 = plt.subplot( 414, sharex = ax1 )
+    ax4 = plt.subplot( 224, sharex = ax1 )
     csM, csU = summaryData[ 'CS+' ]
     baseline = np.mean( csM[:20] )
     y = baseline - csM
