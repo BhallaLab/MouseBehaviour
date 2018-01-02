@@ -34,7 +34,7 @@
 #define         TONE_FREQ                   4500
 
 #define         PUFF_DURATION               50
-#define         TONE_DURATION               350
+#define         TONE_DURATION               50
 #define         LED_DURATION                50
 
 #ifdef USE_MOUSE
@@ -269,6 +269,16 @@ void wait_for_start( )
             Serial.println( ">>>Received l. LED ON" );
             led_on( LED_DURATION );
         }
+        else if( is_command_read( '1', true ) ) 
+        {
+            Serial.println( ">>>Received 1. Start capturing frame" );
+	    digitalWrite( CAMERA_TTL_PIN, HIGH );
+        }
+        else if( is_command_read( '2', true ) ) 
+        {
+            Serial.println( ">>>Received 2. Stop capturing frames" );
+	    digitalWrite( CAMERA_TTL_PIN, LOW );
+        }
         else
         {
             char c = Serial.read( );
@@ -473,7 +483,7 @@ void loop()
     unsigned numProbeTrials = 0;
     unsigned nextProbbeTrialIndex = random(5, 10);
 
-    for (size_t i = 1; i <= 81; i++) 
+    for (size_t i = 0; i <= 102; i++) 
     {
 
         reset_watchdog( );
