@@ -27,13 +27,9 @@ import config
 
 import matplotlib as mpl
 import matplotlib.pyplot as plt
-try:
-    mpl.style.use( 'seaborn-talk' )
-except Exception as e:
-    pass
-mpl.rcParams['axes.linewidth'] = 0.1
-plt.rc('font', family='serif')
-
+mpl.style.use( 'seaborn-talk' )
+mpl.rcParams['axes.linewidth'] = 0.2
+mpl.rcParams['text.usetex'] = True
 
 trial_data_ = [ ]
 
@@ -141,6 +137,7 @@ def process( trialdir ):
     ticks, labels = computeXTicks( newTVec, tstep = 200 )
     plt.xticks( ticks, [ '%d' % x for x in labels] )
     plt.colorbar( )
+    plt.xlabel( 'Time (ms)' )
 
     # Collect for final summary.
     summaryData = { }
@@ -161,6 +158,7 @@ def process( trialdir ):
     plt.imshow( probeImg, interpolation = 'none', aspect = 'auto' )
     plt.title( 'Probe' )
     plt.colorbar( )
+    plt.xlabel( 'Time (ms)' )
 
 
     # Compute performance index.
@@ -179,6 +177,7 @@ def process( trialdir ):
             ) 
     ax3.legend( framealpha = 0.1 )
     summaryData[ 'Probe' ] = ( meanOfProbeTrials, stdOfProbeTrials )
+    plt.xlabel( 'Time (ms)' )
 
     # Plot the normalized curves
     ax4 = plt.subplot( 224, sharex = ax1 )
@@ -199,13 +198,16 @@ def process( trialdir ):
         # Mark CS and PUFF areas
         x1, x2 = tick_for_label( 0, labels, ticks ), tick_for_label( 50, labels, ticks)
         x3, x4 = tick_for_label( 300, labels, ticks ), tick_for_label( 350, labels, ticks)
-        plt.plot( [ x1, x2 ], [ -0.2,-0.2 ] , color = 'black')
-        plt.text( x1, -0.35, 'CS' )
-        plt.plot( [ x3, x4 ], [ -0.2,-0.2 ] , color = 'black')
-        plt.ylim( ymin = -0.5, ymax = 1.5 )
-        plt.xlim( xmin = tick_for_label( -200, labels, ticks ) )
-        plt.yticks( [0, 0.5, 1.0], [0, 0.5, 1.0 ] )
-        plt.text( x3, -0.35, 'PUFF' )
+        ax4.plot( [ x1, x2 ], [ -0.2,-0.2 ] , color = 'black')
+        ax4.text( x1, -0.35, 'CS' )
+        ax4.plot( [ x3, x4 ], [ -0.2,-0.2 ] , color = 'black')
+        ax4.set_ylim( ymin = -0.5, ymax = 1.5 )
+        ax4.set_xlim( xmin = tick_for_label( -200, labels, ticks ) )
+        ax4.set_yticks( [0, 0.5, 1.0], [0, 0.5, 1.0 ] )
+        ax4.text( x3, -0.35, 'PUFF' )
+        ax4.set_xlabel( 'Time (ms)' )
+
+    ax4.set_title( 'FEC' )
 
 
     outfile = os.path.join( resdir, 'summary.png' )
@@ -213,7 +215,7 @@ def process( trialdir ):
     trialName = list( filter(None, trialdir.split( '/' )))[-1] 
     plt.xlabel( 'Time (ms)' )
 
-    plt.suptitle( 'Trial: %s' % trialName, x = 0.1)
+    plt.suptitle( r'Trial: %s' % trialName, x = 0.1)
     plt.savefig( outfile )
     print( 'Wrote summary to %s' % outfile )
 
