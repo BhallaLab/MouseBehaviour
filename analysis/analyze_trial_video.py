@@ -78,20 +78,20 @@ def process( tifffile, plot = True ):
         binline = frame[0,:]
         txtline = (''.join(( [ chr( x ) for x in binline ] ))).rstrip()
         data = txtline.split( ',' )
-        print( txtline )
+        #  print( txtline )
         if len( data ) > 1:
             datalines.append( data )
         if len( data ) > 2:
             arduinoData.append( data )
         else:
+            #  print( 'x Frame %d has no arduino data' % fi )
             pass
-            #print( 'x Frame %d has no arduino data' % fi )
 
     tvec, blinkVec = [ ], [ ] 
     for l in datalines:
         if len(l) > 5:
             if l[-2] == 'CS+':
-                tone, led = int(l[4]), int(l[5])
+                tone, led = int(l[5]), int(l[6])
                 if led == 1:
                     trialType = 'LIGHT NO SOUND'
                 elif tone == 1:
@@ -137,6 +137,7 @@ def process( tifffile, plot = True ):
             ax.plot( [usST, usET] , [mean_, mean_] )
 
         ax.plot( tvec, blinkVec, label = 'Learning?=%s' % learnt  )
+        plt.title('Trial Type=%s' % trialType)
         plt.legend( framealpha = 0.4 )
         plt.xticks( rotation = 'vertical' )
         plt.title( os.path.basename( sys.argv[1] ), fontsize = 8)
