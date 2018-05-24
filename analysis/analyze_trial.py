@@ -54,7 +54,7 @@ def computeXTicks( time, tstep = 100 ):
 
     newIndex = np.rint( np.interp( newlabels, labels, xticks ) )
     return newIndex, newlabels
-    
+
 
 def process( trialdir ):
     global trial_data_
@@ -82,9 +82,12 @@ def process( trialdir ):
 
     times, allBlinks, probeTrial = [ ], [ ], [ ]
     for i, (f, d) in enumerate(trial_data_):
+        print(d.keys())
         blinks = d[ 'blinks' ]
         tvec = d['time']
         cs = d['cs']
+        trialType = d['trial_type']
+        print('[INFO] Trial type is %s' % trialType )
         tvec = list( map(lambda x: (x - cs[0]).total_seconds( ), tvec) )
         duration = 1000 * (tvec[-1] - tvec[0])
         if duration < 900:

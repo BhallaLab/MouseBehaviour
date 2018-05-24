@@ -72,6 +72,7 @@ def process( tifffile, plot = True ):
     datafile = "%s_data.dat" % tifffile
     datalines = [ ]
     arduinoData = [ ]
+    trialType = 'NA'
     for fi, frame in enumerate( frames ):
         # print( frame.shape )
         binline = frame[0,:]
@@ -88,6 +89,13 @@ def process( tifffile, plot = True ):
 
     tvec, blinkVec = [ ], [ ] 
     for l in datalines:
+        if len(l) > 5:
+            if l[-2] == 'CS+':
+                tone, led = int(l[4]), int(l[5])
+                if led == 1:
+                    trialType = 'LIGHT NO SOUND'
+                elif tone == 1:
+                    trialType = 'SOUND NO LIGHT'
         try:
             tvec.append( parse_timestamp( l[0] ) )
             blinkVec.append( float( l[-1] ) )
@@ -141,12 +149,14 @@ def process( tifffile, plot = True ):
 
 
     # Write processed data to pickle.
+    print('[INFO] Trial type %s' % trialType )
     res = dict( time = tvec
             , blinks = blinkVec
             , cs = [ cspST, cspET ]
             , us = [ usST, usET ]
             , did_learn = learnt
             , is_probe = isProbe
+            , trial_type = trialType
             )
 
     pickleFile = os.path.join( 
