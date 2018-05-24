@@ -141,7 +141,6 @@ void write_data_line( )
     // Just read the registers where pin data is saved.
     int tone = digitalRead( TONE_PIN );
     int led = digitalRead( LED_PIN ); 
-
     int puff = digitalRead( PUFF_PIN ); 
     int microscope = digitalRead( IMAGING_TRIGGER_PIN);
     int camera = digitalRead( CAMERA_TTL_PIN ); 
