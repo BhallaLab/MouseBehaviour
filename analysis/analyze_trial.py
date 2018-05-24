@@ -24,6 +24,8 @@ except ImportError as e:
     import pickle
 import numpy as np
 import config
+import itertools
+from collections import defaultdict
 
 import matplotlib as mpl
 import matplotlib.pyplot as plt
@@ -80,9 +82,25 @@ def process( trialdir ):
                 res = pickle.load( pF )
                 trial_data_.append( (f, res) )
 
+    # Plot all data together.
+    outfile = os.path.join( resdir, 'summary.png' )
+    plot_trial_data( trial_data_, trialdir, outfile )
+
+    # Ploting using trial type.
+    groups = defaultdict(list)
+    for f, res in trial_data_:
+        groups[res['trial_type']].append((f,res))
+
+    for gname in groups.keys():
+        print( '[INFO] Plotting for %s' % gname )
+        ext = gname.replace( ' ', '_' )
+        outfile = os.path.join(resdir, 'summary_%s.png' % ext)
+        data = groups[gname]
+        plot_trial_data(data, trialdir, outfile)
+
+def plot_trial_data( trial_data_, trialdir, outfile ):
     times, allBlinks, probeTrial = [ ], [ ], [ ]
     for i, (f, d) in enumerate(trial_data_):
-        print(d.keys())
         blinks = d[ 'blinks' ]
         tvec = d['time']
         cs = d['cs']
@@ -133,7 +151,6 @@ def process( trialdir ):
     stepSize = int(len(newTVec) / numTicks)
     xlabels = [ '%d' % int(1000 * x) for x in newTVec[::stepSize] ]
 
-    #plt.figure( figsize=(8,5) )
     ax1 = plt.subplot( 221 )
     plt.imshow( img, interpolation = 'none', aspect = 'auto' )
     plt.title( 'CS+' )
@@ -212,14 +229,14 @@ def process( trialdir ):
 
     ax4.set_title( 'FEC' )
 
-
-    outfile = os.path.join( resdir, 'summary.png' )
+    #  outfile = os.path.join( resdir, 'summary.png' )
     plt.tight_layout( pad = 4 )
     trialName = list( filter(None, trialdir.split( '/' )))[-1] 
     plt.xlabel( 'Time (ms)' )
 
     plt.suptitle( r'Trial: %s' % trialName, x = 0.1)
     plt.savefig( outfile )
+    plt.close()
     print( 'Wrote summary to %s' % outfile )
 
 def compute_performance_index( perfs ):
