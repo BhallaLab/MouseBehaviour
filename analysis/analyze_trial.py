@@ -89,7 +89,7 @@ def process( trialdir ):
     # Ploting using trial type.
     groups = defaultdict(list)
     for f, res in trial_data_:
-        groups[res['trial_type']].append((f,res))
+        groups[res.get('trial_type', 'UNKNOWN')].append((f,res))
 
     for gname in groups.keys():
         print( '[INFO] Plotting for %s' % gname )
@@ -104,7 +104,7 @@ def plot_trial_data( trial_data_, trialdir, outfile ):
         blinks = d[ 'blinks' ]
         tvec = d['time']
         cs = d['cs']
-        trialType = d['trial_type']
+        trialType = d.get('trial_type', 'UNKNOWN')
         print('[INFO] Trial type is %s' % trialType )
         tvec = list( map(lambda x: (x - cs[0]).total_seconds( ), tvec) )
         duration = 1000 * (tvec[-1] - tvec[0])
@@ -175,10 +175,11 @@ def plot_trial_data( trial_data_, trialdir, outfile ):
             ) 
 
     ax2 = plt.subplot( 222, sharex = ax1 )
-    plt.imshow( probeImg, interpolation = 'none', aspect = 'auto' )
-    plt.title( 'Probe' )
-    plt.colorbar( )
-    plt.xlabel( 'Time (ms)' )
+    if len(probeImg) > 0:
+        plt.imshow( probeImg, interpolation = 'none', aspect = 'auto' )
+        plt.title( 'Probe' )
+        plt.colorbar( )
+        plt.xlabel( 'Time (ms)' )
 
 
     # Compute performance index.
@@ -186,18 +187,19 @@ def plot_trial_data( trial_data_, trialdir, outfile ):
     pI, piList = compute_performance_index( perfs )
 
     ax3 = plt.subplot( 223, sharex = ax1 )
-    meanOfProbeTrials = np.mean( probeImg, axis = 0 )
-    stdOfProbeTrials = np.std( probeImg, axis = 0 )
-    idx = range( len( meanOfProbeTrials ) )
-    plt.plot( idx, meanOfProbeTrials, color = 'red', label = 'Probe' ) 
-    plt.fill_between( idx, meanOfProbeTrials - stdOfProbeTrials
-            , meanOfProbeTrials + stdOfProbeTrials
-            , color = 'red'
-            , alpha = 0.2
-            ) 
-    ax3.legend( framealpha = 0.1 )
-    summaryData[ 'Probe' ] = ( meanOfProbeTrials, stdOfProbeTrials )
-    plt.xlabel( 'Time (ms)' )
+    if len(probeImg) > 0:
+        meanOfProbeTrials = np.mean( probeImg, axis = 0 )
+        stdOfProbeTrials = np.std( probeImg, axis = 0 )
+        idx = range( len( meanOfProbeTrials ) )
+        plt.plot( idx, meanOfProbeTrials, color = 'red', label = 'Probe' ) 
+        plt.fill_between( idx, meanOfProbeTrials - stdOfProbeTrials
+                , meanOfProbeTrials + stdOfProbeTrials
+                , color = 'red'
+                , alpha = 0.2
+                ) 
+        ax3.legend( framealpha = 0.1 )
+        summaryData[ 'Probe' ] = ( meanOfProbeTrials, stdOfProbeTrials )
+        plt.xlabel( 'Time (ms)' )
 
     # Plot the normalized curves
     ax4 = plt.subplot( 224, sharex = ax1 )
