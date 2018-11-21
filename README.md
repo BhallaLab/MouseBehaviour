@@ -1,17 +1,17 @@
-Camera server (PointGrey) and arduino based behaviour setup. Everything is
-automated using cmake. Both arduino and camera must be connected to compute
-before doing the following.
+Camera server (PointGrey) and arduino based behaviour setup. 
+
+Both arduino and camera must be connected to compute before doing the following.
 
 # Download and setup 
 
 To download the code from a particular branch
 
-     $ git clone --recursive -b bhumika https://github.com/ananthamurthy/eyeBlinkBehaviour 
-     $ cd eyeBlinkBehaviour 
-     $ ./bootstap.sh    # To setup your Ubuntu system.
+     $ git clone https://github.com/ananthamurthy/MouseBehaviour
+     $ cd MouseBehaviour 
+     $ ./bootstrap.sh    # To setup your Ubuntu system.
      
 The script `bootstap.sh` will try to configure your system. You must have `sudo` permissions. And you
-must be using `Ubuntu` since the camera server only compiles on Ubuntu. In case, something odd happens, 
+must be using `Ubuntu` since the camera server compiles only on Ubuntu. In case, something odd happens, 
 raise an issue on github.
 
 Once bootstrap is successful, to build and upload to arduino   
@@ -65,3 +65,8 @@ See function `write_data_line` in file `src/main.ino`.
             , timestamp, trial_count_, puff, tone, led
             , motion1, motion2, camera, microscope, trial_state_
             );
+
+
+# How to analyze data
+
+Go to directory `./analysis` and read the `README.md` file there. 
