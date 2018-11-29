@@ -63,6 +63,11 @@ unsigned dt_                    = 2;
 unsigned write_dt_              = 2;
 unsigned trial_count_           = 0;
 
+// Global for rotary encoder.
+volatile int last_encoded_ = 0;
+volatile long encoder_value_ = 0;
+ 
+
 char msg_[80];
 
 unsigned long trial_start_time_ = 0;
@@ -147,6 +152,8 @@ void write_data_line( )
     int microscope = digitalRead( IMAGING_TRIGGER_PIN);
     int camera = digitalRead( CAMERA_TTL_PIN ); 
 
+    // Read data from rotary encoder.
+
     unsigned long timestamp = millis() - trial_start_time_;
 
     int motion1;
@@ -163,9 +170,10 @@ void write_data_line( )
 #endif
     
     sprintf(msg_  
-            , "%lu,%d,%d,%d,%d,%3d,%3d,%d,%d,%s"
+            , "%lu,%d,%d,%d,%d,%3d,%3d,%d,%d,%s,%d"
             , timestamp, trial_count_, puff, tone, led
             , motion1, motion2, camera, microscope, trial_state_
+            , encoder_value_
             );
     Serial.println(msg_);
     Serial.flush( );
@@ -302,6 +310,22 @@ void print_trial_info( )
     Serial.println( SESSION_TYPE );
 }
 
+ 
+// This code is from  https://robu.in/product/incremental-optical-rotary-encoder-6002400-pulse-600-ppr/
+void updateEncoder()
+{
+    int MSB = digitalRead(ROTARY_ENC_A); //MSB = most significant bit
+    int LSB = digitalRead(ROTARY_ENC_B); //LSB = least significant bit
+
+    int encoded = (MSB << 1) |LSB; //converting the 2 pin value to single number
+    int sum  = (last_encoded_ << 2) | encoded; //adding it to the previous encoded value
+
+    if(sum == 0b1101 || sum == 0b0100 || sum == 0b0010 || sum == 0b1011) encoder_value_ ++;
+    if(sum == 0b1110 || sum == 0b0111 || sum == 0b0001 || sum == 0b1000) encoder_value_ --;
+
+    last_encoded_ = encoded; //store this value for next time
+}
+
 void setup()
 {
     Serial.begin( 38400 );
@@ -321,6 +345,17 @@ void setup()
     pinMode( CAMERA_TTL_PIN, OUTPUT );
     pinMode( IMAGING_TRIGGER_PIN, OUTPUT );
 
+    // Rotary encode
+    pinMode(ROTARY_ENC_A, INPUT); 
+    pinMode(ROTARY_ENC_B, INPUT);
+
+    digitalWrite(ROTARY_ENC_A, HIGH); //turn pullup resistor on
+    digitalWrite(ROTARY_ENC_B, HIGH); //turn pullup resistor on
+
+    //call updateEncoder() when any high/low changed seen
+    //on interrupt 0 (pin 2), or interrupt 1 (pin 3) 
+    attachInterrupt(0, updateEncoder, CHANGE); 
+    attachInterrupt(1, updateEncoder, CHANGE);
 
 
 #ifdef USE_MOUSE
