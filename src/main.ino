@@ -21,8 +21,10 @@
 #endif
 
 // Pins etc.
-#define         TONE_PIN                    2
-#define         LED_PIN                     3
+#define         ROTARY_ENC_A                2 
+#define         ROTARY_ENC_B                3 
+#define         TONE_PIN                    8
+#define         LED_PIN                     9
 
 // These pins are more than 7.
 #define         CAMERA_TTL_PIN              10
