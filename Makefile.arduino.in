@@ -23,15 +23,15 @@ MONITOR_BAUDRATE  = 38400
 
 # CFLAGS_STD
 # Set the C standard to be used during compilation. Documentation (https://github.com/WeAreLeka/Arduino-Makefile/blob/std-flags/arduino-mk-vars.md#cflags_std)
-CFLAGS_STD        = -std=gnu11
+CFLAGS_STD        = 
 
 # CXXFLAGS_STD
 # Set the C++ standard to be used during compilation. Documentation (https://github.com/WeAreLeka/Arduino-Makefile/blob/std-flags/arduino-mk-vars.md#cxxflags_std)
-CXXFLAGS_STD      = -std=gnu++11
+CXXFLAGS_STD      = -std=c++1y
 
 # CXXFLAGS
 # Flags you might want to set for debugging purpose. Comment to stop.
-CXXFLAGS         += -pedantic -Wall -Wextra  -I/usr/share/arduino/libraries/LiquidCrystal
+CXXFLAGS         += -pedantic -Wall -Wextra 
 
 # MONITOR_PORT
 # The port your board is connected to. Using an '*' tries all the ports and finds the right one.
@@ -45,7 +45,7 @@ CURRENT_DIR       = $(shell basename $(CURDIR))
 # This is where you put the binaries you just compile using 'make'
 OBJDIR            = $(PROJECT_DIR)/bin/$(BOARD_TAG)/$(CURRENT_DIR)
 
-ARDUINO_LIBS      = LiquidCrystal
+ARDUINO_LIBS      = 
 
 # INO file and other cpp files
 LOCAL_INO_SRCS     = $(PROJECT_DIR)/src/main.ino 

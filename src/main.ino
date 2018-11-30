@@ -64,15 +64,17 @@ unsigned write_dt_              = 2;
 unsigned trial_count_           = 0;
 
 // Global for rotary encoder.
-volatile int last_encoded_ = 0;
-volatile long encoder_value_ = 0;
+long last_encoded_  = 0;
+long encoder_value_      = 0;
+long prev_encoder_value_ = 0;
+
+unsigned long lastT_     = 0;
+// radian per second.
+double angular_velocity_ = 0.0;
+
  
 
-char msg_[80];
-
 unsigned long trial_start_time_ = 0;
-
-
 char trial_state_[5]            = "PRE_";
 
 /*-----------------------------------------------------------------------------
@@ -146,38 +148,34 @@ void write_data_line( )
     reset_watchdog( );
 
     // Just read the registers where pin data is saved.
+    int puff = digitalRead( PUFF_PIN ); 
     int tone = digitalRead( TONE_PIN );
     int led = digitalRead( LED_PIN ); 
-    int puff = digitalRead( PUFF_PIN ); 
-    int microscope = digitalRead( IMAGING_TRIGGER_PIN);
     int camera = digitalRead( CAMERA_TTL_PIN ); 
-
-    // Read data from rotary encoder.
+    int microscope = digitalRead( IMAGING_TRIGGER_PIN);
 
     unsigned long timestamp = millis() - trial_start_time_;
 
-    int motion1;
-    int motion2;
-
-#ifdef USE_MOUSE
-    // Read mouse data.
-    MouseData data = mouse.readData( );
-    motion1 = data.position.x;
-    motion2 = data.position.y;
-#else
-    motion1 = digitalRead( MOTION1_PIN );
-    motion2 = digitalRead( MOTION2_PIN );
-#endif
-    
-    sprintf(msg_  
-            , "%lu,%d,%d,%d,%d,%3d,%3d,%d,%d,%s,%d"
+    char msg[100];
+    sprintf(msg, "%lu,%d,%d,%d,%d,%d,%d,%s,%ld"
             , timestamp, trial_count_, puff, tone, led
-            , motion1, motion2, camera, microscope, trial_state_
-            , encoder_value_
+            , camera, microscope, trial_state_, encoder_value_
             );
-    Serial.println(msg_);
-    Serial.flush( );
-    //delay( 3 );
+    Serial.print(msg);
+
+    // sprintf does not support float. Therefore this convoluted way of printing
+    // float.
+    Serial.print( ',');
+
+    double dt = millis() - lastT_;
+    lastT_ = millis();
+
+    // In radian per second.
+    angular_velocity_ = 1000 * 2 * 3.1416 * (encoder_value_ - prev_encoder_value_) / 2400.0 / dt;
+    prev_encoder_value_ = encoder_value_;
+
+    Serial.println( angular_velocity_, 10 );
+    // delay( 3 );
 }
 
 void check_for_reset( void )
@@ -314,12 +312,18 @@ void print_trial_info( )
 // This code is from  https://robu.in/product/incremental-optical-rotary-encoder-6002400-pulse-600-ppr/
 void updateEncoder()
 {
+
+    // get the anular velocity
+    // This rotary encode has 2400 transitions per second.
+    // https://robokits.co.in/automation-control-cnc/encoders/rotary-quadrature-encoder-600ppr-2400cpr?gclid=EAIaIQobChMI-62Y8-Co3gIVVxOPCh29fgXcEAQYBCABEgJK6_D_BwE
+    // Rotary Quadrature Encoder 600PPR/2400CPR
+
     int MSB = digitalRead(ROTARY_ENC_A); //MSB = most significant bit
     int LSB = digitalRead(ROTARY_ENC_B); //LSB = least significant bit
 
     int encoded = (MSB << 1) |LSB; //converting the 2 pin value to single number
     int sum  = (last_encoded_ << 2) | encoded; //adding it to the previous encoded value
-
+ 
     if(sum == 0b1101 || sum == 0b0100 || sum == 0b0010 || sum == 0b1011) encoder_value_ ++;
     if(sum == 0b1110 || sum == 0b0111 || sum == 0b0001 || sum == 0b1000) encoder_value_ --;
 
