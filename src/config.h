@@ -1,7 +1,7 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
-#define         SESSION_TYPE        '2'
+#define         SESSION_TYPE        'S'
 #define         SESSION_NUM         1
 #define         ANIMAL_NAME         "k2"
 

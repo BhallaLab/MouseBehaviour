@@ -178,8 +178,7 @@ def arduino_client(writeP, trialIndex, cameraPinValue):
         # was pressed. So commenting this out.
         #if trialNum < 1:
         #    continue 
-
-        trialIndex.value = int( trialNum )
+        trialIndex.value = trialNum 
 
         # 3rd last value in data line is camera.
         with cameraPinValue.get_lock( ):
@@ -246,7 +245,7 @@ def line_to_data(line):
     data = [ ]
     for x in line:
         try:
-            data.append( int(x) )
+            data.append( float(x) )
         except ValueError as e:
             data.append( x )
     return data
