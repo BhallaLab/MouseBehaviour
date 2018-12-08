@@ -18,9 +18,12 @@ Once bootstrap is successful, to build and upload to arduino
 
     $ mkdir _build 
     $ cd _build
-    $ cmake -DANIMAL_NAME=k2 -DSESSION_NUM=1 -DSESSION_TYPE=2 ..
+    $ cmake -DANIMAL_NAME=k2 -DSESSION_NUM=1 -DSESSION_TYPE=S ..
     $ make run              # to run the whole setup, (arduino and camera both must be connected)or
     $ make miniterm         # Just to test arduino board. (camera need to be connected)
+
+__NOTE__: Only `S` (sound), `L` (light), and `M` (mixed) `SESSION_TYPE` are
+allowed.
 
 Press `CTRL+C` in terminal to close the session. If just running `make
 miniterm`, press `CTRL+]` to come out of miniterm (scrolling text).

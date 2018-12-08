@@ -258,7 +258,7 @@ void wait_for_start( )
         write_data_line( );
         if( is_command_read( 's', true ) )
         {
-            Serial.println( ">>>Received r. Start" );
+            Serial.println( ">>>Received s. Start" );
             break;                              /* Only START can break the loop */
         }
         else if( is_command_read( 'p', true ) ) 
