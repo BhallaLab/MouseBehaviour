@@ -6,7 +6,7 @@ Both arduino and camera must be connected to compute before doing the following.
 
 To download the code from a particular branch
 
-     $ git clone https://github.com/ananthamurthy/MouseBehaviour
+     $ git clone  https://github.com/BhallaLab/MouseBehaviour.git
      $ cd MouseBehaviour 
      $ ./bootstrap.sh    # To setup your Ubuntu system.
      
