@@ -5,7 +5,9 @@
 #ifndef  config_h_INC
 #define  config_h_INC
 
-#define         SESSION_TYPE        S
+#include "protocol.h"
+
+#define         SESSION_TYPE        'S'
 #define         SESSION_NUM         1
 #define         ANIMAL_NAME         "k3"
 
