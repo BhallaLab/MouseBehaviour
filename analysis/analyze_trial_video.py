@@ -72,22 +72,30 @@ def process( tifffile, plot = True ):
     datafile = "%s_data.dat" % tifffile
     datalines = [ ]
     arduinoData = [ ]
+    trialType = 'NA'
     for fi, frame in enumerate( frames ):
         # print( frame.shape )
         binline = frame[0,:]
         txtline = (''.join(( [ chr( x ) for x in binline ] ))).rstrip()
         data = txtline.split( ',' )
-        print( txtline )
+        #  print( txtline )
         if len( data ) > 1:
             datalines.append( data )
         if len( data ) > 2:
             arduinoData.append( data )
         else:
+            #  print( 'x Frame %d has no arduino data' % fi )
             pass
-            #print( 'x Frame %d has no arduino data' % fi )
 
     tvec, blinkVec = [ ], [ ] 
     for l in datalines:
+        if len(l) > 5:
+            if l[-2] == 'CS+':
+                tone, led = int(l[5]), int(l[6])
+                if led == 1:
+                    trialType = 'LIGHT NO SOUND'
+                elif tone == 1:
+                    trialType = 'SOUND NO LIGHT'
         try:
             tvec.append( parse_timestamp( l[0] ) )
             blinkVec.append( float( l[-1] ) )
@@ -114,7 +122,8 @@ def process( tifffile, plot = True ):
     # Computer perfornace of this trial.
     learnt = compute_learning_yesno( tvec, blinkVec, cspST )
     if learnt:
-        print( '++ Learning in %s' % tifffile )
+        print( '|| Learning in %s' % tifffile )
+
     datadir = os.path.join( os.path.dirname( tifffile ), config.tempdir )
     if not os.path.isdir( datadir ):
         os.makedirs( datadir )
@@ -129,6 +138,7 @@ def process( tifffile, plot = True ):
             ax.plot( [usST, usET] , [mean_, mean_] )
 
         ax.plot( tvec, blinkVec, label = 'Learning?=%s' % learnt  )
+        plt.title('Trial Type=%s' % trialType)
         plt.legend( framealpha = 0.4 )
         plt.xticks( rotation = 'vertical' )
         plt.title( os.path.basename( sys.argv[1] ), fontsize = 8)
@@ -141,12 +151,14 @@ def process( tifffile, plot = True ):
 
 
     # Write processed data to pickle.
+    print('[INFO] Trial type %s' % trialType )
     res = dict( time = tvec
             , blinks = blinkVec
             , cs = [ cspST, cspET ]
             , us = [ usST, usET ]
             , did_learn = learnt
             , is_probe = isProbe
+            , trial_type = trialType
             )
 
     pickleFile = os.path.join( 

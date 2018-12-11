@@ -24,6 +24,8 @@ except ImportError as e:
     import pickle
 import numpy as np
 import config
+import itertools
+from collections import defaultdict
 
 import matplotlib as mpl
 import matplotlib.pyplot as plt
@@ -54,7 +56,7 @@ def computeXTicks( time, tstep = 100 ):
 
     newIndex = np.rint( np.interp( newlabels, labels, xticks ) )
     return newIndex, newlabels
-    
+
 
 def process( trialdir ):
     global trial_data_
@@ -80,11 +82,30 @@ def process( trialdir ):
                 res = pickle.load( pF )
                 trial_data_.append( (f, res) )
 
+    # Plot all data together.
+    outfile = os.path.join( resdir, 'summary.png' )
+    plot_trial_data( trial_data_, trialdir, outfile )
+
+    # Ploting using trial type.
+    groups = defaultdict(list)
+    for f, res in trial_data_:
+        groups[res.get('trial_type', 'UNKNOWN')].append((f,res))
+
+    for gname in groups.keys():
+        print( '[INFO] Plotting for %s' % gname )
+        ext = gname.replace( ' ', '_' )
+        outfile = os.path.join(resdir, 'summary_%s.png' % ext)
+        data = groups[gname]
+        plot_trial_data(data, trialdir, outfile)
+
+def plot_trial_data( trial_data_, trialdir, outfile ):
     times, allBlinks, probeTrial = [ ], [ ], [ ]
     for i, (f, d) in enumerate(trial_data_):
         blinks = d[ 'blinks' ]
         tvec = d['time']
         cs = d['cs']
+        trialType = d.get('trial_type', 'UNKNOWN')
+        print('[INFO] Trial type is %s' % trialType )
         tvec = list( map(lambda x: (x - cs[0]).total_seconds( ), tvec) )
         duration = 1000 * (tvec[-1] - tvec[0])
         if duration < 900:
@@ -130,7 +151,6 @@ def process( trialdir ):
     stepSize = int(len(newTVec) / numTicks)
     xlabels = [ '%d' % int(1000 * x) for x in newTVec[::stepSize] ]
 
-    #plt.figure( figsize=(8,5) )
     ax1 = plt.subplot( 221 )
     plt.imshow( img, interpolation = 'none', aspect = 'auto' )
     plt.title( 'CS+' )
@@ -155,10 +175,11 @@ def process( trialdir ):
             ) 
 
     ax2 = plt.subplot( 222, sharex = ax1 )
-    plt.imshow( probeImg, interpolation = 'none', aspect = 'auto' )
-    plt.title( 'Probe' )
-    plt.colorbar( )
-    plt.xlabel( 'Time (ms)' )
+    if len(probeImg) > 0:
+        plt.imshow( probeImg, interpolation = 'none', aspect = 'auto' )
+        plt.title( 'Probe' )
+        plt.colorbar( )
+        plt.xlabel( 'Time (ms)' )
 
 
     # Compute performance index.
@@ -166,18 +187,19 @@ def process( trialdir ):
     pI, piList = compute_performance_index( perfs )
 
     ax3 = plt.subplot( 223, sharex = ax1 )
-    meanOfProbeTrials = np.mean( probeImg, axis = 0 )
-    stdOfProbeTrials = np.std( probeImg, axis = 0 )
-    idx = range( len( meanOfProbeTrials ) )
-    plt.plot( idx, meanOfProbeTrials, color = 'red', label = 'Probe' ) 
-    plt.fill_between( idx, meanOfProbeTrials - stdOfProbeTrials
-            , meanOfProbeTrials + stdOfProbeTrials
-            , color = 'red'
-            , alpha = 0.2
-            ) 
-    ax3.legend( framealpha = 0.1 )
-    summaryData[ 'Probe' ] = ( meanOfProbeTrials, stdOfProbeTrials )
-    plt.xlabel( 'Time (ms)' )
+    if len(probeImg) > 0:
+        meanOfProbeTrials = np.mean( probeImg, axis = 0 )
+        stdOfProbeTrials = np.std( probeImg, axis = 0 )
+        idx = range( len( meanOfProbeTrials ) )
+        plt.plot( idx, meanOfProbeTrials, color = 'red', label = 'Probe' ) 
+        plt.fill_between( idx, meanOfProbeTrials - stdOfProbeTrials
+                , meanOfProbeTrials + stdOfProbeTrials
+                , color = 'red'
+                , alpha = 0.2
+                ) 
+        ax3.legend( framealpha = 0.1 )
+        summaryData[ 'Probe' ] = ( meanOfProbeTrials, stdOfProbeTrials )
+        plt.xlabel( 'Time (ms)' )
 
     # Plot the normalized curves
     ax4 = plt.subplot( 224, sharex = ax1 )
@@ -209,14 +231,14 @@ def process( trialdir ):
 
     ax4.set_title( 'FEC' )
 
-
-    outfile = os.path.join( resdir, 'summary.png' )
+    #  outfile = os.path.join( resdir, 'summary.png' )
     plt.tight_layout( pad = 4 )
     trialName = list( filter(None, trialdir.split( '/' )))[-1] 
     plt.xlabel( 'Time (ms)' )
 
     plt.suptitle( r'Trial: %s' % trialName, x = 0.1)
     plt.savefig( outfile )
+    plt.close()
     print( 'Wrote summary to %s' % outfile )
 
 def compute_performance_index( perfs ):

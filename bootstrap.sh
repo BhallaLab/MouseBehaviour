@@ -11,7 +11,7 @@ sudo apt install -y  arduino
 sudo apt install -y  python-pip
 sudo apt install -y  gnuplot 
 sudo apt install -y  python-tifffile python-pillow  python-matplotlib
-sudo -E pip install gnuplotlib readchar  
+sudo -E pip install gnuplotlib readchar pyserial
 
 echo "Now adding user to all the cool groups"
 sudo gpasswd -a $USER dialout
