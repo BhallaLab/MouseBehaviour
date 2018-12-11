@@ -108,6 +108,7 @@ execute_process(COMMAND
     OUTPUT_STRIP_TRAILING_WHITESPACE
     )
 message(STATUS "Protocol configuration ${PROTOCOL_CONFIG}")
+file(WRITE ${CMAKE_CURRENT_SOURCE_DIR}/src/protocol.h "${PROTOCOL_CONFIG}")
 
 # Data directory for given session and animal
 set(DATADIR "$ENV{HOME}/DATA/${ANIMAL_NAME}/${ANIMAL_NAME}_${SESSION_TYPE}_${SESSION_NUM}")
