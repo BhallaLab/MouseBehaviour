@@ -122,7 +122,8 @@ def process( tifffile, plot = True ):
     # Computer perfornace of this trial.
     learnt = compute_learning_yesno( tvec, blinkVec, cspST )
     if learnt:
-        print( '++ Learning in %s' % tifffile )
+        print( '|| Learning in %s' % tifffile )
+
     datadir = os.path.join( os.path.dirname( tifffile ), config.tempdir )
     if not os.path.isdir( datadir ):
         os.makedirs( datadir )

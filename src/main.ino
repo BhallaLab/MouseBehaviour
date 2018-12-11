@@ -1,79 +1,29 @@
 /***
- *       Filename:  main.ino
+ *    Protocol for EyeBlinkConditioning. This file contains various protocols
+ *    used in BhallaLab for Animal Training. The code of protocol should be
+ *    specified in CMakeLists.txt file during compile time.
  *
- *    Description:  Protocol for EyeBlinkConditioning.
- *
- *        Version:  0.0.1
- *        Created:  2017-04-11
-
  *         Author:  Dilawar Singh <dilawars@ncbs.res.in>
  *   Organization:  NCBS Bangalore
  *
- *        License:  GNU GPL2
+ *        License:  GNU GPLv3
+ *
+ *  See the GIT changelog for more details.
  */
 
 #include <avr/wdt.h>
+
+// Pin configurations and other global variables.
 #include "config.h"
 
-//#define USE_MOUSE 
-#ifdef USE_MOUSE
-#include "arduino-ps2-mouse/PS2Mouse.h"
-#endif
-
-// Pins etc.
-#define         ROTARY_ENC_A                2 
-#define         ROTARY_ENC_B                3 
-#define         TONE_PIN                    8
-#define         LED_PIN                     9
-
-// These pins are more than 7.
-#define         CAMERA_TTL_PIN              10
-#define         PUFF_PIN                    11
-#define         IMAGING_TRIGGER_PIN         13
-
-#define         SENSOR_PIN                  A5
-
-#define         TONE_FREQ                   4500
-
-#define         PUFF_DURATION               50
-#define         TONE_DURATION               50
-#define         LED_DURATION                50
-
-#ifdef USE_MOUSE
-// Motion detection related.
-#define         CLOCK_PIN                 6
-#define         DATA_PIN                  7
-#else
-#define         MOTION1_PIN                 6
-#define         MOTION2_PIN                 7
-#endif 
-
-
-// Motion detection based on motor
-#define         MOTOR_OUT              A1
-
-// What kind of stimulus is given.
-#define         SOUND                   0
-#define         LIGHT                   1
-#define         MIXED                   2
+// Functions and variable related to rotary encoder.
+#include "RotaryEncoder.h"
 
 
 unsigned long stamp_            = 0;
 unsigned dt_                    = 2;
 unsigned write_dt_              = 2;
 unsigned trial_count_           = 0;
-
-// Global for rotary encoder.
-long last_encoded_  = 0;
-long encoder_value_      = 0;
-long prev_encoder_value_ = 0;
-
-unsigned long lastT_     = 0;
-// radian per second.
-double angular_velocity_ = 0.0;
-
- 
-
 unsigned long trial_start_time_ = 0;
 char trial_state_[5]            = "PRE_";
 
@@ -83,19 +33,8 @@ char trial_state_[5]            = "PRE_";
 int incoming_byte_              = 0;
 bool reboot_                    = false;
 
-/*
- * MOUSE
- */
-#ifdef USE_MOUSE
-PS2Mouse mouse( CLOCK_PIN, DATA_PIN );
-#endif
-
-/*-----------------------------------------------------------------------------
- *  WATCH DOG
- *-----------------------------------------------------------------------------*/
 /**
- * @brief Interrupt serviving routine.
- *
+ * @brief Interrupt serviving routine (watchdog).
  * @param _vect
  */
 ISR(WDT_vect)
@@ -137,9 +76,7 @@ bool is_command_read( char command, bool consume = true )
 }
 
 /**
- * @brief Write data line to Serial port.
- *   NOTE: Use python dictionary format. It can't be written at baud rate of
- *   38400 at least.
+ * @brief Write data line to Serial port in csv format.
  * @param data
  * @param timestamp
  */
@@ -201,10 +138,10 @@ void play_tone( unsigned long period, double duty_cycle = 0.5 )
     reset_watchdog( );
     check_for_reset( );
     unsigned long toneStart = millis();
-    while( millis() - toneStart <= period )
+    while( (millis() - toneStart) <= period )
     {
         write_data_line();
-        if( millis() - toneStart <= (period * duty_cycle) )
+        if( (millis() - toneStart) <= (period * duty_cycle) )
             tone( TONE_PIN, TONE_FREQ );
         else
             noTone( TONE_PIN );
@@ -308,27 +245,6 @@ void print_trial_info( )
     Serial.println( SESSION_TYPE );
 }
 
- 
-// This code is from  https://robu.in/product/incremental-optical-rotary-encoder-6002400-pulse-600-ppr/
-void updateEncoder()
-{
-
-    // get the anular velocity
-    // This rotary encode has 2400 transitions per second.
-    // https://robokits.co.in/automation-control-cnc/encoders/rotary-quadrature-encoder-600ppr-2400cpr?gclid=EAIaIQobChMI-62Y8-Co3gIVVxOPCh29fgXcEAQYBCABEgJK6_D_BwE
-    // Rotary Quadrature Encoder 600PPR/2400CPR
-
-    int MSB = digitalRead(ROTARY_ENC_A); //MSB = most significant bit
-    int LSB = digitalRead(ROTARY_ENC_B); //LSB = least significant bit
-
-    int encoded = (MSB << 1) |LSB; //converting the 2 pin value to single number
-    int sum  = (last_encoded_ << 2) | encoded; //adding it to the previous encoded value
- 
-    if(sum == 0b1101 || sum == 0b0100 || sum == 0b0010 || sum == 0b1011) encoder_value_ ++;
-    if(sum == 0b1110 || sum == 0b0111 || sum == 0b0001 || sum == 0b1000) encoder_value_ --;
-
-    last_encoded_ = encoded; //store this value for next time
-}
 
 void setup()
 {
@@ -406,7 +322,7 @@ void do_empty_trial( size_t trial_num, int duration = 10 )
  * @param trial_num. Index of the trial.
  * @param ttype. Type of the trial.
  */
-void do_trial( unsigned int trial_num, int cs_type, bool isprobe = false )
+void do_trial( int cs_type, bool isprobe = false )
 {
     reset_watchdog( );
     check_for_reset( );
@@ -559,7 +475,7 @@ void loop()
 #if DEBUG
             do_empty_trial( i );
 #else
-            do_trial( i, cs_type, isprobe );
+            do_trial( cs_type, isprobe );
 #endif
         }
 	/*************************************************************************
@@ -588,7 +504,7 @@ void loop()
 #if DEBUG
             do_empty_trial( i );
 #else
-            do_trial( i, cs_type, isprobe );
+            do_trial( cs_type, isprobe );
 #endif
 
         }
