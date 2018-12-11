@@ -401,9 +401,9 @@ void do_trial( size_t trial_num, int cs_type, bool isprobe = false )
      *-----------------------------------------------------------------------------*/
     duration = trace_duration( SESSION_TYPE );
     sprintf( trial_state_, "TRAC" );
-    while( (millis( ) - stamp_) <= duration )
-        write_data_line( );
-    stamp_ = millis( );
+    while( (millis() - stamp_) <= duration )
+        write_data_line();
+    stamp_ = millis();
 
     /*-----------------------------------------------------------------------------
      *  PUFF for 50 ms if trial is not a probe type.
@@ -412,7 +412,7 @@ void do_trial( size_t trial_num, int cs_type, bool isprobe = false )
     {
         sprintf( trial_state_, "NOPF" );
         duration =  PUFF_DURATION;
-        while( (millis( ) - stamp_) <= duration )
+        while( (millis() - stamp_) <= duration )
             write_data_line( );
     }
     else
