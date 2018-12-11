@@ -93,12 +93,21 @@ message(STATUS "List of arduino boards ${ARDUINO_DIR}")
 ################################################################################
 # Animal related options.
 ################################################################################
-if( (NOT ANIMAL_NAME) OR (NOT SESSION_TYPE) OR (NOT SESSION_NUM) )
+if((NOT ANIMAL_NAME) OR (NOT SESSION_TYPE) OR (NOT SESSION_NUM) OR (NOT PROTO_CODE))
     message( FATAL_ERROR 
-        "Please pass ANIMAL_NAME, SESSION_NUM and SESSION_TYPE to cmake \n"
-        "\te.g cmake -DANIMAL_NAME=k3 -DSESSION_NUM=1 -DSESSION_TYPE=S .. \n"
+        "Set ANIMAL_NAME, SESSION_NUM, SESSION_TYPE, and PROTO_CODE to cmake; e.g. \n"
+        "\tcmake -DANIMAL_NAME=k3 -DSESSION_NUM=1 -DSESSION_TYPE=S -DPROTO_CODE=All1 ..\n"
         )
-endif ( )
+endif()
+
+# For given PROTO_CODE generate config file. find_package(PythonInterp REQUIRED)
+execute_process(COMMAND 
+    ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/Protocols/protocol_to_config.py ${PROTO_CODE}
+    OUTPUT_VARIABLE PROTOCOL_CONFIG
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/Protocols
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+    )
+message(STATUS "Protocol configuration ${PROTOCOL_CONFIG}")
 
 # Data directory for given session and animal
 set(DATADIR "$ENV{HOME}/DATA/${ANIMAL_NAME}/${ANIMAL_NAME}_${SESSION_TYPE}_${SESSION_NUM}")
