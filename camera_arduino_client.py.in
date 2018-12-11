@@ -34,7 +34,7 @@ import subprocess
 import blinky
 import gnuplotlib
 
-gnuplot_ = gnuplotlib.gnuplotlib( title = 'Blink readout'
+gnuplot_ = gnuplotlib.gnuplotlib(title = 'Blink readout'
         , terminal = 'x11 noraise' 
         )
 
@@ -46,7 +46,7 @@ cs_type_ = None
 prev_trial_ = 0
 
 # Frame and main window.
-bbox_ = [ (255,131), (521, 288) ]
+bbox_ = [(255,131), (521, 288)]
 default_bbox_ = bbox_ 
 
 camera_store_begin_ = 0
@@ -166,7 +166,7 @@ def arduino_client(writeP, trialIndex, cameraPinValue):
 
     while not finished_all_:
         line = read_line()
-        # print( '[DEBUG] 1: %s' % line )
+        #print( '[DEBUG] 1: %s' % line )
         writeP.send(line)
         data = line_to_data( line )
         if len( data ) < 11:
@@ -178,12 +178,11 @@ def arduino_client(writeP, trialIndex, cameraPinValue):
         # was pressed. So commenting this out.
         #if trialNum < 1:
         #    continue 
-
-        trialIndex.value = int( trialNum )
+        trialIndex.value = trialNum 
 
         # 3rd last value in data line is camera.
         with cameraPinValue.get_lock( ):
-            cameraPinValue.value = int( data[-3] )
+            cameraPinValue.value = int( data[-5] )
             assert( cameraPinValue.value in [ 0, 1 ] )
 
         # NOTE: Write arduino data separately in a single file.
@@ -246,7 +245,7 @@ def line_to_data(line):
     data = [ ]
     for x in line:
         try:
-            data.append( int(x) )
+            data.append( float(x) )
         except ValueError as e:
             data.append( x )
     return data
@@ -307,7 +306,7 @@ def writeTextToFrame( txt, img ):
     metadata = np.array(map(ord, txt), dtype=np.uint8)
     img = np.vstack((metadata, img))
     cv2.putText(img, txt.strip()
-            , (0, h_ - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.4, 128, 1
+            , (0, h_ - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.3, 200, 1
             )
     return img
 
@@ -342,9 +341,12 @@ def camera_client(readP, trialIndex, cameraPinValue):
     framesInStack = 0
     trial_count = 0
     blinks_ = []
+    speed_  = []
     writeTrial_ = False
     recording_ = False
     cameraPinState = [False, False]
+
+    curSpeed = 0.0
     while not finished_all_:
         data = s.recv(frame_size_)
         buf += data
@@ -354,11 +356,13 @@ def camera_client(readP, trialIndex, cameraPinValue):
             img = np.reshape(img, img_shape_)
             txt = now
 
-            
             # This is critical.
             # Read from PIPE but it should not be blocking.
             if readP.poll(1e-4):
                 txt += ',' + readP.recv()
+                data = line_to_data(txt)
+                if len(data) > 10:
+                    curSpeed = float(data[-1])
 
             if len(bbox_) == 2:
                 # print( 'Bounding box has been drawn : %s' % str(bbox_) )
@@ -388,13 +392,14 @@ def camera_client(readP, trialIndex, cameraPinValue):
                 else:
                     writeTrial_ = False
 
-                cv2.putText( 
-                        img, msg, (0, 10 )
+                cv2.putText( img, msg, (0, 10 )
                          , cv2.FONT_HERSHEY_SIMPLEX, 0.4, 128, 2
                          )
                 blinks_.append( res )
+                speed_.append( curSpeed )
             else:
                 blinks_.append( random.random( ) )
+                speed_.append( curSpeed )
 
             # Append blink value to data.
             txt += ',%4.3f' % blinks_[-1]
@@ -427,9 +432,12 @@ def camera_client(readP, trialIndex, cameraPinValue):
                 # 20 FPS.
 
                 if len(bbox_) == 2:
+                    y1, y2 = np.array(blinks_[-2000:]), np.array(speed_[-2000:])
                     if len( blinks_ ) > 10:
                         try:
-                            gnuplot_.plot( np.array( blinks_[-2000:] ))
+                            gnuplot_.plot( (np.arange(len(y1)), y1)
+                                    , (np.arange(len(y2)), y2)
+                                    )
                         except Exception as e:
                             print( 'Failed to launch gnuplot %s' % e )
             buf = buf[frame_size_:]

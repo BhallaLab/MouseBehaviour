@@ -1,71 +1,30 @@
 /***
- *       Filename:  main.ino
+ *    Protocol for EyeBlinkConditioning. This file contains various protocols
+ *    used in BhallaLab for Animal Training. The code of protocol should be
+ *    specified in CMakeLists.txt file during compile time.
  *
- *    Description:  Protocol for EyeBlinkConditioning.
- *
- *        Version:  0.0.1
- *        Created:  2017-04-11
-
  *         Author:  Dilawar Singh <dilawars@ncbs.res.in>
  *   Organization:  NCBS Bangalore
  *
- *        License:  GNU GPL2
+ *        License:  GNU GPLv3
+ *
+ *  See the GIT changelog for more details.
  */
 
 #include <avr/wdt.h>
+
+// Pin configurations and other global variables.
 #include "config.h"
 
-//#define USE_MOUSE 
-#ifdef USE_MOUSE
-#include "arduino-ps2-mouse/PS2Mouse.h"
-#endif
-
-// Pins etc.
-#define         TONE_PIN                    2
-#define         LED_PIN                     3
-
-// These pins are more than 7.
-#define         CAMERA_TTL_PIN              10
-#define         PUFF_PIN                    11
-#define         IMAGING_TRIGGER_PIN         13
-
-#define         SENSOR_PIN                  A5
-
-#define         TONE_FREQ                   4500
-
-#define         PUFF_DURATION               50
-#define         TONE_DURATION               50
-#define         LED_DURATION                50
-
-#ifdef USE_MOUSE
-// Motion detection related.
-#define         CLOCK_PIN                 6
-#define         DATA_PIN                  7
-#else
-#define         MOTION1_PIN                 6
-#define         MOTION2_PIN                 7
-#endif 
-
-
-// Motion detection based on motor
-#define         MOTOR_OUT              A1
-
-// What kind of stimulus is given.
-#define         SOUND                   0
-#define         LIGHT                   1
-#define         MIXED                   2
+// Functions and variable related to rotary encoder.
+#include "RotaryEncoder.h"
 
 
 unsigned long stamp_            = 0;
 unsigned dt_                    = 2;
 unsigned write_dt_              = 2;
 unsigned trial_count_           = 0;
-
-char msg_[80];
-
 unsigned long trial_start_time_ = 0;
-
-
 char trial_state_[5]            = "PRE_";
 
 /*-----------------------------------------------------------------------------
@@ -74,19 +33,8 @@ char trial_state_[5]            = "PRE_";
 int incoming_byte_              = 0;
 bool reboot_                    = false;
 
-/*
- * MOUSE
- */
-#ifdef USE_MOUSE
-PS2Mouse mouse( CLOCK_PIN, DATA_PIN );
-#endif
-
-/*-----------------------------------------------------------------------------
- *  WATCH DOG
- *-----------------------------------------------------------------------------*/
 /**
- * @brief Interrupt serviving routine.
- *
+ * @brief Interrupt serviving routine (watchdog).
  * @param _vect
  */
 ISR(WDT_vect)
@@ -128,9 +76,7 @@ bool is_command_read( char command, bool consume = true )
 }
 
 /**
- * @brief Write data line to Serial port.
- *   NOTE: Use python dictionary format. It can't be written at baud rate of
- *   38400 at least.
+ * @brief Write data line to Serial port in csv format.
  * @param data
  * @param timestamp
  */
@@ -139,36 +85,34 @@ void write_data_line( )
     reset_watchdog( );
 
     // Just read the registers where pin data is saved.
+    int puff = digitalRead( PUFF_PIN ); 
     int tone = digitalRead( TONE_PIN );
     int led = digitalRead( LED_PIN ); 
-
-    int puff = digitalRead( PUFF_PIN ); 
-    int microscope = digitalRead( IMAGING_TRIGGER_PIN);
     int camera = digitalRead( CAMERA_TTL_PIN ); 
+    int microscope = digitalRead( IMAGING_TRIGGER_PIN);
 
     unsigned long timestamp = millis() - trial_start_time_;
 
-    int motion1;
-    int motion2;
-
-#ifdef USE_MOUSE
-    // Read mouse data.
-    MouseData data = mouse.readData( );
-    motion1 = data.position.x;
-    motion2 = data.position.y;
-#else
-    motion1 = digitalRead( MOTION1_PIN );
-    motion2 = digitalRead( MOTION2_PIN );
-#endif
-    
-    sprintf(msg_  
-            , "%lu,%d,%d,%d,%d,%3d,%3d,%d,%d,%s"
+    char msg[100];
+    sprintf(msg, "%lu,%d,%d,%d,%d,%d,%d,%s,%ld"
             , timestamp, trial_count_, puff, tone, led
-            , motion1, motion2, camera, microscope, trial_state_
+            , camera, microscope, trial_state_, encoder_value_
             );
-    Serial.println(msg_);
-    Serial.flush( );
-    //delay( 3 );
+    Serial.print(msg);
+
+    // sprintf does not support float. Therefore this convoluted way of printing
+    // float.
+    Serial.print( ',');
+
+    double dt = millis() - lastT_;
+    lastT_ = millis();
+
+    // In radian per second.
+    angular_velocity_ = 1000 * 2 * 3.1416 * (encoder_value_ - prev_encoder_value_) / 2400.0 / dt;
+    prev_encoder_value_ = encoder_value_;
+
+    Serial.println( angular_velocity_, 10 );
+    // delay( 3 );
 }
 
 void check_for_reset( void )
@@ -194,10 +138,10 @@ void play_tone( unsigned long period, double duty_cycle = 0.5 )
     reset_watchdog( );
     check_for_reset( );
     unsigned long toneStart = millis();
-    while( millis() - toneStart <= period )
+    while( (millis() - toneStart) <= period )
     {
         write_data_line();
-        if( millis() - toneStart <= (period * duty_cycle) )
+        if( (millis() - toneStart) <= (period * duty_cycle) )
             tone( TONE_PIN, TONE_FREQ );
         else
             noTone( TONE_PIN );
@@ -251,7 +195,7 @@ void wait_for_start( )
         write_data_line( );
         if( is_command_read( 's', true ) )
         {
-            Serial.println( ">>>Received r. Start" );
+            Serial.println( ">>>Received s. Start" );
             break;                              /* Only START can break the loop */
         }
         else if( is_command_read( 'p', true ) ) 
@@ -301,6 +245,7 @@ void print_trial_info( )
     Serial.println( SESSION_TYPE );
 }
 
+
 void setup()
 {
     Serial.begin( 38400 );
@@ -320,6 +265,17 @@ void setup()
     pinMode( CAMERA_TTL_PIN, OUTPUT );
     pinMode( IMAGING_TRIGGER_PIN, OUTPUT );
 
+    // Rotary encode
+    pinMode(ROTARY_ENC_A, INPUT); 
+    pinMode(ROTARY_ENC_B, INPUT);
+
+    digitalWrite(ROTARY_ENC_A, HIGH); //turn pullup resistor on
+    digitalWrite(ROTARY_ENC_B, HIGH); //turn pullup resistor on
+
+    //call updateEncoder() when any high/low changed seen
+    //on interrupt 0 (pin 2), or interrupt 1 (pin 3) 
+    attachInterrupt(0, updateEncoder, CHANGE); 
+    attachInterrupt(1, updateEncoder, CHANGE);
 
 
 #ifdef USE_MOUSE
@@ -366,7 +322,7 @@ void do_empty_trial( size_t trial_num, int duration = 10 )
  * @param trial_num. Index of the trial.
  * @param ttype. Type of the trial.
  */
-void do_trial( unsigned int trial_num, int cs_type, bool isprobe = false )
+void do_trial( int cs_type, bool isprobe = false )
 {
     reset_watchdog( );
     check_for_reset( );
@@ -519,7 +475,7 @@ void loop()
 #if DEBUG
             do_empty_trial( i );
 #else
-            do_trial( i, cs_type, isprobe );
+            do_trial( cs_type, isprobe );
 #endif
         }
 	/*************************************************************************
@@ -548,7 +504,7 @@ void loop()
 #if DEBUG
             do_empty_trial( i );
 #else
-            do_trial( i, cs_type, isprobe );
+            do_trial( cs_type, isprobe );
 #endif
 
         }
