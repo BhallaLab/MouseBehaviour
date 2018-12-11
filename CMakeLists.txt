@@ -15,12 +15,13 @@ execute_process(
 endif(NOT PORT)
 
 if (NOT PORT )
-    message(FATAL_ERROR 
-        "Could not find a serial port automatically. You won't be able to upload"
+    message(STATUS
+        "WARNING:"
+        "\nCould not find a serial port automatically. You won't be able to upload"
         "\n and run the arduino target. If you are sure that arduino board is "
         "\n connected and functional, you should provide port path from "
         "\n command line: e.g. \n"
-        "\t cmake -DPORT=/dev/ttyACM0 .."
+        "\t -DPORT=/dev/ttyACM0 etc."
         "\n\n Or you may not be part of 'dailout' group?"
         )
 else (NOT PORT)
@@ -38,6 +39,28 @@ set(ARDUINO_EXTRA_CXXFLAGS "")
 set(BOARD_TAG   uno)
 set(BAUD_RATE   38400)
 find_program(ARDUINO_BIN arduino )
+
+# Set mouse path.
+if( NOT MOUSE_PATH )
+    message( STATUS "Searching for Logitech mouse" )
+    execute_process( 
+        COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/scripts/find_Logitech_mouse.sh
+        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+        TIMEOUT 5
+        OUTPUT_VARIABLE MOUSE_PATH 
+        OUTPUT_STRIP_TRAILING_WHITESPACE )
+endif( )
+
+if(MOUSE_PATH)
+    message( STATUS "Found Logitech mouse: ${MOUSE_PATH}" )
+else(MOUSE_PATH)
+    message( FATAL_ERROR "CMake could not find Logitech mouse. " 
+        "Make sure it is connected to laptop. You can also specify mouse by "
+        " setting the MOUSE_PATH variable "
+        "     $ cmake -DMOUSE_PATH=/dev/input/mouse2 "
+        " etc. "
+        )
+endif( )
 
 set(ARDUINO_BOARD_FILE hardware/arduino/boards.txt)
 find_path( ARDUINO_DIR 
@@ -88,12 +111,12 @@ configure_file( ${CMAKE_SOURCE_DIR}/Makefile.arduino.in
     ${CMAKE_SOURCE_DIR}/Makefile.arduino
     )
 
-configure_file( ${CMAKE_SOURCE_DIR}/src/config.h.in
-    ${CMAKE_SOURCE_DIR}/src/config.h
-    )
 
 set(ARDUINO_TARGET_NAME eyeBlinkBehaviour)
 set(ARDUINO_SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
+
+# Write variables to config.h file.
+configure_file( ${ARDUINO_SRC_DIR}/config.h.in ${ARDUINO_SRC_DIR}/config.h )
 
 set(ARDDUINO_OUT_HEX_FILE 
     ${CMAKE_SOURCE_DIR}/${BOARD_NAME}/${ARDUINO_TARGET_NAME}/${ARDUINO_TARGET_NAME}.hex 
@@ -136,15 +159,19 @@ configure_file( ${CMAKE_CURRENT_SOURCE_DIR}/copy_file.sh.in
 configure_file( ${CMAKE_SOURCE_DIR}/camera_arduino_client.py.in 
     ${CMAKE_BINARY_DIR}/camera_arduino_client.py 
     )
-configure_file( ${CMAKE_SOURCE_DIR}/pyblink/config.py ${CMAKE_BINARY_DIR}/config.py )
+
+# write .gnuplot
+file(WRITE $ENV{HOME}/.gnuplot "set fit quiet; " )
 
 # Pass animal options to run.sh which will will passed to python script.
 SET(RUN_ARGS 
-    "-p ${PORT} -n ${ANIMAL_NAME} -sn ${SESSION_NUM} -st ${SESSION_TYPE}"
+    -p ${PORT} -n ${ANIMAL_NAME} -sn ${SESSION_NUM} -st ${SESSION_TYPE} 
      )
 
+# Copy python files into current working directory.
 file(COPY ${CMAKE_SOURCE_DIR}/eyeblinkdetector/extract.py 
-        ${CMAKE_SOURCE_DIR}/blinky.py
+        ${CMAKE_SOURCE_DIR}/blinky.py 
+        ${CMAKE_SOURCE_DIR}/mouse_server.py
         DESTINATION ${CMAKE_BINARY_DIR}
      )
 
@@ -157,16 +184,6 @@ add_custom_target( run
     WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
     VERBATIM
     )
-
-set( THREADMILL_TEST_SCRIPT test_threadmill.py )
-add_custom_target( threadmill
-    DEPENDS upload
-    COMMAND python ${THREADMILL_TEST_SCRIPT} ${PORT}
-    COMMENT "Testing threadmill"
-    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-    VERBATIM
-    )
-
 
 # Now  add the client and server 
 add_subdirectory( ${CMAKE_SOURCE_DIR}/PointGreyCamera )
