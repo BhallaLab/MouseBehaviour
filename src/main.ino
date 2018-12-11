@@ -33,6 +33,8 @@ char trial_state_[5]            = "PRE_";
 int incoming_byte_              = 0;
 bool reboot_                    = false;
 
+
+
 /**
  * @brief Interrupt serviving routine (watchdog).
  * @param _vect
@@ -49,7 +51,7 @@ void reset_watchdog( )
         wdt_reset( );
 }
 
-unsigned int trace_duration( int st, const char* option = "" )
+unsigned int trace_duration( int st )
 {
     if( st == 3 )
         return 350;
@@ -338,7 +340,7 @@ void do_empty_trial( size_t trial_num, int duration = 10 )
  * @param trial_num. Index of the trial.
  * @param ttype. Type of the trial.
  */
-void do_trial( int cs_type, bool isprobe = false )
+void do_trial( size_t trial_num, int cs_type, bool isprobe = false )
 {
     reset_watchdog( );
     check_for_reset( );
@@ -461,7 +463,8 @@ void loop()
     reset_watchdog( );
 
     // Initialize probe trials index. Mean 6 +/- 2 trials. 
-    proble_trial_index_init( 6, 2 );
+    unsigned numProbeTrials = 0;
+    unsigned nextProbeTrialIndex = random(5, 10);
 
     for (size_t i = 0; i <= 102; i++) 
     {
@@ -478,11 +481,11 @@ void loop()
             bool isprobe = false;
 
             // Probe trial.
-            if( i == nextProbbeTrialIndex )
+            if( i == nextProbeTrialIndex )
             {
                 isprobe = true;
                 numProbeTrials +=1 ;
-                nextProbbeTrialIndex = random( 
+                nextProbeTrialIndex = random( 
                         (numProbeTrials+1)*10-2, (numProbeTrials+1)*10+3
                         );
             }
@@ -492,14 +495,14 @@ void loop()
                 Serial.print( ">> PROBE TRIAL. Index :" );
                 Serial.print( i );
                 Serial.print( ". Next probe " );
-                Serial.println( nextProbbeTrialIndex );
+                Serial.println( nextProbeTrialIndex );
             }
 #endif
 
 #if DEBUG
             do_empty_trial( i );
 #else
-            do_trial( cs_type, isprobe );
+            do_trial( i, cs_type, isprobe );
 #endif
         }
 	/*************************************************************************
@@ -528,7 +531,7 @@ void loop()
 #if DEBUG
             do_empty_trial( i );
 #else
-            do_trial( cs_type, isprobe );
+            do_trial(i, cs_type, isprobe );
 #endif
 
         }
