@@ -49,6 +49,22 @@ void reset_watchdog( )
         wdt_reset( );
 }
 
+unsigned int trace_duration( int st, const char* option = "" )
+{
+    if( st == 3 )
+        return 350;
+    else if( st == 4 )
+        return 500;
+    else if( 5 == st )
+        return 650;
+    else if( 6 == st )
+        return 800;
+    else if( 7 == st )
+        return 1000;
+
+    return 250;
+}
+
 
 
 /**
@@ -330,8 +346,13 @@ void do_trial( int cs_type, bool isprobe = false )
     print_trial_info( );
     trial_start_time_ = millis( );
 
-    // PRE
-    unsigned duration = 5000;
+    /*-----------------------------------------------------------------------------
+     *  PRE. Start imaging;  for 8 seconds.
+     *-----------------------------------------------------------------------------*/
+    unsigned duration = 8000;
+    if (trial_num == 1)
+	delay(60); // Shutter delay; Only for the first trial
+
     stamp_ = millis( );
 
     sprintf( trial_state_, "PRE_" );
@@ -353,38 +374,30 @@ void do_trial( int cs_type, bool isprobe = false )
     stamp_ = millis( );
 
     /*-----------------------------------------------------------------------------
-     *  CS: 50 ms duration. Either LED or TONE depending on trial type.
+     *  CS: 50 ms duration. No tone is played here. Write LED pin to HIGH.
+     *  Play CS only when SESSION_TYPE is not 5.
      *-----------------------------------------------------------------------------*/
-    if( cs_type == LIGHT )
+    if( 1 == SESSION_TYPE )
+    {
+        sprintf( trial_state_, "NOCS" );
+        duration =  LED_DURATION;
+        while( (millis( ) - stamp_) <= duration )
+            write_data_line( );
+    }
+    else
     {
         duration = LED_DURATION;
         stamp_ = millis( );
         sprintf( trial_state_, "CS+" );
         led_on( duration );
-        stamp_ = millis( );
     }
-    else if( cs_type == SOUND )
-    {
-        duration = TONE_DURATION;
-        stamp_ = millis( );
-        sprintf( trial_state_, "CS+" );
-        play_tone( duration );
-        stamp_ = millis( );
-    }
-    else if( cs_type == MIXED )
-    {
-        // Mixed type.
-    }
-    else
-    {
-        Serial.println( ">> Horror horror. What type of session is that?" );
-        Serial.println( ">> We only allow type 0 (SOUND), 1 (LIGHT) or 2 (MIXED)" );
-    }
+
+    stamp_ = millis( );
 
     /*-----------------------------------------------------------------------------
      *  TRACE. The duration of trace varies from trial to trial.
      *-----------------------------------------------------------------------------*/
-    duration = 250;
+    duration = trace_duration( SESSION_TYPE );
     sprintf( trial_state_, "TRAC" );
     while( (millis( ) - stamp_) <= duration )
         write_data_line( );
@@ -393,25 +406,35 @@ void do_trial( int cs_type, bool isprobe = false )
     /*-----------------------------------------------------------------------------
      *  PUFF for 50 ms if trial is not a probe type.
      *-----------------------------------------------------------------------------*/
-    duration = PUFF_DURATION;
-    if( isprobe )
+    if( 1 == SESSION_TYPE || 2 == SESSION_TYPE )
     {
-        sprintf( trial_state_, "PROB" );
+        sprintf( trial_state_, "NOPF" );
+        duration =  PUFF_DURATION;
         while( (millis( ) - stamp_) <= duration )
             write_data_line( );
     }
     else
     {
-        sprintf( trial_state_, "PUFF" );
-        play_puff( duration );
+        duration = PUFF_DURATION;
+        if( isprobe )
+        {
+            sprintf( trial_state_, "PROB" );
+            while( (millis( ) - stamp_) <= duration )
+                write_data_line( );
+        }
+        else
+        {
+            sprintf( trial_state_, "PUFF" );
+            play_puff( duration );
+        }
     }
     stamp_ = millis( );
     
     /*-----------------------------------------------------------------------------
-     *  POST, flexible duration till trial is over. It is 5 second long.
+     *  POST, flexible duration till trial is over. It is 8 second long.
      *-----------------------------------------------------------------------------*/
     // Last phase is post. If we are here just spend rest of time here.
-    duration = 5000;
+    duration = 8000;
     sprintf( trial_state_, "POST" );
     while( (millis( ) - stamp_) <= duration )
     {
@@ -419,13 +442,15 @@ void do_trial( int cs_type, bool isprobe = false )
         // Switch camera OFF after 500 ms into POST.
         if( (millis() - stamp_) >= 500 )
             digitalWrite( CAMERA_TTL_PIN, LOW );
-
     }
+
 
     /*-----------------------------------------------------------------------------
      *  End trial.
      *-----------------------------------------------------------------------------*/
     digitalWrite( IMAGING_TRIGGER_PIN, LOW ); /* Shut down the imaging. */
+    sprintf( trial_state_, "ITI_" );
+
     Serial.print( ">>END Trial " );
     Serial.print( trial_count_ );
     Serial.println( " is over. Starting new");
@@ -435,9 +460,8 @@ void loop()
 {
     reset_watchdog( );
 
-    // The probe trial occurs every 7th trial with +/- of 2 trials.
-    unsigned numProbeTrials = 0;
-    unsigned nextProbbeTrialIndex = random(5, 10);
+    // Initialize probe trials index. Mean 6 +/- 2 trials. 
+    proble_trial_index_init( 6, 2 );
 
     for (size_t i = 0; i <= 102; i++) 
     {
@@ -509,19 +533,12 @@ void loop()
 
         }
         else
-        {
-            Serial.println( ">> Horror horror. What type of session is that?" );
-            Serial.println( ">> We only allow type 0 (SOUND), 1 (LIGHT) or 2 (MIXED)" );
-        }
+            do_trial( i, false );
         
         /*-----------------------------------------------------------------------------
          *  ITI.
          *-----------------------------------------------------------------------------*/
-#if DEBUG
-        unsigned long rduration = random( 100, 151);
-#else
-        unsigned long rduration = random( 10000, 15001);
-#endif
+        unsigned long rduration = random( 23000, 25001);
         stamp_ = millis( );
         sprintf( trial_state_, "ITI_" );
         while((millis( ) - stamp_) <= rduration )
@@ -529,7 +546,6 @@ void loop()
             reset_watchdog( );
             delay( 10 );
         }
-
         trial_count_ += 1;
     }
 

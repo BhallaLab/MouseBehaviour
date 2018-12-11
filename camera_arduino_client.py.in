@@ -12,6 +12,8 @@ __email__      = ""
 __status__     = "Development"
 
 import sys
+import linecache
+import math
 sys.path.append( '../pyblink' )
 import os
 import socket
@@ -54,6 +56,24 @@ camera_store_end_ = 0
 
 title_ = 'Animal Window'
 
+def to_float( x ):
+    try:
+        x = eval( x )
+        return x
+    except Exception as e:
+        return float( 'nan' )
+
+def printException( msg = None ):
+    exc_type, exc_obj, tb = sys.exc_info()
+    f = tb.tb_frame
+    lineno = tb.tb_lineno
+    filename = f.f_code.co_filename
+    linecache.checkcache(filename)
+    line = linecache.getline(filename, lineno, f.f_globals)
+    print( 'EXCEPTION IN ({}, LINE {} "{}"): {}'.format(filename, lineno,
+        line.strip(), exc_obj) )
+    if msg:
+        print( '\t%s' % msg )
 
 def onmouse(event, x, y, flags, params):
     global bbox_
@@ -99,13 +119,15 @@ with open(config_file, "r") as cf:
     assert sock, "Can't read socket path from configuration file"
 
 sock_name_ = sock
+mouse_sock_ = '/tmp/__MY_MOUSE_SOCKET__'
+assert os.path.exists( mouse_sock_ )
 
 img_shape_ = (h_, w_)
 frame_size_ = img_shape_[0] * img_shape_[1]
 
 # Maximum allowed frame in each trial. This is guard against RAM overflow in
 # case arduino failes to update trial count. 
-max_frames_in_trial = 500
+max_frames_in_trial = 1000
 image_stack_ = None
 
 write_data_ = True
@@ -142,7 +164,6 @@ def cleanup():
 def append_trial_data(outfile, line ):
     with open(outfile, 'a') as f:
         f.write('%s\n' %  line )
-
 
 def read_line():
     """Append timestamp at which this line was read 
@@ -281,12 +302,12 @@ def init_stack():
     global h_, w_
     global max_frames_in_trial
     image_stack_ = np.zeros(
-        shape=(max_frames_in_trial, h_ + 1, w_), dtype=np.uint8
+        shape=(max_frames_in_trial, h_+1, w_), dtype=np.uint8
     )
 
 
 def poll_socket():
-    return os.path.exists(sock_name_)
+    return os.path.exists(sock_name_) and os.path.exists( mouse_sock_ )
 
 
 def show_frame(frame, outfile=None):
@@ -296,6 +317,11 @@ def show_frame(frame, outfile=None):
     if outfile:
         cv2.imsave(outfile, frame)
 
+def tryConnectToMouse( sock ):
+    try:
+        sock.connect( mouse_sock_ )
+    except Exception as e:
+        print( 'Failed to connect to mouse socket %s' % e )
 
 def writeTextToFrame( txt, img ):
     global image_stack_, h_
@@ -314,7 +340,10 @@ def camera_client(readP, trialIndex, cameraPinValue):
     global finished_all_
     global img_, buf_
     global image_stack_
+
+    # Camera socket and Mouse socket.
     s = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+    ms = socket.socket( socket.AF_UNIX, socket.SOCK_STREAM )
 
     # Connect to socket. Try only for 5 seconds.
     now = time.time()
@@ -323,20 +352,27 @@ def camera_client(readP, trialIndex, cameraPinValue):
             print('[INFO] Timeout in connecting socket. Quitting')
             finished_all_ = True
             break
-        if os.path.exists(sock_name_):
-            try:
-                s.connect(sock_name_)
-                break
-            except Exception as e:
-                print('Error connecting %s' % e)
-                time.sleep(1)
-        else:
-            print('Could not find %s' % sock_name_)
+        try:
+            print( 'Trying to connect to %s' % sock_name_ )
+            s.connect(sock_name_)
+        except Exception as e:
+            print( e )
             time.sleep(1)
 
+        try:
+            print( 'Trying to connect to %s' % mouse_sock_ )
+            ms.connect( mouse_sock_ )
+            break
+        except Exception as e:
+            print( e )
+            time.sleep( 1 )
+        else:
+            time.sleep(1)
+
+    print( '[INFO] Connected with both arduino board and Mouse' )
     totalBytesRead = 0
     totalFrames = 0
-    buf = ''
+    buf, mousebuf = '', '\n'.join( [ 'BABA JI KA THULLU' ] * 2 )
     init_stack()
     framesInStack = 0
     trial_count = 0
@@ -458,7 +494,6 @@ def camera_client(readP, trialIndex, cameraPinValue):
             init_stack( )
 
 
-
 def main():
     # Lock so that only one process prints to console at a time.
     # When daemon is set to True, all threads will exit (ungracefully) when main
@@ -475,9 +510,8 @@ def main():
 
     readP, writeP = Pipe(duplex=False)
 
-    cam = Process(
-            target=camera_client
-            , args=(readP, trialIndex, cameraPinValue )
+    cam = Process( target=camera_client
+            , args=(readP,trialIndex, cameraPinValue )
             )
     cam.daemon = True
     cam.start()
@@ -485,7 +519,7 @@ def main():
 
     arduinoP = Process(
             target=arduino_client,
-            args=( writeP, trialIndex, cameraPinValue)
+            args=(writeP, trialIndex, cameraPinValue)
             )
     arduinoP.daemon = True
     arduinoP.start()
@@ -500,7 +534,8 @@ def main():
 
     arduinoP.join()
     cam.join()
-    print('All done')
+    print('All done. Raising Ctrl+C to cleanup.')
+    raise KeyboardInterrupt
 
 if __name__ == '__main__':
     import argparse
@@ -530,11 +565,12 @@ if __name__ == '__main__':
         required=False,
         default=None,
         help='Serial port [full path]')
+
     parser.parse_args(namespace=config.args_)
     init_serial()
     # Intialize logger after intializing serial port.
     try:
-        main()
+        main( )
     except KeyboardInterrupt as e:
         logging.warn("Interrupt from keyboard.... Quitting after cleanup.")
         cleanup()
