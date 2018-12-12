@@ -484,21 +484,7 @@ void loop()
                 numProbeTrials +=1 ;
                 nextProbeTrialIndex = random( (numProbeTrials+1)*10-2, (numProbeTrials+1)*10+3);
             }
-#if DEBUG
-            if( isprobe )
-            {
-                Serial.print( ">> PROBE TRIAL. Index :" );
-                Serial.print( i );
-                Serial.print( ". Next probe " );
-                Serial.println( nextProbeTrialIndex );
-            }
-#endif
-
-#if DEBUG
-            do_empty_trial( i );
-#else
             do_trial(i, cs_type, isprobe);
-#endif
         }
 	/*************************************************************************
 	* MIXED TRIALS
@@ -535,7 +521,7 @@ void loop()
         trial_count_ += 1;
     }
 
-    // Don't do anything once trails are over.
+    // Don't do anything once all trails are over.
     while( true )
     {
         reset_watchdog( );
