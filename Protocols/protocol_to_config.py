@@ -38,7 +38,7 @@ def main():
             v = '"%s"' % v
         k = k.replace( '-', '_' )
         k = k.replace( ' ', '_' )
-        print( '#define _%s      %s' % (k,v))
+        print( '#define PROTO_%s      %s' % (k,v))
     return True
 
 if __name__ == '__main__':

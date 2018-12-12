@@ -55,24 +55,6 @@ void reset_watchdog( )
         wdt_reset( );
 }
 
-unsigned int trace_duration( int st )
-{
-    if( st == 3 )
-        return 350;
-    else if( st == 4 )
-        return 500;
-    else if( 5 == st )
-        return 650;
-    else if( 6 == st )
-        return 800;
-    else if( 7 == st )
-        return 1000;
-
-    return 250;
-}
-
-
-
 /**
  * @brief  Read a command from command line. Consume when character is matched.
  *
@@ -355,20 +337,26 @@ void do_trial( size_t trial_num, int cs_type, bool isprobe = false )
     print_trial_info( );
     trial_start_time_ = millis( );
 
-    /*-----------------------------------------------------------------------------
-     *  PRE. Start imaging;  for 8 seconds.
-     *-----------------------------------------------------------------------------*/
-    unsigned duration = 8000;
+   /*-----------------------------------------------------------------------------
+    * PRE. Start imaging; 
+    * Usually durations of PRE_ is 8000 ms. For some trials is it randomly
+    * chosen between 6000 ms and 8000 ms. See protocol.h file and
+    * ./Protocols/BehaviourProtocols.xlsx file.
+    *-----------------------------------------------------------------------------*/
+    size_t duration = random(PROTO_PreStimDuration_LOW, PROTO_PreStimDuration_HIGH+1);
+
+    // From Ananth. He suggested that 60ms delay is required for every protocol. This is 
+    // apprently shutter delay for the camera and only required for trial number
+    // 1.
     if (trial_num == 1)
 	delay(60); // Shutter delay; Only for the first trial
 
     stamp_ = millis( );
 
     sprintf( trial_state_, "PRE_" );
-    digitalWrite( IMAGING_TRIGGER_PIN, HIGH);   /* Start imaging. */
-
-    digitalWrite( CAMERA_TTL_PIN, LOW );
-    digitalWrite( LED_PIN, LOW );
+    digitalWrite( IMAGING_TRIGGER_PIN, HIGH);   // Imaging START
+    digitalWrite( CAMERA_TTL_PIN, LOW );        // Camera STOP.
+    digitalWrite( LED_PIN, LOW );               // LED STOP.
 
     while( (millis( ) - trial_start_time_ ) <= duration ) /* PRE_ time */
     {
@@ -389,13 +377,13 @@ void do_trial( size_t trial_num, int cs_type, bool isprobe = false )
     if( 1 == SESSION_TYPE )
     {
         sprintf( trial_state_, "NOCS" );
-        duration =  LED_DURATION;
+        duration =  PROTO_CSDuration;
         while( (millis( ) - stamp_) <= duration )
             write_data_line( );
     }
     else
     {
-        duration = LED_DURATION;
+        duration = PROTO_CSDuration;
         stamp_ = millis( );
         sprintf( trial_state_, "CS+" );
         led_on( duration );
@@ -406,25 +394,25 @@ void do_trial( size_t trial_num, int cs_type, bool isprobe = false )
     /*-----------------------------------------------------------------------------
      *  TRACE. The duration of trace varies from trial to trial.
      *-----------------------------------------------------------------------------*/
-    duration = trace_duration( SESSION_TYPE );
+    duration = PROTO_TraceDuration;
     sprintf( trial_state_, "TRAC" );
     while( (millis() - stamp_) <= duration )
         write_data_line();
     stamp_ = millis();
 
     /*-----------------------------------------------------------------------------
-     *  PUFF for 50 ms if trial is not a probe type.
+     *  US for 50 ms if trial is not a probe type.
      *-----------------------------------------------------------------------------*/
     if( 1 == SESSION_TYPE || 2 == SESSION_TYPE )
     {
-        sprintf( trial_state_, "NOPF" );
-        duration =  PUFF_DURATION;
+        sprintf( trial_state_, PROTO_USValue );
+        duration =  PROTO_USDuration;
         while( (millis() - stamp_) <= duration )
             write_data_line( );
     }
     else
     {
-        duration = PUFF_DURATION;
+        duration = PROTO_USDuration;
         if( isprobe )
         {
             sprintf( trial_state_, "PROB" );
@@ -433,7 +421,7 @@ void do_trial( size_t trial_num, int cs_type, bool isprobe = false )
         }
         else
         {
-            sprintf( trial_state_, "PUFF" );
+            sprintf( trial_state_, PROTO_USValue );
             play_puff( duration );
         }
     }
@@ -443,7 +431,7 @@ void do_trial( size_t trial_num, int cs_type, bool isprobe = false )
      *  POST, flexible duration till trial is over. It is 8 second long.
      *-----------------------------------------------------------------------------*/
     // Last phase is post. If we are here just spend rest of time here.
-    duration = 8000;
+    duration = PROTO_PostStimDuration;
     sprintf( trial_state_, "POST" );
     while( (millis( ) - stamp_) <= duration )
     {
@@ -456,6 +444,8 @@ void do_trial( size_t trial_num, int cs_type, bool isprobe = false )
 
     /*-----------------------------------------------------------------------------
      *  End trial.
+     *  Just set the state to ITI_. The ITI delay is implemented in loop
+     *  function.
      *-----------------------------------------------------------------------------*/
     digitalWrite( IMAGING_TRIGGER_PIN, LOW ); /* Shut down the imaging. */
     sprintf( trial_state_, "ITI_" );
@@ -473,7 +463,7 @@ void loop()
     unsigned numProbeTrials = 0;
     unsigned nextProbeTrialIndex = random(5, 10);
 
-    for (size_t i = 0; i <= 102; i++) 
+    for (size_t i = 0; i <= PROTO_NumTrialsInABlock; i++) 
     {
 
         reset_watchdog( );
@@ -492,9 +482,7 @@ void loop()
             {
                 isprobe = true;
                 numProbeTrials +=1 ;
-                nextProbeTrialIndex = random( 
-                        (numProbeTrials+1)*10-2, (numProbeTrials+1)*10+3
-                        );
+                nextProbeTrialIndex = random( (numProbeTrials+1)*10-2, (numProbeTrials+1)*10+3);
             }
 #if DEBUG
             if( isprobe )
@@ -509,7 +497,7 @@ void loop()
 #if DEBUG
             do_empty_trial( i );
 #else
-            do_trial( i, cs_type, isprobe );
+            do_trial(i, cs_type, isprobe);
 #endif
         }
 	/*************************************************************************
@@ -523,23 +511,11 @@ void loop()
             if( i % 5 == 0 )
                 isprobe = true;
 
-#if DEBUG
-            if( isprobe )
-            {
-                Serial.print( ">> PROBE TRIAL. Index :" );
-                Serial.println( i );
-            }
-#endif
-
             // 1-4, 11-14, 21-24 etc are trails with SOUND.
             int cs_type = LIGHT;
             if( i % 10 > 0 && i % 10 <= 5 )
                 cs_type = SOUND;
-#if DEBUG
-            do_empty_trial( i );
-#else
             do_trial(i, cs_type, isprobe );
-#endif
 
         }
         else
@@ -548,7 +524,7 @@ void loop()
         /*-----------------------------------------------------------------------------
          *  ITI.
          *-----------------------------------------------------------------------------*/
-        unsigned long rduration = random( 23000, 25001);
+        unsigned long rduration = random(23000, 25001);
         stamp_ = millis( );
         sprintf( trial_state_, "ITI_" );
         while((millis( ) - stamp_) <= rduration )
