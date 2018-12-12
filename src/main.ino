@@ -1,7 +1,9 @@
 /***
- *    Protocol for EyeBlinkConditioning. This file contains various protocols
- *    used in BhallaLab for Animal Training. The code of protocol should be
- *    specified in CMakeLists.txt file during compile time.
+ *    Protocol for EyeBlinkConditioning. 
+ *
+ *    The protocols are read from the file '../Protocols/BehaviourProtocols.csv'
+ *    by a python script. The cmake build system generates appropriate header
+ *    file protocol.h.
  *
  *         Author:  Dilawar Singh <dilawars@ncbs.res.in>
  *   Organization:  NCBS Bangalore

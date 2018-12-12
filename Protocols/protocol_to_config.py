@@ -25,7 +25,7 @@ def main():
     whichProtocol = sys.argv[1]
     if whichProtocol not in protocols:
         print( "Protocol '%s' is not available." % whichProtocol )
-        print( "| Available protcols are: %s" % str(protcols.keys()))
+        print( "| Available protcols are: %s" % ','.join(protocols.keys()))
         return False
 
     protocol = protocols[whichProtocol]
