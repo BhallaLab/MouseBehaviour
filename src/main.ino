@@ -15,6 +15,7 @@
 
 // Pin configurations and other global variables.
 #include "config.h"
+#include "protocol.h"
 
 // Functions and variable related to rotary encoder.
 #include "RotaryEncoder.h"
