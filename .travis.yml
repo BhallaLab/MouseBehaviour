@@ -1,13 +1,15 @@
 sudo: required
+dist: xenial
 language: cpp
 compiler: gcc
 cache: apt
 
 before_script:
     - sudo apt-get install -qq g++ arduino arduino-mk
-    - sudo apt-get install -qq make cmake libboost-all-dev ffmpeg
+    - sudo apt-get install -qq make cmake libboost-all-dev
     - sudo apt-get install -qq  python-numpy python-matplotlib python-networkx
     - sudo apt-get install -qq  libopencv-dev
+    - sudo apt-get install -qq libavformat-ffmpeg56 ffmpeg
 
 install:
     - echo "nothing to do here"
