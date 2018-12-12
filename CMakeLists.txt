@@ -37,7 +37,8 @@ set(ARDUINO_PROJECT_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 set(ARDUINO_EXTRA_CXXFLAGS "")
 
 set(BOARD_TAG   uno)
-set(BAUD_RATE   38400)
+# Baud rate of 115200 roughly translates to 115 char per 10ms. 
+set(BAUD_RATE   115200)
 find_program(ARDUINO_BIN arduino )
 
 set(ARDUINO_BOARD_FILE hardware/arduino/boards.txt)
