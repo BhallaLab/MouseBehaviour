@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/BhallaLab/MouseBehaviour.svg?branch=master)](https://travis-ci.org/BhallaLab/MouseBehaviour)
+
 A `cmake` based pipeline to run behavioural experiments.
 
 # Protocols
