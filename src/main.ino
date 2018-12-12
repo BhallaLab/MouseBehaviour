@@ -99,7 +99,7 @@ void write_data_line( )
 
     char msg[100];
     sprintf(msg, "%lu,%s,%d,%d,%d,%d,%d,%d,%s,%ld"
-            , timestamp, _CODE, trial_count_, puff, tone, led
+            , timestamp, PROTO_CODE, trial_count_, puff, tone, led
             , camera, microscope, trial_state_, encoder_value_
             );
     Serial.print(msg);
