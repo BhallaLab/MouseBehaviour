@@ -42,38 +42,38 @@ void sig_handler( int s )
 // exposure.
 int ResetExposure(INodeMap & nodeMap)
 {
-        int result = 0;
-        try
+    int result = 0;
+    try
+    {
+        //
+        // Turn automatic exposure back on
+        //
+        // *** NOTES ***
+        // Automatic exposure is turned on in order to return the camera to its
+        // default state.
+        //
+        CEnumerationPtr ptrExposureAuto = nodeMap.GetNode("ExposureAuto");
+        if (!IsAvailable(ptrExposureAuto) || !IsWritable(ptrExposureAuto))
         {
-                // 
-                // Turn automatic exposure back on
-                //
-                // *** NOTES ***
-                // Automatic exposure is turned on in order to return the camera to its 
-                // default state.
-                //
-                CEnumerationPtr ptrExposureAuto = nodeMap.GetNode("ExposureAuto");
-                if (!IsAvailable(ptrExposureAuto) || !IsWritable(ptrExposureAuto))
-                {
-                        cout << "Unable to enable automatic exposure (node retrieval). Non-fatal error..." << endl << endl;
-                        return -1;
-                }
-        
-                CEnumEntryPtr ptrExposureAutoContinuous = ptrExposureAuto->GetEntryByName("Continuous");
-                if (!IsAvailable(ptrExposureAutoContinuous) || !IsReadable(ptrExposureAutoContinuous))
-                {
-                        cout << "Unable to enable automatic exposure (enum entry retrieval). Non-fatal error..." << endl << endl;
-                        return -1;
-                }
-                ptrExposureAuto->SetIntValue(ptrExposureAutoContinuous->GetValue());
-                cout << "Automatic exposure enabled..." << endl << endl;
+            cout << "Unable to enable automatic exposure (node retrieval). Non-fatal error..." << endl << endl;
+            return -1;
         }
-        catch (Spinnaker::Exception &e)
+
+        CEnumEntryPtr ptrExposureAutoContinuous = ptrExposureAuto->GetEntryByName("Continuous");
+        if (!IsAvailable(ptrExposureAutoContinuous) || !IsReadable(ptrExposureAutoContinuous))
         {
-                cout << "Error: " << e.what() << endl;
-                result = -1;
+            cout << "Unable to enable automatic exposure (enum entry retrieval). Non-fatal error..." << endl << endl;
+            return -1;
         }
-        return result;
+        ptrExposureAuto->SetIntValue(ptrExposureAutoContinuous->GetValue());
+        cout << "Automatic exposure enabled..." << endl << endl;
+    }
+    catch (Spinnaker::Exception &e)
+    {
+        cout << "Error: " << e.what() << endl;
+        result = -1;
+    }
+    return result;
 }
 
 /**
@@ -82,7 +82,7 @@ int ResetExposure(INodeMap & nodeMap)
  * @param data
  * @param size
  *
- * @return 
+ * @return
  */
 int write_data( void* data, size_t width, size_t height )
 {
@@ -97,11 +97,11 @@ int write_data( void* data, size_t width, size_t height )
     imshow( "MyImg", img );
     waitKey( 10 );
 #else
-    try 
+    try
     {
         if( write( socket_, data,  width * height ) == -1 )
             throw runtime_error( strerror( errno ) );
-    } 
+    }
     catch ( exception & e )
     {
         throw runtime_error( "Error in writing" );
@@ -115,7 +115,8 @@ int create_socket( bool waitfor_client = true )
     int s, s2, len;
     struct sockaddr_un local, remote;
 
-    if ((s = socket(AF_UNIX, SOCK_STREAM, 0)) == -1) {
+    if ((s = socket(AF_UNIX, SOCK_STREAM, 0)) == -1)
+    {
         perror("socket");
         exit(1);
     }
@@ -123,15 +124,17 @@ int create_socket( bool waitfor_client = true )
     local.sun_family = AF_UNIX;
     cout << "[INFO] Creating socket " << SOCK_PATH << endl;
     strcpy(local.sun_path, SOCK_PATH);
-    
+
     remove(local.sun_path);
     len = strlen(local.sun_path) + sizeof(local.sun_family);
-    if (bind(s, (struct sockaddr *)&local, len) == -1) {
+    if (bind(s, (struct sockaddr *)&local, len) == -1)
+    {
         perror("bind");
         exit(1);
     }
 
-    if (listen(s, 5) == -1) {
+    if (listen(s, 5) == -1)
+    {
         perror("listen");
         exit(1);
     }
@@ -182,8 +185,8 @@ int AcquireImages(CameraPtr pCam, INodeMap & nodeMap , INodeMap & nodeMapTLDevic
         CEnumerationPtr ptrAcquisitionMode = nodeMap.GetNode("AcquisitionMode");
         if (!IsAvailable(ptrAcquisitionMode) || !IsWritable(ptrAcquisitionMode))
         {
-            cout << "Unable to set acquisition mode to continuous " 
-                << " (enum retrieval). Aborting..." << endl << endl;
+            cout << "Unable to set acquisition mode to continuous "
+                 << " (enum retrieval). Aborting..." << endl << endl;
             return -1;
         }
 
@@ -191,8 +194,8 @@ int AcquireImages(CameraPtr pCam, INodeMap & nodeMap , INodeMap & nodeMapTLDevic
         CEnumEntryPtr ptrAcquisitionModeContinuous = ptrAcquisitionMode->GetEntryByName("Continuous");
         if (!IsAvailable(ptrAcquisitionModeContinuous) || !IsReadable(ptrAcquisitionModeContinuous))
         {
-            cout << "Unable to set acquisition mode to continuous " << 
-                " (entry retrieval). Aborting..." << endl << endl;
+            cout << "Unable to set acquisition mode to continuous " <<
+                 " (entry retrieval). Aborting..." << endl << endl;
             return -1;
         }
 
@@ -221,8 +224,8 @@ int AcquireImages(CameraPtr pCam, INodeMap & nodeMap , INodeMap & nodeMapTLDevic
         if (IsAvailable(ptrStringSerial) && IsReadable(ptrStringSerial))
         {
             deviceSerialNumber = ptrStringSerial->GetValue();
-            cout << "Device serial number retrieved " << deviceSerialNumber 
-                << endl;
+            cout << "Device serial number retrieved " << deviceSerialNumber
+                 << endl;
         }
 
 
@@ -236,8 +239,8 @@ int AcquireImages(CameraPtr pCam, INodeMap & nodeMap , INodeMap & nodeMapTLDevic
 
                 if ( pResultImage->IsIncomplete() ) /* Image is incomplete. */
                 {
-                    cout << "[WARN] Image incomplete with image status " << 
-                        pResultImage->GetImageStatus() << " ..." << endl;
+                    cout << "[WARN] Image incomplete with image status " <<
+                         pResultImage->GetImageStatus() << " ..." << endl;
                 }
                 else
                 {
@@ -354,7 +357,8 @@ int RunSingleCamera(CameraPtr pCam, int socket)
 
         CFloatPtr ptrAcquisitionFrameRate = nodeMap.GetNode("AcquisitionFrameRate");
 
-        try {
+        try
+        {
             cout << "Trying to set frame rate to " << EXPECTED_FPS << endl;
             ptrAcquisitionFrameRate->SetValue( EXPECTED_FPS );
         }
@@ -364,7 +368,7 @@ int RunSingleCamera(CameraPtr pCam, int socket)
             cout << "\tError was " << e.what( ) << endl;
         }
 
-        if (!IsAvailable(ptrAcquisitionFrameRate) || !IsReadable(ptrAcquisitionFrameRate)) 
+        if (!IsAvailable(ptrAcquisitionFrameRate) || !IsReadable(ptrAcquisitionFrameRate))
             cout << "Unable to retrieve frame rate. " << endl << endl;
         else
         {

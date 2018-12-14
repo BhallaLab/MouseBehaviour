@@ -7,7 +7,7 @@
 
 #include "protocol.h"
 
-#define         SESSION_TYPE        'S'
+#define         CS_TYPE             'S'
 #define         SESSION_NUM         1
 #define         ANIMAL_NAME         "k3"
 

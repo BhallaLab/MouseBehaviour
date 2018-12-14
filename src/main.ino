@@ -246,7 +246,7 @@ void print_trial_info( )
     Serial.print( " SESSION NUM: " );
     Serial.print( SESSION_NUM );
     Serial.print( " SESSION TYPE: " );
-    Serial.println( SESSION_TYPE );
+    Serial.println( CS_TYPE );
 }
 
 
@@ -372,9 +372,9 @@ void do_trial( size_t trial_num, int cs_type, bool isprobe = false )
 
     /*-----------------------------------------------------------------------------
      *  CS: 50 ms duration. No tone is played here. Write LED pin to HIGH.
-     *  Play CS only when SESSION_TYPE is not 5.
+     *  Play CS only when CS_TYPE is not 5.
      *-----------------------------------------------------------------------------*/
-    if( 1 == SESSION_TYPE )
+    if( 1 == CS_TYPE )
     {
         sprintf( trial_state_, "NOCS" );
         duration =  PROTO_CSDuration;
@@ -403,7 +403,7 @@ void do_trial( size_t trial_num, int cs_type, bool isprobe = false )
     /*-----------------------------------------------------------------------------
      *  US for 50 ms if trial is not a probe type.
      *-----------------------------------------------------------------------------*/
-    if( 1 == SESSION_TYPE || 2 == SESSION_TYPE )
+    if( 1 == CS_TYPE || 2 == CS_TYPE )
     {
         sprintf( trial_state_, PROTO_USValue );
         duration =  PROTO_USDuration;
@@ -469,10 +469,10 @@ void loop()
         reset_watchdog( );
 
         // These are normal trial with either SOUND or LIGHT.
-        if( SESSION_TYPE == 'S' || SESSION_TYPE == 'L' )
+        if( CS_TYPE == 'S' || CS_TYPE == 'L' )
         {
             int cs_type = SOUND;
-            if( 'L' == SESSION_TYPE )
+            if( 'L' == CS_TYPE )
                 cs_type = LIGHT;
 
             bool isprobe = false;
@@ -490,7 +490,7 @@ void loop()
 	* MIXED TRIALS
 	*************************************************************************/
 
-        else if( 'M' == SESSION_TYPE )  // These are mixed trials.
+        else if( 'M' == CS_TYPE )  // These are mixed trials.
         {
             // Every 5, 10, 15 etc trial is proble trials.
             bool isprobe = false;
