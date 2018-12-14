@@ -106,6 +106,7 @@ assert sock, "Can't read socket path from configuration file"
 sock_name_ = sock
 img_shape_ = (h_, w_)
 frame_size_ = img_shape_[0] * img_shape_[1]
+logging.info( 'FRAME SIZE %d' % frame_size_ )
 
 # Maximum allowed frame in each trial. This is guard against RAM overflow in
 # case arduino failes to update trial count. 
@@ -171,11 +172,10 @@ def arduino_client(writeP, trialIndex, cameraPinValue):
 
     while not finished_all_:
         line = read_line()
-        logging.info( '%s' % line )
+        #  logging.debug( '%s' % line )
         writeP.send(line)
         data = line_to_data( line )
         if len( data ) < 10:
-            #  logging.warn( 'Bad line: ' + line )
             #  print( 'x', end='')
             #  sys.stdout.flush()
             continue
@@ -184,6 +184,8 @@ def arduino_client(writeP, trialIndex, cameraPinValue):
         trialNum = int(data[3])
         #  print( '[DEBUG] %s' % line )
         trialIndex.value = trialNum 
+        #  print(end='.')
+        #  sys.stdout.flush()
 
         # 5th from the last value in data line is camera.
         with cameraPinValue.get_lock():
@@ -206,9 +208,8 @@ def init_arduino_client():
 
 
 def send_command():
-    # all commands should be two characters long
-    # This function must be last one after all the threads/processes have been
-    # launched.
+    # This function must be last one 
+    # the threads/processes have been launched before this is called first time.
     global select_sent_
     global finished_all_
     command = ""
@@ -320,22 +321,24 @@ def camera_client(readP, trialIndex, cameraPinValue):
 
     # Camera socket 
     s = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+    s.settimeout(1)
     # Connect to socket. Try only for 5 seconds.
     stamp = time.time()
-    while not finished_all_:
+    connected = False
+    while (not finished_all_) and (not connected):
         if (time.time() - stamp) > 5:
-            print('[INFO] Timeout in connecting socket. Quitting')
+            logging.info('Timeout in connecting socket. Quitting')
             finished_all_ = True
             break
         try:
-            print( '[INFO] Trying to connect to %s' % sock_name_ )
+            logging.info( 'Trying to connect to %s' % sock_name_ )
             s.connect(sock_name_)
-            break
+            connected = True
         except Exception as e:
-            print( '\t Error was %s' % e )
+            logging.error( 'Error was %s' % e )
             time.sleep(1)
 
-    print( '[INFO] Connected with arduino board' )
+    logging.info( 'Connected with camera server.' )
     totalBytesRead = 0
     totalFrames = 0
     buf = ''
@@ -350,7 +353,12 @@ def camera_client(readP, trialIndex, cameraPinValue):
 
     curSpeed = 0.0
     while not finished_all_:
-        data = s.recv(frame_size_)
+        data = ''
+        try:
+            data = s.recv(frame_size_)
+        except socket.timeout as e:
+            logging.warn( 'Could not read from camera socket. Timed out' )
+            continue
         buf += data
         if len(buf) >= frame_size_:
             now = datetime.datetime.now().isoformat()
@@ -408,6 +416,7 @@ def camera_client(readP, trialIndex, cameraPinValue):
 
             # Fill txt to have its length equal to frame width
             txt += ' ' * (img_shape_[1] - len(txt))
+            logging.info( txt )
 
             # Convert txt to binary and prefix to the img we got from camera
             # server.
@@ -426,24 +435,22 @@ def camera_client(readP, trialIndex, cameraPinValue):
 
             # Show every 15th frame.
             if totalFrames % 15 == 0:
+                logging.info( 'Showing frame %d' % totalFrames )
                 show_frame( img )
-                # show_frame( np.vstack( (infile, outfile )) )
 
                 # Enable the following if you want to see the blink data on
                 # separate plot window. Slows down frame rate a bit ~ 10 to
                 # 20 FPS.
-
                 if len(bbox_) == 2:
                     y1, y2 = np.array(blinks_[-2000:]), np.array(speed_[-2000:])
                     if len( blinks_ ) > 10:
                         try:
                             pg.plot((np.arange(len(y1)), y1), (np.arange(len(y2)), y2))
                         except Exception as e:
-                            print( 'Failed to launch gnuplot %s' % e )
+                            logging.warn( 'Failed to launch gnuplot %s' % e )
             buf = buf[frame_size_:]
 
         totalFrames += 1
-        
         # Write to file and set flag to OFF.
         if writeTrial_:
             framesInStack = 0
@@ -456,7 +463,6 @@ def camera_client(readP, trialIndex, cameraPinValue):
             print( '[INFO] Too many frames in buffer.. flusing ' )
             save_img_stack(image_stack_, -1 )
             init_stack( )
-
 
 def main():
     # Lock so that only one process prints to console at a time.
@@ -476,21 +482,22 @@ def main():
     cam = Process(target=camera_client, args=(readP,trialIndex, cameraPinValue))
     cam.daemon = True
     cam.start()
-    print('Camera client launched')
+    logging.info('Camera client launched')
 
-    arduinoP = Process(
-            target=arduino_client,
+    arduinoP = Process(target=arduino_client,
             args=(writeP, trialIndex, cameraPinValue)
             )
     arduinoP.daemon = True
     arduinoP.start()
-    print("Arduino client launched")
+    logging.info("Arduino client launched")
 
     try:
         send_command()
     except Exception as e:
         print('Got %s in send_comamnd' % e)
         finished_all_ = True
+        arduinoP.join()
+        cam.join()
         raise KeyboardInterrupt
 
     arduinoP.join()
