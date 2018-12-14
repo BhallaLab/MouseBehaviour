@@ -40,9 +40,7 @@ CXXFLAGS_STD      = -std=c++1y
 # We treat most warnings as error. Some warnings are not treated as errors due
 # to various reasons. The arduino library itself has many errors which we become
 # very strict about warnings.
-CXXFLAGS         += -Wall -Wextra -Werror \
-		    -Wno-sign-compare \
-		    -Wno-unused-parameter -Wno-unused-function -Wno-unused-variable \
+CXXFLAGS         += -Wall -Wextra -pedantic
 
 # MONITOR_PORT
 # The port your board is connected to. Using an '*' tries all the ports and finds the right one.

@@ -7,7 +7,7 @@
 
 #include "protocol.h"
 
-#define         SESSION_TYPE        '@SESSION_TYPE@'
+#define         CS_TYPE             '@CS_TYPE@'
 #define         SESSION_NUM         @SESSION_NUM@
 #define         ANIMAL_NAME         "@ANIMAL_NAME@"
 
