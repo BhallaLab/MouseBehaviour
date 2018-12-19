@@ -7,11 +7,11 @@ project(EyeBlinkBehavour)
 find_package( PythonInterp REQUIRED )
 
 if( NOT PORT )
-execute_process( 
-    COMMAND bash ${CMAKE_SOURCE_DIR}/scripts/list_serial_ports.sh 
-    OUTPUT_VARIABLE PORT 
-    OUTPUT_STRIP_TRAILING_WHITESPACE
-    )
+    execute_process( 
+        COMMAND bash ${CMAKE_SOURCE_DIR}/scripts/list_serial_ports.sh 
+        OUTPUT_VARIABLE PORT 
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+        )
 endif(NOT PORT)
 
 if (NOT PORT )
@@ -37,30 +37,9 @@ set(ARDUINO_PROJECT_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 set(ARDUINO_EXTRA_CXXFLAGS "")
 
 set(BOARD_TAG   uno)
-set(BAUD_RATE   38400)
+# Baud rate of 115200 roughly translates to 115 char per 10ms. 
+set(BAUD_RATE   115200)
 find_program(ARDUINO_BIN arduino )
-
-# Set mouse path.
-if( NOT MOUSE_PATH )
-    message( STATUS "Searching for Logitech mouse" )
-    execute_process( 
-        COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/scripts/find_Logitech_mouse.sh
-        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-        TIMEOUT 5
-        OUTPUT_VARIABLE MOUSE_PATH 
-        OUTPUT_STRIP_TRAILING_WHITESPACE )
-endif( )
-
-if(MOUSE_PATH)
-    message( STATUS "Found Logitech mouse: ${MOUSE_PATH}" )
-else(MOUSE_PATH)
-    message( FATAL_ERROR "CMake could not find Logitech mouse. " 
-        "Make sure it is connected to laptop. You can also specify mouse by "
-        " setting the MOUSE_PATH variable "
-        "     $ cmake -DMOUSE_PATH=/dev/input/mouse2 "
-        " etc. "
-        )
-endif( )
 
 set(ARDUINO_BOARD_FILE hardware/arduino/boards.txt)
 find_path( ARDUINO_DIR 
@@ -70,21 +49,6 @@ find_path( ARDUINO_DIR
     )
 message( STATUS "Arduino location ${ARDUINO_DIR}" )
 
-find_path( ARDUINO_LIQUID_LIB_DIRS 
-    NAMES LiquidCrystal.h 
-    PATHS /usr/share/arduino /opt
-    PATH_SUFFIXES libraries/LiquidCrystal
-    )
-
-# Find directory where LiquidCrystal is installed.
-message( STATUS "Liquid crystal library ${ARDUINO_LIQUID_LIB_DIRS}" )
-if( ARDUINO_LIQUID_LIB_DIRS )
-    set(ARDUINO_EXTRA_CXXFLAGS 
-        "${ARDUINO_EXTRA_CXXFLAGS} -I${ARDUINO_LIQUID_LIB_DIRS}"
-    )
-endif( )
-
-
 if(NOT ARDUINO_DIR)
     message(FATAL_ERROR "Arduino board list not found")
 endif( )
@@ -93,36 +57,46 @@ message(STATUS "List of arduino boards ${ARDUINO_DIR}")
 ################################################################################
 # Animal related options.
 ################################################################################
-if( (NOT ANIMAL_NAME) OR (NOT SESSION_TYPE) OR (NOT SESSION_NUM) )
-    message( FATAL_ERROR 
-        "Please pass ANIMAL_NAME, SESSION_NUM and SESSION_TYPE to cmake \n"
-        "\te.g cmake -DANIMAL_NAME=k3 -DSESSION_NUM=1 -DSESSION_TYPE=S .. \n"
+if((NOT ANIMAL_NAME) OR (NOT CS_TYPE) OR (NOT SESSION_NUM) OR (NOT PROTO_CODE))
+    message(FATAL_ERROR 
+        "Set ANIMAL_NAME, SESSION_NUM, CS_TYPE, and PROTO_CODE to cmake; e.g. \n"
+        "\tcmake -DANIMAL_NAME=k3 -DSESSION_NUM=1 -DCS_TYPE=S -DPROTO_CODE=All1 ..\n"
+        "For info on protocols, see file 'Protocols/BehaviourProtocols.xlsx'"
+        " in the top directory."
         )
-endif ( )
+endif()
 
-# Data directory for given session and animal
-set(DATADIR "$ENV{HOME}/DATA/${ANIMAL_NAME}/${ANIMAL_NAME}_${SESSION_TYPE}_${SESSION_NUM}")
+# For given PROTO_CODE generate config file. find_package(PythonInterp REQUIRED)
+message(STATUS "User asked for protocol code: ${PROTO_CODE}")
+execute_process(COMMAND 
+    ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/Protocols/protocol_to_config.py ${PROTO_CODE}
+    OUTPUT_VARIABLE PROTOCOL_CONFIG
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/Protocols
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+    )
+message(STATUS "Writing protocol ${PROTO_CODE} config to file.")
+file(WRITE ${CMAKE_CURRENT_SOURCE_DIR}/src/protocol.h "${PROTOCOL_CONFIG}")
 
-# Python script handle this.
-# file(MAKE_DIRECTORY ${DATADIR})
-
+# Set DATA DIRirectory to store data for given animal, session, and protocol
+# code. No need to create this directory from CMake, python script which saves
+# data takes care for it.
+set(DATADIR "$ENV{HOME}/DATA/${ANIMAL_NAME}/${ANIMAL_NAME}_${CS_TYPE}_${SESSION_NUM}_${PROTO_CODE}")
 
 configure_file( ${CMAKE_SOURCE_DIR}/Makefile.arduino.in
     ${CMAKE_SOURCE_DIR}/Makefile.arduino
     )
 
-
-set(ARDUINO_TARGET_NAME eyeBlinkBehaviour)
+set(ARDUINO_TARGET_NAME protocol_${PROTO_CODE})
 set(ARDUINO_SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
 
 # Write variables to config.h file.
 configure_file( ${ARDUINO_SRC_DIR}/config.h.in ${ARDUINO_SRC_DIR}/config.h )
-
 set(ARDDUINO_OUT_HEX_FILE 
     ${CMAKE_SOURCE_DIR}/${BOARD_NAME}/${ARDUINO_TARGET_NAME}/${ARDUINO_TARGET_NAME}.hex 
     )
 
-add_custom_target( build_arduino_hex  ALL DEPENDS ${ARDDUINO_OUT_HEX_FILE}
+add_custom_target( build_arduino_hex ALL 
+    DEPENDS ${ARDDUINO_OUT_HEX_FILE}
     VERBATIM 
     )
 
@@ -165,13 +139,12 @@ file(WRITE $ENV{HOME}/.gnuplot "set fit quiet; " )
 
 # Pass animal options to run.sh which will will passed to python script.
 SET(RUN_ARGS 
-    -p ${PORT} -n ${ANIMAL_NAME} -sn ${SESSION_NUM} -st ${SESSION_TYPE} 
+    -p ${PORT} -n ${ANIMAL_NAME} -sn ${SESSION_NUM} -ct ${CS_TYPE} 
      )
 
 # Copy python files into current working directory.
 file(COPY ${CMAKE_SOURCE_DIR}/eyeblinkdetector/extract.py 
         ${CMAKE_SOURCE_DIR}/blinky.py 
-        ${CMAKE_SOURCE_DIR}/mouse_server.py
         DESTINATION ${CMAKE_BINARY_DIR}
      )
 
@@ -185,5 +158,5 @@ add_custom_target( run
     VERBATIM
     )
 
-# Now  add the client and server 
+# Now add the client and server 
 add_subdirectory( ${CMAKE_SOURCE_DIR}/PointGreyCamera )
