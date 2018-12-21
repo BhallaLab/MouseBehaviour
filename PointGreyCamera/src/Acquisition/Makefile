@@ -9,21 +9,20 @@ CFLAGS += -std=c++11
 CC = g++ ${CFLAGS}
 OUTPUTNAME = Acquisition${D}
 OUTDIR = ../../bin
-OUTDIR = bin
 
 ################################################################################
 # Dependencies
 ################################################################################
 # Spinnaker deps
-SPINNAKER_LIB = -L../../spinnaker_1_0_0_270_amd64/lib -lSpinnaker${D}
+SPINNAKER_LIB = -L../../lib -lSpinnaker${D}
 
 ################################################################################
 # Master inc/lib/obj/dep settings
 ################################################################################
 OBJ = Acquisition.o
-INC = -I../../spinnaker_1_0_0_270_amd64/include/
+INC = -I../../include
 LIB += -Wl,-Bdynamic ${SPINNAKER_LIB} 
-LIB += -Wl,-rpath-link=../../spinnaker_1_0_0_270_amd64/lib
+LIB += -Wl,-rpath-link=../../lib 
 
 ################################################################################
 # Rules/recipes
