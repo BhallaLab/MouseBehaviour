@@ -190,11 +190,12 @@ def arduino_client(writeP, trialIndex, cameraPinValue):
 
         # 5th from the last value in data line is camera.
         with cameraPinValue.get_lock():
-            if data[-5].isdecimal():
+            try:
                 cameraPinValue.value = int(data[-5])
-                assert(cameraPinValue.value in [0,1])
-            else:
+                assert cameraPinValue.value in [0,1], 'Invalid camera value'
+            except Exception as e:
                 print( 'x', end = '' )
+                pass
 
         # NOTE: Write arduino data separately in a single file.
         append_trial_data(trial_file_path( trialNum ), line )
