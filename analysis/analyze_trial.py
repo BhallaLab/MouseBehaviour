@@ -1,10 +1,5 @@
-#!/usr/bin/env python
-
-"""analyze_trial.py: 
-
-Analyze each trial.
-
-"""
+#!/usr/bin/env python2
+from __future__ import print_function
     
 __author__           = "Dilawar Singh"
 __copyright__        = "Copyright 2016, Dilawar Singh "
@@ -116,7 +111,6 @@ def plot_trial_data( trial_data_, trialdir, outfile ):
         allBlinks.append( d['blinks'] )
         if d['is_probe'] == True:
             probeTrial.append( i )
-        
 
     tmins, tmaxs = [ ], [ ]
     for t in times:
@@ -150,6 +144,8 @@ def plot_trial_data( trial_data_, trialdir, outfile ):
     numTicks = 10
     stepSize = int(len(newTVec) / numTicks)
     xlabels = [ '%d' % int(1000 * x) for x in newTVec[::stepSize] ]
+    print( 'No of probe trials : %d' % len(probeImg) )
+    print( 'No of other trials: %s' % len(img) )
 
     ax1 = plt.subplot( 221 )
     plt.imshow( img, interpolation = 'none', aspect = 'auto' )

@@ -59,6 +59,13 @@ function kill_acquition_from_point_grey( )
     find /mnt/ramdisk -user $USER -print0 | xargs -0 rm
 }
 
+function kill_acquition_from_mouse( )
+{
+    echo "Ctrl+c pressed. Terminating processes  $1"
+    kill_process $1
+}
+
+
 
 # First, we execute the binary file acquition_from_point_grey  in background and
 # save its PID. We can use the PID to kill this process.
@@ -97,7 +104,9 @@ fi
 # Now run python script to acquire data. If user press Ctrl+c to stop it, we
 # must send ctrl+c to PID acquition_from_point_grey app as well.
 echo "Launching ardunio+camera client with options: $@"
+set +e
 python ./camera_arduino_client.py $@
+set -e
 
 # If we have come here successfully, cleanup.
 killall $(basename $COMMAND) || echo "Nothing to kill"
