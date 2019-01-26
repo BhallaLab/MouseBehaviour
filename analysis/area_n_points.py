@@ -19,7 +19,7 @@ def theta(x2, y2, x1, y1):
     return math.atan2(y2-y1, x2-x1)
 
 def sort_points(ps, x0, y0):
-    psorted = sorted(ps, key=lambda p: theta(*p, x0, y0))
+    psorted = sorted(ps, key=lambda p: theta(p[0], p[1], x0, y0))
     return psorted
 
 def areaTriangle( p1, p2, p3 ):
@@ -55,12 +55,12 @@ def test():
     plt.plot( [x0], [y0], 'x' )
     for i, (p1, p2) in enumerate(zip(sortedPs, sortedPs[1:]+[sortedPs[0]])):
         color = (random.random(), random.random(), random.random())
-        x1, y1, x2, y2 = *p1, *p2
+        (x1, y1), (x2, y2) = p1, p2
         plt.plot( [x1, x2], [y1, y2], color=color )
         plt.plot( [x0, x1], [y0, y1], color=color )
         plt.annotate(str(i), (x1, y1))
 
-    plt.savefig( f'{__file__}.png' )
+    plt.savefig( '%s.png' % __file__ )
 
     a = compute_area( X, Y )
     print( 'Area is %f' % a )
