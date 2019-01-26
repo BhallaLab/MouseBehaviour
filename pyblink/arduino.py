@@ -1,7 +1,6 @@
-"""arduino.py: 
-
-    Helper functions to communicate with arduino.
-
+# -*- coding: utf-8 -*-
+"""
+Helper functions to communicate with arduino.
 """
 from __future__ import print_function
     
@@ -19,11 +18,9 @@ import serial
 import serial.tools.list_ports 
 import config
 import logging
-#logging = logging.getLogger('')
 
 # Create a class to handle serial port.
 class ArduinoPort( ):
-
     def __init__(self, path, baud_rate = 38400, **kwargs):
         self.path = path
         config.args_.port = path
