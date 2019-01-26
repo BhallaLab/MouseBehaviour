@@ -22,19 +22,19 @@ def extractData(abf):
     for sl in abf.sweepList:
         abf.setSweep(sl)
         x, y = abf.sweepX, abf.sweepY
-        df[ f'Time' ] = x
-        df[ f'Trace {sl}' ] = y
+        df[ 'Time' ] = x
+        df[ 'Trace %s'%sl ] = y
     return df
 
 def plotFigure( df, outfile ):
     import matplotlib.pyplot as plt
     df.plot()
     plt.savefig( outfile )
-    print( f'[INFO] Saved to {outfile}' )
+    print( '[INFO] Saved to %s' % outfile )
 
 def saveData( df, outfile ):
     df.to_csv( outfile, index = False )
-    print( f'[INFO] Saved to {outfile}' )
+    print( '[INFO] Saved to %s' % outfile )
 
 def main(args):
     abf = pyabf.ABF( args.input )
