@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""abf2other.py: 
-"""
-    
+
 __author__           = "Dilawar Singh"
 __copyright__        = "Copyright 2017-, Dilawar Singh"
 __version__          = "1.0.0"
