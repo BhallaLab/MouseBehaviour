@@ -377,7 +377,10 @@ def camera_client(readP, trialIndex, cameraPinValue):
                 txt += ',' + readP.recv()
                 data = line_to_data(txt)
                 if len(data) > 10:
-                    curSpeed = float(data[-1])
+                    try:
+                        curSpeed = float(data[-1])
+                    except Exception as e:
+                        print(e)
 
             if len(bbox_) == 2:
                 # print( 'Bounding box has been drawn : %s' % str(bbox_) )
