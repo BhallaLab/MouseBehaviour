@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 from __future__ import print_function, division
 
@@ -173,7 +172,7 @@ def arduino_client(writeP, trialIndex, cameraPinValue):
 
     while not finished_all_:
         line = read_line()
-        #  logging.debug( '%s' % line )
+        logging.debug( '%s' % line )
         writeP.send(line)
         data = line_to_data( line )
         if len( data ) < 10:
