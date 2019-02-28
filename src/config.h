@@ -7,9 +7,9 @@
 
 #include "protocol.h"
 
-#define         CS_TYPE             'S'
+#define         CS_TYPE             '5'
 #define         SESSION_NUM         1
-#define         ANIMAL_NAME         "k3"
+#define         ANIMAL_NAME         "S66"
 
 // Pins etc.
 #define         ROTARY_ENC_A                2 
