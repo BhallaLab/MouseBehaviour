@@ -184,7 +184,6 @@ def arduino_client(writeP, trialIndex, cameraPinValue):
         trialNum = int(data[3])
         trialIndex.value = trialNum 
         # 5th from the last value in data line is camera.
-        print(data)
         with cameraPinValue.get_lock():
             cameraPinValue.value = int(data[-5])
             assert cameraPinValue.value in [0,1], 'Invalid camera value'
