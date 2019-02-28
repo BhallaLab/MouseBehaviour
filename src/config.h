@@ -7,7 +7,7 @@
 
 #include "protocol.h"
 
-#define         CS_TYPE             '5'
+#define         CS_TYPE             'S'
 #define         SESSION_NUM         1
 #define         ANIMAL_NAME         "S66"
 

@@ -1,6 +1,7 @@
 """
 Extract a csv file out of video file representing eye blinks.
 
+python3 only.
 """
     
 __author__           = "Dilawar Singh"
@@ -15,8 +16,9 @@ __status__           = "Development"
 import cv2
 import numpy as np
 import os
+import sys
 
-
+assert sys.version_info.major == 3
 
 def merge_contours(cnts, img):
     """Merge these contours together. And create an image"""
@@ -24,7 +26,6 @@ def merge_contours(cnts, img):
         hull = cv2.convexHull(c)
         cv2.fillConvexPoly(img, hull, 0)
     return img
-
 
 def accept_contour_as_possible_eye( contour, threshold = 0.1 ):
     # The eye has a certain geometrical shape. If it can not be approximated by
@@ -59,9 +60,9 @@ def find_blinks_using_pixals( frame ):
 
     # Read the signal from half of the boundbox.
     rs, cs = newframe.shape
-    r0, c0 = rs / 2, cs / 2
-    signal = np.sum( newframe[r0-rs/4:r0+rs/4,c0-cs/4:c0+cs/4] )
-    return frame, newframe, 1.0 * signal / float(rs*cs/4), -1
+    r0, c0 = int(rs//2), int(cs//2)
+    signal = np.sum(newframe[r0-rs//4:r0+rs//4,c0-cs//4:c0+cs//4])
+    return frame, newframe, 1.0*signal/rs*cs/4, -1
 
 
 def process_frame(frame, method = 0):
