@@ -1,6 +1,4 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from __future__ import print_function, division
 
 __author__     = "Dilawar Singh"
 __copyright__  = "Copyright 2016, Dilawar Singh"
@@ -58,6 +56,13 @@ def to_float( x ):
         return x
     except Exception as e:
         return float( 'nan' )
+
+def float_or_same(x):
+    try:
+        x = float(x)
+    except Exception as e:
+        pass
+    return x
 
 def onmouse(event, x, y, flags, params):
     global bbox_
@@ -141,7 +146,7 @@ def trial_file_path( trial = 0 ):
 def cleanup():
     global finished_all_
     finished_all_ = True
-    config.serial_port_.write_msg('r')
+    config.serial_port_.write_msg(b'r')
     print("+++++++++++++++++++++++++++++ All over")
 
 
@@ -152,12 +157,9 @@ def append_trial_data(outfile, line ):
 def read_line():
     """Append timestamp at which this line was read 
     """
-    now = datetime.datetime.now().isoformat()
-    try:
-        line = config.serial_port_.read_line().decode('utf8', errors='ignore')
-    except Exception as e:
-        line = config.serial_port_.read_line()
-    line = now + ',' + line.replace(' ', '')
+    now = datetime.datetime.now().isoformat().encode('utf8')
+    line = config.serial_port_.read_line()
+    line = now + b',' + line
     return line
 
 
@@ -173,31 +175,23 @@ def arduino_client(writeP, trialIndex, cameraPinValue):
 
     while not finished_all_:
         line = read_line()
-        #  logging.debug( '%s' % line )
+        logging.debug( '%s' % line )
         writeP.send(line)
-        data = line_to_data( line )
-        if len( data ) < 10:
-            #  print( 'x', end='')
-            #  sys.stdout.flush()
+        data = line_to_data(line)
+        if len(data) < 10:
             continue
-
         code = data[2]
         trialNum = int(data[3])
-        #  print( '[DEBUG] %s' % line )
         trialIndex.value = trialNum 
-        #  print(end='.')
-        #  sys.stdout.flush()
-
         # 5th from the last value in data line is camera.
         with cameraPinValue.get_lock():
             cameraPinValue.value = int(data[-5])
-            assert(cameraPinValue.value in [0,1])
+            assert cameraPinValue.value in [0,1], 'Invalid camera value'
 
         # NOTE: Write arduino data separately in a single file.
         append_trial_data(trial_file_path( trialNum ), line )
         if trialNum >= 101:
             finished_all_ = True
-
 
 def init_arduino_client():
     """
@@ -213,8 +207,8 @@ def send_command():
     # the threads/processes have been launched before this is called first time.
     global select_sent_
     global finished_all_
-    command = ""
-    legalCommandsBeforeStart = [ "t", "s", "p", "l", '1', '2' ]
+    command = b""
+    legalCommandsBeforeStart = [ b"t", b"s", b"p", b"l", b'1', b'2' ]
     legalCommandsAfterStart = [ ]
     validCommands = legalCommandsAfterStart + legalCommandsBeforeStart
     validStartChars = ''.join([x[0] for x in validCommands])
@@ -226,7 +220,7 @@ def send_command():
             if command in legalCommandsBeforeStart and not select_sent_:
                 logging.info("[COMMAND] Sending command: %s" % command)
                 config.serial_port_.write_msg(command)
-                if command == 's':
+                if command == b's':
                     select_sent_ = True
         elif command in [ '\x03', '\x04', '\x1a']:
             finished_all_ = True
@@ -244,26 +238,21 @@ def init_serial( baudRate=38400 ):
 def line_to_data(line):
     """First element is timestamp, rest the data etc.
     """
-    if '>' in line:
+    if b'>' in line:
         return [ ]
 
-    line = filter(None, line.split(',') )
-    data = [ ]
-    for x in line:
-        try:
-            data.append( float(x) )
-        except ValueError as e:
-            data.append( x )
+    line = line.decode('utf8', 'ignore')
+    line = filter(lambda x:len(x.strip())>0, line.split(','))
+    data = [float_or_same(x) for x in line]
     return data
-
 
 def save_img_stack(stack, index):
     global start_
     filename = os.path.join(data_dir_, 'trial_%03d.tif' % index)
     tmpfile = os.path.join('/mnt', 'ramdisk', 'tmp.tif')
     # Remove empty frame.
-    stack = np.array( filter( lambda x : np.sum( x ) > 2, stack ))
-    if len( stack ) < 1:
+    stack = np.array(filter(lambda x: np.sum(x)>2, stack))
+    if len(stack) < 1:
         print( 'Zero frames in image. Not saving' )
         return 
 
@@ -308,7 +297,7 @@ def writeTextToFrame( txt, img ):
     txt += ' ' * (img_shape_[1] - len(txt))
     # Convert txt to binary and prefix to the img we got from camera
     # server.
-    metadata = np.array(map(ord, txt), dtype=np.uint8)
+    metadata = np.fromstring(txt.decode('ascii', 'ignore'), dtype=np.uint8)
     img = np.vstack((metadata, img))
     cv2.putText(img, txt.strip()
             , (0, h_ - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.3, 200, 1
@@ -342,7 +331,7 @@ def camera_client(readP, trialIndex, cameraPinValue):
     logging.info( 'Connected with camera server.' )
     totalBytesRead = 0
     totalFrames = 0
-    buf = ''
+    buf = b''
     init_stack()
     framesInStack = 0
     trial_count = 0
@@ -354,7 +343,7 @@ def camera_client(readP, trialIndex, cameraPinValue):
 
     curSpeed = 0.0
     while not finished_all_:
-        data = ''
+        data = b''
         try:
             data = s.recv(frame_size_)
         except socket.timeout as e:
@@ -362,7 +351,7 @@ def camera_client(readP, trialIndex, cameraPinValue):
             continue
         buf += data
         if len(buf) >= frame_size_:
-            now = datetime.datetime.now().isoformat()
+            now = datetime.datetime.now().isoformat().encode('utf8')
             img = np.frombuffer(buf[:frame_size_], dtype=np.uint8)
             img = np.reshape(img, img_shape_)
             txt = now
@@ -370,21 +359,23 @@ def camera_client(readP, trialIndex, cameraPinValue):
             # This is critical.
             # Read from PIPE but it should not be blocking.
             if readP.poll(1e-4):
-                txt += ',' + readP.recv()
+                txt += b',' + readP.recv()
                 data = line_to_data(txt)
                 if len(data) > 10:
-                    curSpeed = float(data[-1])
+                    try:
+                        curSpeed = float(data[-1])
+                    except Exception as e:
+                        print(e)
 
             if len(bbox_) == 2:
                 # print( 'Bounding box has been drawn : %s' % str(bbox_) )
-                cv2.rectangle( img, bbox_[0], bbox_[1], 128 )
+                cv2.rectangle(img, bbox_[0], bbox_[1], 128)
                 (x0, y0), (x1, y1) = bbox_
                 roi = img[y0:y1,x0:x1]
                 # Equalize histogram
                 roi = cv2.equalizeHist( roi )
                 infile, outfile, res, sss = blinky.process_frame(roi, 0)
                 #cv2.imshow( 'algo', outfile )
-
                 # When camera pin goes HIGH, start writing trial.
                 if cameraPinValue.value == 1:
                     msg = '%.2f (ON)'  % res
@@ -413,20 +404,18 @@ def camera_client(readP, trialIndex, cameraPinValue):
                 speed_.append( curSpeed )
 
             # Append blink value to data.
-            txt += ',%4.3f' % blinks_[-1]
-
+            txt += b',%g' % blinks_[-1]
             # Fill txt to have its length equal to frame width
-            txt += ' ' * (img_shape_[1] - len(txt))
+            txt += b' '*(img_shape_[1] - len(txt))
             #  logging.debug( txt )
 
             # Convert txt to binary and prefix to the img we got from camera
             # server.
-            metadata = np.array(map(ord, txt), dtype=np.uint8)
-            img = np.vstack((metadata, img))
+            metadata = np.fromstring(txt.decode('ascii', 'replace'), dtype=np.uint8)
+            img = np.vstack((metadata[:img.shape[1]], img))
             if write_data_:
-                cv2.putText(img, txt.strip(), (0, h_ - 10),
-                            cv2.FONT_HERSHEY_SIMPLEX, 0.4, 128, 1
-                            )
+                cv2.putText(img, txt.strip().decode('utf8', 'replace')
+                        , (0,h_-10), cv2.FONT_HERSHEY_SIMPLEX,0.4,128,1)
 
             # Only save the frame if camera pin says so.
             if recording_:
