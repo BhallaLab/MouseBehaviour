@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 
 # originally from here: http://stackoverflow.com/questions/12090503/listing-available-com-ports-with-python
 import sys

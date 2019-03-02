@@ -23,7 +23,7 @@ Both arduino and camera must be connected to compute before doing the following.
 ## Download and setup 
 
 This code will __only__ work on Ubuntu-16.04. Install arduino, c++ compiler
-(gcc), cmake, and various python libraries. More details below.
+(gcc), cmake, and various python libraries (python3). More details below.
 
 ### Dependencies
 
@@ -33,11 +33,8 @@ them. Required libraries for PointGrey camera is in the source.
     - sudo apt install cmake g++
     - sudo apt install gnuplot-x11
     - sudo apt install libopencv-dev
-    - pip install readchar
-    - pip install gnuplotlib
-    - pip install pandas 
-    - pip install pyserial
-
+    - pip install -r requirements.txt
+    
 Download the code:
 
     $ git clone  https://github.com/BhallaLab/MouseBehaviour.git
