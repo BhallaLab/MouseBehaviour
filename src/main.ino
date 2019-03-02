@@ -102,20 +102,17 @@ void write_data_line( )
             , timestamp, PROTO_CODE, trial_count_, puff, tone, led
             , camera, microscope, trial_state_, encoder_value_
             );
-    Serial.print(msg);
 
     // sprintf does not support float. Therefore this convoluted way of printing
     // float.
-    Serial.print( ',');
     double dt = millis() - lastT_;
     lastT_ = millis();
-
     // In radian per second.
     angular_velocity_ = 1000 * 2 * 3.1416 * (encoder_value_ - prev_encoder_value_) / 2400.0 / dt;
     prev_encoder_value_ = encoder_value_;
-
+    Serial.print(msg + String(","));
     Serial.println(angular_velocity_, 5);
-    // delay( 3 );
+    delay( 3 );
 }
 
 void check_for_reset( void )

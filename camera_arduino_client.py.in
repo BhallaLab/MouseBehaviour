@@ -132,8 +132,6 @@ else:
     data_dir_ = os.path.join( "@DATADIR@", now )
     os.makedirs(data_dir_)
 
-
-
 # Arduino data storate
 def trial_file_path( trial = 0 ):
     filename = "name=%s_st=%s_sn=%s" % (
@@ -175,19 +173,27 @@ def arduino_client(writeP, trialIndex, cameraPinValue):
 
     while not finished_all_:
         line = read_line()
-        logging.debug( '%s' % line )
         writeP.send(line)
         data = line_to_data(line)
-        if len(data) < 12:
-            logging.warn( 'Invalid line: %s' %  line) 
+        if len(data) != 12:
             continue
+
         code = data[2]
-        trialNum = int(data[3])
-        trialIndex.value = trialNum 
+        try:
+            trialNum = int(data[3])
+            trialIndex.value = trialNum 
+        except Exception as e:
+            print( "[WARN] Invalid value at index 4. Need int. %" % line)
+            finished_all_ = True 
+
         # 5th from the last value in data line is camera.
         with cameraPinValue.get_lock():
-            cameraPinValue.value = int(data[-5])
-            assert cameraPinValue.value in [0,1], 'Invalid camera value'
+            try:
+                cameraPinValue.value = int(data[-5])
+                assert cameraPinValue.value in [0,1], 'Invalid camera value'
+            except Exception as e:
+                print( "[WARN] Invalid value at index -5. Need int. %" % line)
+                finished_all_ = True 
 
         # NOTE: Write arduino data separately in a single file.
         append_trial_data(trial_file_path( trialNum ), line )
