@@ -107,7 +107,6 @@ void write_data_line( )
     // sprintf does not support float. Therefore this convoluted way of printing
     // float.
     Serial.print( ',');
-
     double dt = millis() - lastT_;
     lastT_ = millis();
 
@@ -115,7 +114,7 @@ void write_data_line( )
     angular_velocity_ = 1000 * 2 * 3.1416 * (encoder_value_ - prev_encoder_value_) / 2400.0 / dt;
     prev_encoder_value_ = encoder_value_;
 
-    Serial.println( angular_velocity_, 10 );
+    Serial.println(angular_velocity_, 5);
     // delay( 3 );
 }
 
@@ -232,8 +231,8 @@ void wait_for_start( )
             char c = Serial.read( );
             if( c != -1 )
             {
-                Serial.print( ">>> Unknown command : " );
-                Serial.println( c );
+                Serial.print( ">>> Unknown command: " );
+                Serial.println(c);
             }
         }
     }

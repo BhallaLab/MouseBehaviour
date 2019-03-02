@@ -178,7 +178,8 @@ def arduino_client(writeP, trialIndex, cameraPinValue):
         logging.debug( '%s' % line )
         writeP.send(line)
         data = line_to_data(line)
-        if len(data) < 10:
+        if len(data) < 12:
+            logging.warn( 'Invalid line: %s' %  line) 
             continue
         code = data[2]
         trialNum = int(data[3])
@@ -207,25 +208,26 @@ def send_command():
     # the threads/processes have been launched before this is called first time.
     global select_sent_
     global finished_all_
-    command = b""
-    legalCommandsBeforeStart = [ b"t", b"s", b"p", b"l", b'1', b'2' ]
-    legalCommandsAfterStart = [ ]
+    command = ""
+    legalCommandsBeforeStart = ["t", "s", "p", "l", '1', '2']
+    legalCommandsAfterStart = []
     validCommands = legalCommandsAfterStart + legalCommandsBeforeStart
     validStartChars = ''.join([x[0] for x in validCommands])
     print('[INFO] Executing send command loop')
     while True:
-        # This is blocking.
+        # This is blocking. Arduino only understand ascii.
         command = readchar.readkey()
+        if not command:
+            continue
         if command in validCommands:
             if command in legalCommandsBeforeStart and not select_sent_:
-                logging.info("[COMMAND] Sending command: %s" % command)
+                logging.info("[COMMAND] Sending command: %s (%d)" % (command, ord(command)))
                 config.serial_port_.write_msg(command)
                 if command == b's':
                     select_sent_ = True
         elif command in [ '\x03', '\x04', '\x1a']:
             finished_all_ = True
             break
-
 
 def init_serial( baudRate=38400 ):
     if config.args_.port is None:
@@ -251,7 +253,7 @@ def save_img_stack(stack, index):
     filename = os.path.join(data_dir_, 'trial_%03d.tif' % index)
     tmpfile = os.path.join('/mnt', 'ramdisk', 'tmp.tif')
     # Remove empty frame.
-    stack = np.array(filter(lambda x: np.sum(x)>2, stack))
+    stack = np.array(list(filter(lambda x: np.sum(x)>2, stack)))
     if len(stack) < 1:
         print( 'Zero frames in image. Not saving' )
         return 
@@ -486,7 +488,7 @@ def main():
     try:
         send_command()
     except Exception as e:
-        print('Got %s in send_comamnd' % e)
+        print('Got command %s in send_comamnd' % e)
         finished_all_ = True
         arduinoP.join()
         cam.join()
