@@ -9,7 +9,7 @@
 
 #define         CS_TYPE             'S'
 #define         SESSION_NUM         1
-#define         ANIMAL_NAME         "S66"
+#define         ANIMAL_NAME         "k3"
 
 // Pins etc.
 #define         ROTARY_ENC_A                2 

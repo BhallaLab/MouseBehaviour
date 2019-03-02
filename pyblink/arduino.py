@@ -30,12 +30,8 @@ class ArduinoPort( ):
     def open(self, wait = True):
         # ATTN: timeout is essential else realine will block.
         try:
-            print( "Trying %s with %d baudrate" % ( config.args_.port,
-                self.baudRate ) )
-            self.port = serial.serial_for_url( config.args_.port 
-                    , baudrate = self.baudRate 
-                    , timeout = 0.5
-                    )
+            print( "Trying %s with %d baudrate" % (config.args_.port, self.baudRate ) )
+            self.port = serial.serial_for_url(config.args_.port, baudrate = self.baudRate, timeout = 0.5)
         except OSError as e:
             # Most like to be a busy resourse. Wait till it opens.
             print("[FATAL] Could not connect")
@@ -66,6 +62,7 @@ class ArduinoPort( ):
         return line.strip()
 
     def write_msg(self, msg):
+        msg = msg.encode()
         logging.info('Writing %s to serial port' % msg)
         self.port.write(msg)
 
