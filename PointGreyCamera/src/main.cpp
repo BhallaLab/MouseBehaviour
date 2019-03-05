@@ -148,7 +148,8 @@ void AddToStoreHouse(Mat& mat, const string arduino)
     if(arduinoData.size() < 13)
         return;
 
-    lines_.push_back(arduino);
+    if(currentTrial > 0)
+        lines_.push_back(arduino);
 
     // Else we have valid data.
     size_t storeFrameIdx = 8;
@@ -403,16 +404,15 @@ int AcquireImages(CameraPtr pCam, INodeMap& nodeMap, INodeMap& nodeMapTLDevice)
 
             ProcessFrame( pResultImage->GetData(), width, height);
 
-            if( total_frames_ % 100 == 0)
+            if( total_frames_ % 200 == 0)
             {
                 boost::chrono::duration<double> elapsedSecs = 
                     boost::chrono::system_clock::now() - startTime;
                 fps_ = (double) total_frames_ / elapsedSecs.count();
-                cout << "[INFO] Running FPS : " << fps_ << endl;
+                cout << "[INFO] Current FPS : " << fps_ << endl;
             }
         }
     }
-
     pCam->EndAcquisition();
     return 0;
 }
