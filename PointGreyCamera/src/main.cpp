@@ -4,6 +4,7 @@
 #include <iostream>
 #include <csignal>
 #include <queue>
+#include <fstream>
 #include <exception>
 
 #include <opencv2/highgui/highgui.hpp>
@@ -56,11 +57,9 @@ string bbox_str_;
 array<int,4> bbox_={0,0,0,0};
 vector<double> gnuplotVec_(1000, 0.0);
 
-// gnuplot
-// Gnuplot gp_;
-
 // Storage for images.
 vector<Mat> frames_;
+vector<string> lines_;
 
 // queue.
 queue<string> arduinoQ_({"", "", "", "", "", "", "", "", "", ""});
@@ -121,6 +120,14 @@ void SaveAllFrames(vector<Mat>& frames, const size_t trial)
     string outfile = dataDir_ + '/' + boost::str(boost::format("%03d")%trial) + ".tiff";
     write_frames_to_tiff(outfile, frames);
     cout << "[INFO] Saved data to " << outfile << endl;
+
+    // Save CSV file.
+    string csvFile = dataDir_ + "/session_all_data.csv";
+    std::ofstream ofs;
+    ofs.open(csvFile, std::ofstream::out | std::ofstream::app);
+    for(auto l : lines_) ofs << l << endl;
+    ofs.close();
+    lines_.clear();
 }
 
 /* --------------------------------------------------------------------------*/
@@ -140,6 +147,8 @@ void AddToStoreHouse(Mat& mat, const string arduino)
     boost::split(arduinoData, arduino, boost::is_any_of(","));
     if(arduinoData.size() < 13)
         return;
+
+    lines_.push_back(arduino);
 
     // Else we have valid data.
     size_t storeFrameIdx = 8;
