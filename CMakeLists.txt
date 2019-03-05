@@ -1,11 +1,12 @@
 cmake_minimum_required(VERSION 2.8)
 project(EyeBlinkBehavour)
 
+find_program(PYTHON_EXECUTABLE python3)
+message(STATUS "Found python3 ${PYTHON_EXECUTABLE}")
+
 ################################################################################
 # ARDUINO BOARD 
 ################################################################################
-find_package( PythonInterp REQUIRED )
-
 if( NOT PORT )
     execute_process( 
         COMMAND bash ${CMAKE_SOURCE_DIR}/scripts/list_serial_ports.sh 
@@ -57,10 +58,10 @@ message(STATUS "List of arduino boards ${ARDUINO_DIR}")
 ################################################################################
 # Animal related options.
 ################################################################################
-if((NOT ANIMAL_NAME) OR (NOT CS_TYPE) OR (NOT SESSION_NUM) OR (NOT PROTO_CODE))
+if((NOT ANIMAL_NAME) OR (NOT SESSION_NUM) OR (NOT PROTO_CODE))
     message(FATAL_ERROR 
-        "Set ANIMAL_NAME, SESSION_NUM, CS_TYPE, and PROTO_CODE to cmake; e.g. \n"
-        "\tcmake -DANIMAL_NAME=k3 -DSESSION_NUM=1 -DCS_TYPE=S -DPROTO_CODE=All1 ..\n"
+        "Set ANIMAL_NAME, SESSION_NUM, and PROTO_CODE to cmake; e.g. \n"
+        "\tcmake -DANIMAL_NAME=k3 -DSESSION_NUM=1 -DPROTO_CODE=All1 ..\n"
         "For info on protocols, see file 'Protocols/BehaviourProtocols.xlsx'"
         " in the top directory."
         )
@@ -80,7 +81,7 @@ file(WRITE ${CMAKE_CURRENT_SOURCE_DIR}/src/protocol.h "${PROTOCOL_CONFIG}")
 # Set DATA DIRirectory to store data for given animal, session, and protocol
 # code. No need to create this directory from CMake, python script which saves
 # data takes care for it.
-set(DATADIR "$ENV{HOME}/DATA/${ANIMAL_NAME}/${ANIMAL_NAME}_${CS_TYPE}_${SESSION_NUM}_${PROTO_CODE}")
+set(DATADIR "$ENV{HOME}/DATA/${ANIMAL_NAME}/${ANIMAL_NAME}_${SESSION_NUM}_${PROTO_CODE}")
 
 configure_file( ${CMAKE_SOURCE_DIR}/Makefile.arduino.in
     ${CMAKE_SOURCE_DIR}/Makefile.arduino
@@ -138,9 +139,7 @@ configure_file( ${CMAKE_SOURCE_DIR}/camera_arduino_client.py.in
 file(WRITE $ENV{HOME}/.gnuplot "set fit quiet; " )
 
 # Pass animal options to run.sh which will will passed to python script.
-SET(RUN_ARGS 
-    -p ${PORT} -n ${ANIMAL_NAME} -sn ${SESSION_NUM} -ct ${CS_TYPE} 
-     )
+SET(RUN_ARGS -p ${PORT} -n ${ANIMAL_NAME} -sn ${SESSION_NUM})
 
 # Copy python files into current working directory.
 file(COPY ${CMAKE_SOURCE_DIR}/eyeblinkdetector/extract.py 
