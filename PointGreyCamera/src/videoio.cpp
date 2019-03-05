@@ -257,16 +257,13 @@ void write_frames(
  * @param 
  * @param {
  */
-void write_frames_to_tiff ( const string& outfile
-        , const vector< Mat > frames
-        )
+void write_frames_to_tiff ( const string& outfile, const vector< Mat > frames)
 {
     // Open the tiff file and create tags from the infile.
     TIFF* out = TIFFOpen ( outfile.c_str(), "w" );
-
     if( ! out )
     {
-        std::cout << "Can't open tiff file to open : " << outfile << std::endl;
+        std::cerr << "[WARN] Can't open tiff file to open : " << outfile << std::endl;
         return;
     }
 

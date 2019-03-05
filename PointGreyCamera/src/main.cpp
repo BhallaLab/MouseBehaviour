@@ -8,12 +8,11 @@
 #include <boost/thread/thread.hpp>
 #include <boost/chrono.hpp>
 #include <boost/asio.hpp>
+#include <boost/format.hpp>
 #include <boost/program_options.hpp>
 #include <boost/algorithm/string.hpp>
+#include <boost/filesystem.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
-
-#include <tiffio.h>
-#include <tiffio.hxx>
 
 #define ARDUINO_SERIAL_PORT     "/dev/ttyACM0"
 #define OPENCV_MAIN_WINDOW      "Frame"
@@ -44,7 +43,10 @@ SystemPtr system_;
 CameraList cam_list_;
 bool all_done_ = false;
 string validCommands_ = "stlr";                   // Valid char commands.
+
+// Command line arguments.
 string portPath_;
+string dataDir_ = "/tmp";
 
 // Storage for images.
 vector<Mat> frames_;
@@ -77,9 +79,10 @@ void SaveAllFrames(vector<Mat>& frames, const size_t trial)
 
     cout << "[INFO] Saving " << frames.size() << " frames to disk." << endl;
     cout << "\t Trial number " << trial << endl;
-    write_frames_to_tiff("/tmp/out.tif", frames);
 
-    cout << "\t All done." << endl;
+    string outfile = dataDir_ + '/' + boost::str(boost::format("%03d")%trial) + ".tiff";
+    write_frames_to_tiff(outfile, frames);
+    cout << "[INFO] Saved data to " << outfile << endl;
 }
 
 /* --------------------------------------------------------------------------*/
@@ -93,33 +96,40 @@ void SaveAllFrames(vector<Mat>& frames, const size_t trial)
 void AddToStoreHouse(Mat& mat, const string arduino)
 {
     static int currentTrial = 0;
+    static bool saveFrames = false;
 
     vector<string> arduinoData;
     boost::split(arduinoData, arduino, boost::is_any_of(","));
     if(arduinoData.size() < 13)
         return;
 
-
     // Else we have valid data.
     size_t storeFrameIdx = 8;
     if( (int)std::stoi(arduinoData[storeFrameIdx]) == 1)
-        frames_.push_back(mat);
-
-    size_t trialNumIdx = 4;
-    if( (int)std::stoi(arduinoData[trialNumIdx]) > currentTrial)
     {
-        cout << "[INFO] New trial is strating: " << currentTrial+1<< endl;
-        cout << "[INFO] Total frames to store: " << frames_.size() << endl;
-
-        // Save everything.
-        vector<Mat> data = frames_;
-        auto t = boost::thread(SaveAllFrames, data, currentTrial);
-        t.detach();
-
-        frames_.clear();
-        currentTrial = std::stoi(arduinoData[trialNumIdx]);
+        saveFrames = true;
+        frames_.push_back(mat);
+    }
+    else
+    {
+        if(saveFrames)
+        {
+            // Save everything.
+            vector<Mat> data = frames_;
+            auto t = boost::thread(SaveAllFrames, data, currentTrial);
+            t.detach();
+            saveFrames = false;
+            frames_.clear();
+        }
     }
 
+    size_t trialNumIdx = 4;
+    auto thisTrial = (int) std::stoi(arduinoData[trialNumIdx]);
+    if( thisTrial > currentTrial)
+    {
+        cout << "[INFO] New trial has started: " << thisTrial << endl;
+        currentTrial = thisTrial;
+    }
 }
 
 void ReadLine(string& res)
@@ -521,10 +531,21 @@ void RunSingleCamera(CameraPtr pCam, INodeMap* pNodeMap, INodeMap* pNodeMapTLDev
     pCam->DeInit();
 }
 
-void initOpenCV()
+void initialize()
 {
+
+    // Initialize opencv window.
     namedWindow(OPENCV_MAIN_WINDOW);
     setMouseCallback(OPENCV_MAIN_WINDOW, cvMouseCallback);
+
+    // Make sure that data-dir exists.
+    using namespace boost::filesystem;
+    path p(dataDir_);
+    if(! exists(p))
+    {
+        cout << "[INFO] Creating directory " << p << endl;
+        create_directories(p);
+    }
 }
 
 // Example entry point; please see Enumeration example for more in-depth
@@ -532,22 +553,26 @@ void initOpenCV()
 int main(int argc, char** argv)
 {
 
+    // Most of these arguments are useless. 
     po::options_description desc("Arduino/Camera client.");
     desc.add_options()
-        ("help", "produce help message")
-        ("port", po::value<string>(&portPath_)->default_value(ARDUINO_SERIAL_PORT), "Serial port")
+        ("help,h", "produce help message")
+        ("port,p", po::value<string>(&portPath_)->default_value(ARDUINO_SERIAL_PORT), "Serial port")
+        ("datadir,d", po::value<string>(&dataDir_)->default_value("/tmp"), "Directory to save images/data.")
         ;
 
     po::variables_map vm;
     po::store(po::parse_command_line(argc, argv, desc), vm);
     po::notify(vm);
 
-    if(vm.count("help")) {
+    if(vm.count("help")) 
+    {
         cout << desc << endl;
         return 0;
     }
 
-    if(vm.count("help")) {
+    if(vm.count("help")) 
+    {
         cout << desc << endl;
         return 0;
     }
@@ -555,8 +580,8 @@ int main(int argc, char** argv)
     // Add a signal handler.
     signal(SIGINT, sig_handler );
 
-    // Intialize opencv windown and callback function.
-    initOpenCV();
+    // Intialize 
+    initialize();
 
     // Print application build information
     cout << "Application build date: " << __DATE__ << " " << __TIME__ << endl << endl;
@@ -572,7 +597,6 @@ int main(int argc, char** argv)
     // Retrieve list of cameras from the system
     cam_list_ = system_->GetCameras();
     unsigned int numCameras = cam_list_.GetSize();
-
     cout << "Number of cameras detected: " << numCameras << endl << endl;
 
     // Finish if there are no cameras
