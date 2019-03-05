@@ -8,6 +8,7 @@
 #include <boost/thread/thread.hpp>
 #include <boost/chrono.hpp>
 #include <boost/asio.hpp>
+#include <boost/date_time/posix_time/posix_time.hpp>
 
 #define ARDUINO_SERIAL_PORT "/dev/ttyACM0"
 #define ARDUINO_SERIAL_BAUD_RATE 96400
@@ -41,6 +42,13 @@ void sig_handler( int s )
     all_done_ = true;
 }
 
+string get_timestamp()
+{
+    using namespace boost::posix_time;
+    ptime t = microsec_clock::universal_time();
+    return to_iso_extended_string(t);
+}
+
 string ReadLine(SerialStream& serial)
 {
     string res;
@@ -52,9 +60,18 @@ string ReadLine(SerialStream& serial)
         if(all_done_)
             break;
     }
+
+    res = get_timestamp() + ',' + res;
+    // Append timestamp to the line.
     return res;
 }
 
+/* --------------------------------------------------------------------------*/
+/**
+ * @Synopsis  Arduino client. It read the data from arduino and put them into a
+ * queue which is consumed by Camera Client.
+ */
+/* ----------------------------------------------------------------------------*/
 void ArduinoClient()
 {
     // Connect to arduino client.
@@ -63,7 +80,7 @@ void ArduinoClient()
 
     while(! connected)
     {
-        cout << "Trying to connect to arduino." << endl;
+        cout << "[INFO] Trying to connect to arduino." << endl;
         try 
         {
             arduinoStream.Open(string(ARDUINO_SERIAL_PORT));
@@ -72,7 +89,7 @@ void ArduinoClient()
         catch(std::exception& e) 
         {
             cerr << "Failed to open serial port." << e.what() << endl;
-            boost::this_thread::sleep_for(boost::chrono::milliseconds(1000));
+            boost::this_thread::sleep_for(boost::chrono::milliseconds(500));
         }
     }
 
@@ -81,16 +98,12 @@ void ArduinoClient()
     arduinoStream.SetBaudRate(SerialStreamBuf::BAUD_115200);
 
     string line;
-    while( ! all_done_)
+    while(! all_done_)
     {
         // Read line from serial.
         line = ReadLine(arduinoStream);
-        if( ! line.empty() )
-            arduinoQ_.push(line);
-        else
-            arduinoQ_.push("Nothing");
+        arduinoQ_.push(line);
         arduinoQ_.pop();
-        boost::this_thread::sleep_for(boost::chrono::milliseconds(100));
     }
 }
 
@@ -100,9 +113,6 @@ int ResetExposure(INodeMap & nodeMap)
 {
     try
     {
-        //
-        // Turn automatic exposure back on
-        //
         // *** NOTES ***
         // Automatic exposure is turned on in order to return the camera to its
         // default state.
@@ -130,23 +140,28 @@ int ResetExposure(INodeMap & nodeMap)
     return 0;
 }
 
+/* --------------------------------------------------------------------------*/
 /**
- * @brief Show data.
+ * @Synopsis  Process frame. Append data collected from arduino.
  *
- * @param data
- * @param size
+ * @Param data
+ * @Param width
+ * @Param height
  *
- * @return
+ * @Returns   
  */
+/* ----------------------------------------------------------------------------*/
 int ProcessFrame(void* data, size_t width, size_t height)
 {
     Mat img(height, width, CV_8UC1, data );
-    // data = img.data;
 
     // Write frame number on the frame.
-    string msg("Frame:" +std::to_string(total_frames_));
-    msg += "|" + string(arduinoQ_.back());
-    putText(img, msg, Point(10,10), FONT_HERSHEY_SIMPLEX, 0.3, 255);
+    string msg = get_timestamp() + ',';
+    msg += string(arduinoQ_.back());
+
+    // Draw a back rectangle on the top.
+    rectangle(img, Point(10,2), Point(width, 16), 0, -1);
+    putText(img, msg, Point(10,10), FONT_HERSHEY_SIMPLEX, 0.3, 200);
 
     // Convert msg to array of uint8 and append to first frame.
     msg.resize(width, ' ');
@@ -155,13 +170,11 @@ int ProcessFrame(void* data, size_t width, size_t height)
     // Prepent to image.
     cv::vconcat(infoRow, img, img);
 
-#if 1
     if( total_frames_ % 10 == 0)
     {
         imshow("Camera",  img );
         waitKey(1);
     }
-#endif
     return 0;
 }
 
@@ -170,8 +183,6 @@ int AcquireImages(CameraPtr pCam, INodeMap& nodeMap, INodeMap& nodeMapTLDevice)
     int result = 0;
     try
     {
-        auto startTime = boost::chrono::system_clock::now();
-
         CEnumerationPtr ptrAcquisitionMode = nodeMap.GetNode("AcquisitionMode");
         if (!IsAvailable(ptrAcquisitionMode) || !IsWritable(ptrAcquisitionMode))
         {
@@ -207,59 +218,52 @@ int AcquireImages(CameraPtr pCam, INodeMap& nodeMap, INodeMap& nodeMapTLDevice)
             cout << "Device serial number retrieved " << deviceSerialNumber
                  << endl;
         }
-
-        while(! all_done_)
-        {
-            try
-            {
-                ImagePtr pResultImage = pCam->GetNextImage();
-                //cout << "Pixal format: " << pResultImage->GetPixelFormatName( ) << endl;
-
-                if ( pResultImage->IsIncomplete() ) /* Image is incomplete. */
-                {
-                    cout << "[WARN] Image incomplete with image status " <<
-                         pResultImage->GetImageStatus() << " ..." << endl;
-                }
-                else
-                {
-                    size_t width = pResultImage->GetWidth();
-                    size_t height = pResultImage->GetHeight();
-                    size_t size = pResultImage->GetBufferSize( );
-                    total_frames_ += 1;
-                    //cout << "H: "<< height << " W: " << width << " S: " << size << endl;
-                    // Convert the image to Monochorme, 8 bits (1 byte) and send
-                    // the output.
-                    //auto img = pResultImage->Convert( PixelFormat_Mono8 );
-                    ProcessFrame( pResultImage->GetData(), width, height);
-                    if( total_frames_ % 100 == 0 )
-                    {
-                        boost::chrono::duration<double> elapsedSecs = 
-                            boost::chrono::system_clock::now() - startTime;
-                        fps_ = (double) total_frames_ / elapsedSecs.count();
-                        cout << "Running FPS : " << fps_ << endl;
-                    }
-                }
-            }
-            catch( runtime_error& e )
-            {
-                cout << "User pressed Ctrl+c" << endl;
-                break;
-            }
-            catch (Spinnaker::Exception &e)
-            {
-                cout << "Error: " << e.what() << endl;
-                result = -1;
-            }
-        }
-        pCam->EndAcquisition();
+    }
+    catch( runtime_error& e )
+    {
+        cout << "User pressed Ctrl+c" << endl;
+        return -1;
     }
     catch (Spinnaker::Exception &e)
     {
         cout << "Error: " << e.what() << endl;
-        result = -1;
+        return  -1;
     }
 
-    return result;
+    auto startTime = boost::chrono::system_clock::now();
+    while(! all_done_)
+    {
+        ImagePtr pResultImage = pCam->GetNextImage();
+        //cout << "Pixal format: " << pResultImage->GetPixelFormatName( ) << endl;
+
+        if ( pResultImage->IsIncomplete() ) /* Image is incomplete. */
+        {
+            cout << "[WARN] Image incomplete with image status " <<
+                pResultImage->GetImageStatus() << " ..." << endl;
+        }
+        else
+        {
+            size_t width = pResultImage->GetWidth();
+            size_t height = pResultImage->GetHeight();
+            size_t size = pResultImage->GetBufferSize( );
+            total_frames_ += 1;
+            //cout << "H: "<< height << " W: " << width << " S: " << size << endl;
+            // Convert the image to Monochorme, 8 bits (1 byte) and send
+            // the output.
+            //auto img = pResultImage->Convert( PixelFormat_Mono8 );
+            ProcessFrame( pResultImage->GetData(), width, height);
+            if( total_frames_ % 100 == 0 )
+            {
+                boost::chrono::duration<double> elapsedSecs = 
+                    boost::chrono::system_clock::now() - startTime;
+                fps_ = (double) total_frames_ / elapsedSecs.count();
+                cout << "Running FPS : " << fps_ << endl;
+            }
+        }
+    }
+
+    pCam->EndAcquisition();
+    return 0;
 }
 
 // This function prints the device information of the camera from the transport
