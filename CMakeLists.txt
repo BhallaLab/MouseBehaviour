@@ -1,11 +1,12 @@
 cmake_minimum_required(VERSION 2.8)
 project(EyeBlinkBehavour)
 
+find_program(PYTHON_EXECUTABLE python3)
+message(STATUS "Found python3 ${PYTHON_EXECUTABLE}")
+
 ################################################################################
 # ARDUINO BOARD 
 ################################################################################
-find_package( PythonInterp REQUIRED )
-
 if( NOT PORT )
     execute_process( 
         COMMAND bash ${CMAKE_SOURCE_DIR}/scripts/list_serial_ports.sh 

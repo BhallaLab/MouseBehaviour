@@ -349,40 +349,52 @@ void do_trial( size_t trial_num, int cs_type, bool isprobe = false )
 
     stamp_ = millis( );
 
-    sprintf( trial_state_, "PRE_" );
-    digitalWrite( IMAGING_TRIGGER_PIN, HIGH);   // Imaging START
-    digitalWrite( CAMERA_TTL_PIN, LOW );        // Camera STOP.
-    digitalWrite( LED_PIN, LOW );               // LED STOP.
+    sprintf(trial_state_, "PRE_" );
+    digitalWrite(IMAGING_TRIGGER_PIN, HIGH);   // Imaging START
+    digitalWrite(CAMERA_TTL_PIN, LOW );        // Camera STOP.
+    digitalWrite(LED_PIN, LOW );               // LED STOP.
 
     while( (millis( ) - trial_start_time_ ) <= duration ) /* PRE_ time */
     {
         // 500 ms before the PRE_ ends, start camera pin high. We start
         // recording as well.
-        if( (millis( ) - stamp_) >= (duration - 500 ) )
-            if( LOW == digitalRead( CAMERA_TTL_PIN ) )
+        if( (millis( ) - stamp_) >= (duration - 500 ) ) {
+            if( LOW == digitalRead( CAMERA_TTL_PIN ) ) {
                 digitalWrite( CAMERA_TTL_PIN, HIGH );
+            }
+        }
 
         write_data_line( );
     }
     stamp_ = millis( );
 
     /*-----------------------------------------------------------------------------
-     *  CS: 50 ms duration. No tone is played here. Write LED pin to HIGH.
-     *  Play CS only when CS_TYPE is not 5.
+     *  CS: 50 ms duration. 
      *-----------------------------------------------------------------------------*/
-    if( 1 == CS_TYPE )
+    duration = PROTO_CSDuration;
+    if( "NONE" == PROTO_CSValue )
     {
         sprintf( trial_state_, "NOCS" );
-        duration =  PROTO_CSDuration;
-        while( (millis( ) - stamp_) <= duration )
+        while((millis( ) - stamp_) <= duration) {
             write_data_line( );
+        }
     }
     else
     {
-        duration = PROTO_CSDuration;
         stamp_ = millis( );
         sprintf( trial_state_, "CS+" );
-        led_on( duration );
+        if( "LED" == PROTO_CSValue ) {
+            led_on( duration );
+        }
+        else if( "TONE" == PROTO_CSValue) {
+            play_tone(duration);
+        }
+        else if( "TONE/LIGHT" == PROTO_CSValue) {
+            // TODO: What?
+        }
+        else {
+            Serial.println( "<<<Error: Unknown CS" );
+        }
     }
 
     stamp_ = millis( );
@@ -399,27 +411,15 @@ void do_trial( size_t trial_num, int cs_type, bool isprobe = false )
     /*-----------------------------------------------------------------------------
      *  US for 50 ms if trial is not a probe type.
      *-----------------------------------------------------------------------------*/
-    if( 1 == CS_TYPE || 2 == CS_TYPE )
-    {
-        sprintf( trial_state_, PROTO_USValue );
-        duration =  PROTO_USDuration;
-        while( (millis() - stamp_) <= duration )
+    duration = PROTO_USDuration;
+    if(isprobe) {
+        sprintf( trial_state_, "PROB" );
+        while( (millis( ) - stamp_) <= duration )
             write_data_line( );
     }
-    else
-    {
-        duration = PROTO_USDuration;
-        if( isprobe )
-        {
-            sprintf( trial_state_, "PROB" );
-            while( (millis( ) - stamp_) <= duration )
-                write_data_line( );
-        }
-        else
-        {
-            sprintf( trial_state_, PROTO_USValue );
-            play_puff( duration );
-        }
+    else {
+        sprintf( trial_state_, PROTO_USValue );
+        play_puff( duration );
     }
     stamp_ = millis( );
     
