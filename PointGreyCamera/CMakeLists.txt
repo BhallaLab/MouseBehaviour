@@ -1,7 +1,5 @@
 cmake_minimum_required(VERSION 2.8)
-project(Blinky)
-
-set( SOCK_PATH "\"/tmp/eye_blink_socket\"" )
+project(CameraAndArduino)
 
 # How many bytes should we write to socket in one go.
 # This is deprecated. We write whole frame in one go
@@ -32,9 +30,11 @@ find_package( OpenCV REQUIRED )
 find_package(Boost COMPONENTS chrono)
 find_package( PkgConfig REQUIRED )
 pkg_check_modules(LIBSERIAL REQUIRED libserial)
+pkg_check_modules(LIBTIFF4 REQUIRED libtiff-4)
 
 include_directories(${OpenCV_INCLUDE_DIRS} )
 include_directories(${LIBSERIAL_INCLUDE_DIRS})
+include_directories(${LIBTIFF4_INCLUDE_DIRS})
 set(SPINNAKER_SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/external)
 
 set(CMAKE_BUILD_TYPE Release)
@@ -51,7 +51,7 @@ find_library( SPINNAKER_LIB Spinnaker
     )
 
 message(STATUS "Found ${SPINNAKER_LIB}")
-add_executable(cam_server ./src/main.cpp)
+add_executable(cam_server ./src/videoio.cpp ./src/main.cpp)
 
 # After building the server, copy required client and configuration files into
 # current binary directory.
@@ -65,6 +65,7 @@ add_custom_command( TARGET cam_server POST_BUILD
 target_link_libraries(cam_server ${SPINNAKER_LIB} 
     ${OpenCV_LIBRARIES} ${Boost_LIBRARIES}
     ${LIBSERIAL_LIBRARIES}
+    ${LIBTIFF4_LIBRARIES}
     )
 
 set_target_properties( cam_server 

@@ -21,7 +21,7 @@
 #ifndef  config_INC
 #define  config_INC
 
-#define SOCK_PATH  "/tmp/eye_blink_socket"
+#define SOCK_PATH  
 
 /* Block to write. */
 #define BLOCK_SIZE  4096 

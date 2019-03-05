@@ -8,33 +8,46 @@
 #include <boost/thread/thread.hpp>
 #include <boost/chrono.hpp>
 #include <boost/asio.hpp>
+#include <boost/algorithm/string.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
 
-#define ARDUINO_SERIAL_PORT "/dev/ttyACM0"
-#define ARDUINO_SERIAL_BAUD_RATE 96400
+#include <tiffio.h>
+#include <tiffio.hxx>
+
+#define ARDUINO_SERIAL_PORT     "/dev/ttyACM0"
+#define OPENCV_MAIN_WINDOW      "Frame"
 
 // Libserial.
 #include <SerialStream.h>
-using namespace LibSerial;
-
 #include "config.h"
+#include "helper.hh"
+#include "videoio.h"
 
+using namespace LibSerial;
 using namespace cv;
-
 using namespace Spinnaker;
 using namespace Spinnaker::GenApi;
 using namespace Spinnaker::GenICam;
 using namespace std;
 
-int total_frames_ = 0;
-float fps_ = 0.0;                               /* Frame per second. */
 
+/*-----------------------------------------------------------------------------
+ *  Globals.
+ *-----------------------------------------------------------------------------*/
+int total_frames_ = 0;
+double fps_       = 0.0;                          /* Frame per second. */
 SystemPtr system_;
 CameraList cam_list_;
 bool all_done_ = false;
+string validCommands_ = "stlr";                   // Valid char commands.
 
-// Global queue.
+// Storage for images.
+vector<Mat> frames_;
+
+
+// queue.
 queue<string> arduinoQ_({"", "", "", "", "", "", "", "", "", ""});
+SerialStream serial_;
 
 void sig_handler( int s )
 {
@@ -49,21 +62,76 @@ string get_timestamp()
     return to_iso_extended_string(t);
 }
 
-string ReadLine(SerialStream& serial)
+void SaveAllFrames(vector<Mat>& frames, const size_t trial)
 {
-    string res;
+    if(frames.size() < 1)
+    {
+        cout << "[WARN] No frames to save." << endl;
+        return;
+    }
+
+    cout << "[INFO] Saving " << frames.size() << " frames to disk." << endl;
+    cout << "\t Trial number " << trial << endl;
+    write_frames_to_tiff("/tmp/out.tif", frames);
+
+    cout << "\t All done." << endl;
+}
+
+/* --------------------------------------------------------------------------*/
+/**
+ * @Synopsis  Store house.
+ *
+ * @Param mat
+ * @Param arduino
+ */
+/* ----------------------------------------------------------------------------*/
+void AddToStoreHouse(Mat& mat, const string arduino)
+{
+    static int currentTrial = 0;
+
+    vector<string> arduinoData;
+    boost::split(arduinoData, arduino, boost::is_any_of(","));
+    if(arduinoData.size() < 13)
+        return;
+
+
+    // Else we have valid data.
+    size_t storeFrameIdx = 8;
+    if( (int)std::stoi(arduinoData[storeFrameIdx]) == 1)
+        frames_.push_back(mat);
+
+    size_t trialNumIdx = 4;
+    if( (int)std::stoi(arduinoData[trialNumIdx]) > currentTrial)
+    {
+        cout << "[INFO] New trial is strating: " << currentTrial+1<< endl;
+        cout << "[INFO] Total frames to store: " << frames_.size() << endl;
+
+        // Save everything.
+        vector<Mat> data = frames_;
+        auto t = boost::thread(SaveAllFrames, data, currentTrial);
+        t.detach();
+
+        frames_.clear();
+        currentTrial = std::stoi(arduinoData[trialNumIdx]);
+    }
+
+}
+
+void ReadLine(string& res)
+{
+    res.clear();
     char next_char = ' ';
     while(next_char != '\n')
     {
-        serial.get(next_char);
+        serial_.get(next_char);
+        if( next_char < 32 ) // less than SPACE.
+            continue;
         res += next_char;
         if(all_done_)
             break;
     }
-
-    res = get_timestamp() + ',' + res;
     // Append timestamp to the line.
-    return res;
+    res = get_timestamp() + ',' + res;
 }
 
 /* --------------------------------------------------------------------------*/
@@ -76,14 +144,13 @@ void ArduinoClient()
 {
     // Connect to arduino client.
     bool connected = false;
-    SerialStream arduinoStream;
 
     while(! connected)
     {
         cout << "[INFO] Trying to connect to arduino." << endl;
         try 
         {
-            arduinoStream.Open(string(ARDUINO_SERIAL_PORT));
+            serial_.Open(string(ARDUINO_SERIAL_PORT));
             connected = true;
         } 
         catch(std::exception& e) 
@@ -94,14 +161,14 @@ void ArduinoClient()
     }
 
     // Config.
-    arduinoStream.SetCharSize(SerialStreamBuf::CHAR_SIZE_8);
-    arduinoStream.SetBaudRate(SerialStreamBuf::BAUD_115200);
+    serial_.SetCharSize(SerialStreamBuf::CHAR_SIZE_8);
+    serial_.SetBaudRate(SerialStreamBuf::BAUD_115200);
 
     string line;
     while(! all_done_)
     {
         // Read line from serial.
-        line = ReadLine(arduinoStream);
+        ReadLine(line);
         arduinoQ_.push(line);
         arduinoQ_.pop();
     }
@@ -156,24 +223,40 @@ int ProcessFrame(void* data, size_t width, size_t height)
     Mat img(height, width, CV_8UC1, data );
 
     // Write frame number on the frame.
-    string msg = get_timestamp() + ',';
-    msg += string(arduinoQ_.back());
+    string aLine = arduinoQ_.back();
+    if( '<' == aLine[0] )
+        cout << aLine << endl;
+
+    string arduinoData = get_timestamp() + ',' + aLine;
 
     // Draw a back rectangle on the top.
     rectangle(img, Point(10,2), Point(width, 16), 0, -1);
-    putText(img, msg, Point(10,10), FONT_HERSHEY_SIMPLEX, 0.3, 200);
+    putText(img, arduinoData, Point(10,10), FONT_HERSHEY_SIMPLEX, 0.3, 200);
 
     // Convert msg to array of uint8 and append to first frame.
-    msg.resize(width, ' ');
-    cv::Mat infoRow(1, width, CV_8UC1, (void*) msg.data());
+    string toWrite = arduinoData;
+    toWrite.resize(width, ' ');
+    cv::Mat infoRow(1, width, CV_8UC1, (void*) toWrite.data());
     
     // Prepent to image.
     cv::vconcat(infoRow, img, img);
 
-    if( total_frames_ % 10 == 0)
+    // Show every 25th frame.
+    if( total_frames_ % 25 == 0)
+        imshow(OPENCV_MAIN_WINDOW,  img);
+
+    // This frame and arduino data are stamped together.
+    AddToStoreHouse(img, arduinoData);
+
+    char k = waitKey(2);
+    if( k < ' ')
+        return 0;
+
+    cout << "[INFO] Key pressed " << k << endl;
+    if(validCommands_.find(k) != std::string::npos)
     {
-        imshow("Camera",  img );
-        waitKey(1);
+        cout << "[INFO] Got valid command. Writing to serial." << k << endl;
+        serial_ << k << endl;
     }
     return 0;
 }
@@ -247,17 +330,15 @@ int AcquireImages(CameraPtr pCam, INodeMap& nodeMap, INodeMap& nodeMapTLDevice)
             size_t height = pResultImage->GetHeight();
             size_t size = pResultImage->GetBufferSize( );
             total_frames_ += 1;
-            //cout << "H: "<< height << " W: " << width << " S: " << size << endl;
-            // Convert the image to Monochorme, 8 bits (1 byte) and send
-            // the output.
-            //auto img = pResultImage->Convert( PixelFormat_Mono8 );
+
             ProcessFrame( pResultImage->GetData(), width, height);
-            if( total_frames_ % 100 == 0 )
+
+            if( total_frames_ % 100 == 0)
             {
                 boost::chrono::duration<double> elapsedSecs = 
                     boost::chrono::system_clock::now() - startTime;
                 fps_ = (double) total_frames_ / elapsedSecs.count();
-                cout << "Running FPS : " << fps_ << endl;
+                cout << "[INFO] Running FPS : " << fps_ << endl;
             }
         }
     }
@@ -308,13 +389,18 @@ int PrintDeviceInfo(INodeMap & nodeMap)
     return result;
 }
 
+static void cvMouseCallback(int event, int x, int y, int, void*)
+{
+
+}
+
 // This function acts as the body of the example; please see NodeMapInfo example
 // for more in-depth comments on setting up cameras.
 int InitSingleCamera(CameraPtr pCam, std::pair<INodeMap*, INodeMap*>& res)
 {
     // Retrieve TL device nodemap and print device information
     INodeMap& nodeMapTLDevice = pCam->GetTLDeviceNodeMap();
-    PrintDeviceInfo(nodeMapTLDevice);
+    // PrintDeviceInfo(nodeMapTLDevice);
 
     // Initialize camera
     pCam->Init();
@@ -431,11 +517,20 @@ void RunSingleCamera(CameraPtr pCam, INodeMap* pNodeMap, INodeMap* pNodeMapTLDev
     pCam->DeInit();
 }
 
+void initOpenCV()
+{
+    namedWindow(OPENCV_MAIN_WINDOW);
+    setMouseCallback(OPENCV_MAIN_WINDOW, cvMouseCallback);
+}
+
 // Example entry point; please see Enumeration example for more in-depth
 // comments on preparing and cleaning up the system.
 int main(int argc, char** argv)
 {
     signal(SIGINT, sig_handler );
+
+    // Intialize opencv windown and callback function.
+    initOpenCV();
 
     // Print application build information
     cout << "Application build date: " << __DATE__ << " " << __TIME__ << endl << endl;
@@ -484,6 +579,7 @@ int main(int argc, char** argv)
     // Release system_
     system_->ReleaseInstance();
 
+    destroyAllWindows();
     if( t.joinable() )
         t.join();
 
