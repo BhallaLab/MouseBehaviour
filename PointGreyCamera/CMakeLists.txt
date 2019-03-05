@@ -29,16 +29,18 @@ set( CMAKE_CXX_COMPILER g++ )
 set( CMAKE_C_COMPILER g++ )
 
 find_package( OpenCV REQUIRED )
+find_package(Boost COMPONENTS chrono)
 find_package( PkgConfig REQUIRED )
+pkg_check_modules(LIBSERIAL REQUIRED libserial)
 
-include_directories( ${OpenCV_INCLUDE_DIRS} )
-
-
+include_directories(${OpenCV_INCLUDE_DIRS} )
+include_directories(${LIBSERIAL_INCLUDE_DIRS})
 set(SPINNAKER_SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/external)
 
 set(CMAKE_BUILD_TYPE Release)
 
 add_definitions( -std=c++11 -Wall -Wno-unknown-pragmas )
+add_definitions( -Wno-unused-variable -Wno-unused-function)
 
 include_directories( ${SPINNAKER_SRC_DIR} ${SPINNAKER_SRC_DIR}/include )
 include_directories( ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/include )
@@ -49,7 +51,7 @@ find_library( SPINNAKER_LIB Spinnaker
     )
 
 message(STATUS "Found ${SPINNAKER_LIB}")
-add_executable( cam_server ./src/main.cpp )
+add_executable(cam_server ./src/main.cpp)
 
 # After building the server, copy required client and configuration files into
 # current binary directory.
@@ -60,7 +62,10 @@ add_custom_command( TARGET cam_server POST_BUILD
         ${CMAKE_CURRENT_SOURCE_DIR}/config.h ${CMAKE_BINARY_DIR}
     VERBATIM 
    )
-target_link_libraries(cam_server ${SPINNAKER_LIB} ${OpenCV_LIBRARIES} )
+target_link_libraries(cam_server ${SPINNAKER_LIB} 
+    ${OpenCV_LIBRARIES} ${Boost_LIBRARIES}
+    ${LIBSERIAL_LIBRARIES}
+    )
 
 set_target_properties( cam_server 
     PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}
@@ -70,9 +75,4 @@ enable_testing( )
 
 add_executable( test-socket ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_socket.cc )
 target_link_libraries( test-socket )
-
 add_test( test_socket test-socket )
-
-
-
-

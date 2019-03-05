@@ -1,21 +1,23 @@
 #include "Spinnaker.h"
 #include "SpinGenApi/SpinnakerGenApi.h"
 #include <iostream>
-#include <sstream>
-#include <sys/socket.h>
-#include <sys/types.h>
-#include <sys/un.h>
-#include <error.h>
-#include "Streamer.hpp"
-#include <chrono>
+#include <csignal>
+#include <queue>
 #include <exception>
 #include <opencv2/highgui/highgui.hpp>
+#include <boost/thread/thread.hpp>
+#include <boost/chrono.hpp>
+#include <boost/asio.hpp>
+
+#define ARDUINO_SERIAL_PORT "/dev/ttyACM0"
+#define ARDUINO_SERIAL_BAUD_RATE 96400
+
+// Libserial.
+#include <SerialStream.h>
 
 #include "config.h"
 
-using namespace std::chrono;
 using namespace cv;
-
 
 using namespace Spinnaker;
 using namespace Spinnaker::GenApi;
@@ -23,26 +25,44 @@ using namespace Spinnaker::GenICam;
 using namespace std;
 
 int total_frames_ = 0;
-int socket_ = -1;                               /* Socket descriptor */
 float fps_ = 0.0;                               /* Frame per second. */
 
 SystemPtr system_;
 CameraList cam_list_;
 
+// Global queue.
+queue<string> arduinoQ_({"", "", "", "", "", "", "", "", "", ""});
 
 void sig_handler( int s )
 {
-    cout << "Got keyboard interrupt. Removing socket" << endl;
-    close( socket_ );
-    remove( SOCK_PATH );
     throw runtime_error( "Ctrl+C pressed" );
+}
+
+void ArduinoClient()
+{
+    // Connect to arduino client.
+    bool connected = false;
+
+    LibSerial::SerialStream arduinoStream(string(ARDUINO_SERIAL_PORT));
+    arduinoStream.SetBaudRate(ARDUINO_SERIAL_BAUD_RATE);
+
+    while(! connected)
+    {
+        cout << "Trying to connect to arduino." << endl;
+    }
+
+    while(true)
+    {
+        arduinoQ_.push("Nothing");
+        arduinoQ_.pop();
+        boost::this_thread::sleep_for(boost::chrono::milliseconds(100));
+    }
 }
 
 // This function returns the camera to its default state by re-enabling automatic
 // exposure.
 int ResetExposure(INodeMap & nodeMap)
 {
-    int result = 0;
     try
     {
         //
@@ -71,117 +91,45 @@ int ResetExposure(INodeMap & nodeMap)
     catch (Spinnaker::Exception &e)
     {
         cout << "Error: " << e.what() << endl;
-        result = -1;
     }
-    return result;
+    return 0;
 }
 
 /**
- * @brief Write data to socket.
+ * @brief Show data.
  *
  * @param data
  * @param size
  *
  * @return
  */
-int write_data( void* data, size_t width, size_t height )
+int ProcessFrame(void* data, size_t width, size_t height)
 {
-    // If socket_ is not set, don't try to write.
-    if( socket_ == 0 )
-        return 0;
-
     Mat img(height, width, CV_8UC1, data );
-    data = img.data;
+    // data = img.data;
 
-#ifdef TEST_WITH_CV
-    imshow( "MyImg", img );
-    waitKey( 10 );
-#else
-    try
+    // Write frame number on the frame.
+    string msg("Frame:" +std::to_string(total_frames_));
+    msg += "|" + string(arduinoQ_.back());
+    putText(img, msg, Point(10,10), FONT_HERSHEY_SIMPLEX, 0.3, 255);
+
+#if 1
+    if( total_frames_ % 10 == 0)
     {
-        if( write( socket_, data,  width * height ) == -1 )
-            throw runtime_error( strerror( errno ) );
-    }
-    catch ( exception & e )
-    {
-        throw runtime_error( "Error in writing" );
+        imshow("Camera",  img );
+        waitKey(1);
     }
 #endif
     return 0;
 }
 
-int create_socket( bool waitfor_client = true )
+int AcquireImages(CameraPtr pCam, INodeMap& nodeMap, INodeMap& nodeMapTLDevice)
 {
-    int s, s2, len;
-    struct sockaddr_un local, remote;
-
-    if ((s = socket(AF_UNIX, SOCK_STREAM, 0)) == -1)
-    {
-        perror("socket");
-        exit(1);
-    }
-
-    local.sun_family = AF_UNIX;
-    cout << "[INFO] Creating socket " << SOCK_PATH << endl;
-    strcpy(local.sun_path, SOCK_PATH);
-
-    remove(local.sun_path);
-    len = strlen(local.sun_path) + sizeof(local.sun_family);
-    if (bind(s, (struct sockaddr *)&local, len) == -1)
-    {
-        perror("bind");
-        exit(1);
-    }
-
-    if (listen(s, 5) == -1)
-    {
-        perror("listen");
-        exit(1);
-    }
-
-
-    // There is no point continuing if there is not one to read the data.
-    while( true )
-    {
-        if( ! waitfor_client )
-            return 0;
-        int done, n;
-        cout << "Waiting for a connection..." << endl;
-        socklen_t t = sizeof(remote);
-        if( (s2 = accept(s, (struct sockaddr *)&remote, &t)) == -1 )
-        {
-            perror("accept");
-            exit(1);
-        }
-
-        cout << "Connected." << endl;
-        break;
-    }
-
-    // Assign to global value.
-    socket_ = s2;
-    return s2;
-}
-
-#if 0
-void configure_camera( CameraPtr pCam )
-{
-    cout << "Max width: " << pCam->Width << endl;
-    //cout << "Max height: " << pCam->Height.GetValue( ) << endl;
-}
-#endif
-
-
-int AcquireImages(CameraPtr pCam, INodeMap & nodeMap , INodeMap & nodeMapTLDevice , int socket )
-{
-    signal( SIGINT, sig_handler );
     int result = 0;
     try
     {
+        auto startTime = boost::chrono::system_clock::now();
 
-        auto startTime = system_clock::now();
-
-#if 1
         CEnumerationPtr ptrAcquisitionMode = nodeMap.GetNode("AcquisitionMode");
         if (!IsAvailable(ptrAcquisitionMode) || !IsWritable(ptrAcquisitionMode))
         {
@@ -207,16 +155,6 @@ int AcquireImages(CameraPtr pCam, INodeMap & nodeMap , INodeMap & nodeMapTLDevic
         cout << "Acquisition mode set to continuous..." << endl;
 
         // Change the acquition frame rate.
-
-#else
-        // This section does not work.
-        CEnumerationPtr pAcquisitionMode = nodeMap.GetNode( "AcquisitionMode" );
-        pAcquisitionMode->SetIntValue( AcquisitionMode_MultiFrame );
-        CIntegerPtr pAcquitionFrameCount = nodeMap.GetNode( "AcquisitionBurstFrameCount" );
-        pAcquitionFrameCount->SetValue( 3 );
-        cout << "Frame per fetch " << pAcquitionFrameCount->GetValue( ) << endl;
-#endif
-
         pCam->BeginAcquisition();
 
         gcstring deviceSerialNumber("");
@@ -252,11 +190,12 @@ int AcquireImages(CameraPtr pCam, INodeMap & nodeMap , INodeMap & nodeMapTLDevic
                     // Convert the image to Monochorme, 8 bits (1 byte) and send
                     // the output.
                     //auto img = pResultImage->Convert( PixelFormat_Mono8 );
-                    write_data( pResultImage->GetData( ), width, height );
+                    ProcessFrame( pResultImage->GetData(), width, height);
                     if( total_frames_ % 100 == 0 )
                     {
-                        duration<double> elapsedSecs = system_clock::now( ) - startTime;
-                        fps_ = ( float ) total_frames_ / elapsedSecs.count( );
+                        boost::chrono::duration<double> elapsedSecs = 
+                            boost::chrono::system_clock::now() - startTime;
+                        fps_ = (double) total_frames_ / elapsedSecs.count();
                         cout << "Running FPS : " << fps_ << endl;
                     }
                 }
@@ -327,10 +266,9 @@ int PrintDeviceInfo(INodeMap & nodeMap)
 
 // This function acts as the body of the example; please see NodeMapInfo example
 // for more in-depth comments on setting up cameras.
-int RunSingleCamera(CameraPtr pCam, int socket)
+int RunSingleCamera(CameraPtr pCam)
 {
     int result = 0;
-
     try
     {
         // Retrieve TL device nodemap and print device information
@@ -438,8 +376,9 @@ int RunSingleCamera(CameraPtr pCam, int socket)
 
         /*-----------------------------------------------------------------------------
          *  IMAGE ACQUISITION
+         *  Infinite loop.
          *-----------------------------------------------------------------------------*/
-        result = AcquireImages(pCam, nodeMap, nodeMapTLDevice, socket );
+        result = AcquireImages(pCam, nodeMap, nodeMapTLDevice);
 
         // Reset settings.
         ResetExposure( nodeMap );
@@ -460,7 +399,7 @@ int RunSingleCamera(CameraPtr pCam, int socket)
 // comments on preparing and cleaning up the system.
 int main(int /*argc*/, char** /*argv*/)
 {
-    int result = 0;
+    signal(SIGINT, sig_handler );
 
     // Print application build information
     cout << "Application build date: " << __DATE__ << " " << __TIME__ << endl << endl;
@@ -492,30 +431,24 @@ int main(int /*argc*/, char** /*argv*/)
         return -1;
     }
 
-    CameraPtr pCam = NULL;
+    CameraPtr pCam = cam_list_.GetByIndex( 0 );
 
-    // Since there are enough camera lets initialize socket to write acquired
-    // frames.
+    auto t = boost::thread(ArduinoClient);
+    cout << "info: Arduino client has been launched." << endl;
 
-    socket_ = create_socket( true );
+    // This function loops forever.
+    RunSingleCamera(pCam);
 
-    pCam = cam_list_.GetByIndex( 0 );
-
-    // Configure camera here.
-    // configure_camera( pCam );
-    result = RunSingleCamera(pCam, socket_);
-
-
-    pCam = NULL;
+    pCam = 0;
     // Clear camera list before releasing system_
     cam_list_.Clear();
 
     // Release system_
     system_->ReleaseInstance();
+
+    if( t.joinable() )
+        t.join();
+
     std::cout << "All done" << std::endl;
-
-    if( socket_ > 0 )
-        close( socket_ );
-
     return 0;
 }
