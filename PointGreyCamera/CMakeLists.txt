@@ -1,10 +1,6 @@
 cmake_minimum_required(VERSION 2.8)
 project(CameraAndArduino)
 
-# How many bytes should we write to socket in one go.
-# This is deprecated. We write whole frame in one go
-set( BLOCK_SIZE 4096 )
-
 # NOTICE: Following values are optimized to achive FPS of 100. If you are changing them,
 # do it at your own risk. These values replaces macros in config.h.in file in
 # PointGrey submodule.
@@ -23,12 +19,11 @@ configure_file(
 
 set( CMAKE_MODULE_PATH  ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake )
 
-set( CMAKE_CXX_COMPILER g++ )
-set( CMAKE_C_COMPILER g++ )
+set(CMAKE_CXX_COMPILER g++)
 
-find_package( OpenCV REQUIRED )
-find_package(Boost COMPONENTS chrono)
-find_package( PkgConfig REQUIRED )
+find_package(OpenCV REQUIRED)
+find_package(Boost COMPONENTS chrono program_options)
+find_package(PkgConfig REQUIRED)
 pkg_check_modules(LIBSERIAL REQUIRED libserial)
 pkg_check_modules(LIBTIFF4 REQUIRED libtiff-4)
 
@@ -39,11 +34,11 @@ set(SPINNAKER_SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/external)
 
 set(CMAKE_BUILD_TYPE Release)
 
-add_definitions( -std=c++11 -Wall -Wno-unknown-pragmas )
-add_definitions( -Wno-unused-variable -Wno-unused-function)
+add_definitions(-std=c++11 -Wall -Wno-unknown-pragmas)
+add_definitions(-Wno-unused-variable -Wno-unused-function)
 
-include_directories( ${SPINNAKER_SRC_DIR} ${SPINNAKER_SRC_DIR}/include )
-include_directories( ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/include )
+include_directories(${SPINNAKER_SRC_DIR} ${SPINNAKER_SRC_DIR}/include)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 find_library( SPINNAKER_LIB Spinnaker 
     PATHS ${SPINNAKER_SRC_DIR}/lib

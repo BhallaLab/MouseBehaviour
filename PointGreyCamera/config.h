@@ -24,7 +24,7 @@
 #define SOCK_PATH  
 
 /* Block to write. */
-#define BLOCK_SIZE  4096 
+#define BLOCK_SIZE   
 
 #define FRAME_HEIGHT            512
 #define FRAME_WIDTH             640

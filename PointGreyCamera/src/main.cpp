@@ -8,6 +8,7 @@
 #include <boost/thread/thread.hpp>
 #include <boost/chrono.hpp>
 #include <boost/asio.hpp>
+#include <boost/program_options.hpp>
 #include <boost/algorithm/string.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
 
@@ -30,6 +31,9 @@ using namespace Spinnaker::GenApi;
 using namespace Spinnaker::GenICam;
 using namespace std;
 
+// Program options.
+namespace po = boost::program_options;
+
 
 /*-----------------------------------------------------------------------------
  *  Globals.
@@ -40,6 +44,7 @@ SystemPtr system_;
 CameraList cam_list_;
 bool all_done_ = false;
 string validCommands_ = "stlr";                   // Valid char commands.
+string portPath_;
 
 // Storage for images.
 vector<Mat> frames_;
@@ -144,13 +149,12 @@ void ArduinoClient()
 {
     // Connect to arduino client.
     bool connected = false;
-
     while(! connected)
     {
-        cout << "[INFO] Trying to connect to arduino." << endl;
+        cout << "[INFO] Trying to connect to arduino: " << portPath_ << endl;
         try 
         {
-            serial_.Open(string(ARDUINO_SERIAL_PORT));
+            serial_.Open(portPath_);
             connected = true;
         } 
         catch(std::exception& e) 
@@ -527,6 +531,28 @@ void initOpenCV()
 // comments on preparing and cleaning up the system.
 int main(int argc, char** argv)
 {
+
+    po::options_description desc("Arduino/Camera client.");
+    desc.add_options()
+        ("help", "produce help message")
+        ("port", po::value<string>(&portPath_)->default_value(ARDUINO_SERIAL_PORT), "Serial port")
+        ;
+
+    po::variables_map vm;
+    po::store(po::parse_command_line(argc, argv, desc), vm);
+    po::notify(vm);
+
+    if(vm.count("help")) {
+        cout << desc << endl;
+        return 0;
+    }
+
+    if(vm.count("help")) {
+        cout << desc << endl;
+        return 0;
+    }
+
+    // Add a signal handler.
     signal(SIGINT, sig_handler );
 
     // Intialize opencv windown and callback function.
