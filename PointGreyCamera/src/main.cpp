@@ -317,7 +317,7 @@ int ProcessFrame(void* data, size_t width, size_t height)
     cv::vconcat(infoRow, img, img);
 
     // Show every 25th frame.
-    if( total_frames_ % 25 == 0)
+    if( total_frames_ % 10 == 0)
         show_fame(img);
 
     // This frame and arduino data are stamped together.
