@@ -15,6 +15,7 @@
 #include <boost/date_time/posix_time/posix_time.hpp>
 
 #define ARDUINO_SERIAL_PORT     "/dev/ttyACM0"
+#define DEFAULT_BBOX            "255,131,521,288"
 #define OPENCV_MAIN_WINDOW      "Frame"
 
 // Libserial.
@@ -33,7 +34,6 @@ using namespace std;
 // Program options.
 namespace po = boost::program_options;
 
-
 /*-----------------------------------------------------------------------------
  *  Globals.
  *-----------------------------------------------------------------------------*/
@@ -48,9 +48,12 @@ string validCommands_ = "stlr";                   // Valid char commands.
 string portPath_;
 string dataDir_ = "/tmp";
 
+// ROI for the eye.
+string bbox_str_;
+array<int,4> bbox_={0,0,0,0};
+
 // Storage for images.
 vector<Mat> frames_;
-
 
 // queue.
 queue<string> arduinoQ_({"", "", "", "", "", "", "", "", "", ""});
@@ -67,6 +70,19 @@ string get_timestamp()
     using namespace boost::posix_time;
     ptime t = microsec_clock::universal_time();
     return to_iso_extended_string(t);
+}
+
+/* --------------------------------------------------------------------------*/
+/**
+ * @Synopsis  Show the frame.
+ *
+ * @Param img
+ */
+/* ----------------------------------------------------------------------------*/
+void show_fame( cv::Mat img)
+{
+    rectangle(img, Point(bbox_[0], bbox_[1]), Point(bbox_[2], bbox_[3]), 1, 1, 128);
+    imshow(OPENCV_MAIN_WINDOW,  img);
 }
 
 void SaveAllFrames(vector<Mat>& frames, const size_t trial)
@@ -247,6 +263,13 @@ int ProcessFrame(void* data, size_t width, size_t height)
     rectangle(img, Point(10,2), Point(width, 16), 0, -1);
     putText(img, arduinoData, Point(10,10), FONT_HERSHEY_SIMPLEX, 0.3, 200);
 
+    // Get the ROI.
+    for(auto c: bbox_) cout << c << ',';
+    cout << endl;
+
+    auto roi = img(cv::Range(bbox_[0], bbox_[2]), cv::Range(bbox_[1], bbox_[3]));
+    imshow("roi", roi);
+
     // Convert msg to array of uint8 and append to first frame.
     string toWrite = arduinoData;
     toWrite.resize(width, ' ');
@@ -255,9 +278,12 @@ int ProcessFrame(void* data, size_t width, size_t height)
     // Prepent to image.
     cv::vconcat(infoRow, img, img);
 
+
     // Show every 25th frame.
     if( total_frames_ % 25 == 0)
-        imshow(OPENCV_MAIN_WINDOW,  img);
+    {
+        show_fame(img);
+    }
 
     // This frame and arduino data are stamped together.
     AddToStoreHouse(img, arduinoData);
@@ -316,12 +342,7 @@ int AcquireImages(CameraPtr pCam, INodeMap& nodeMap, INodeMap& nodeMapTLDevice)
                  << endl;
         }
     }
-    catch( runtime_error& e )
-    {
-        cout << "User pressed Ctrl+c" << endl;
-        return -1;
-    }
-    catch (Spinnaker::Exception &e)
+    catch (std::exception &e)
     {
         cout << "Error: " << e.what() << endl;
         return  -1;
@@ -423,11 +444,13 @@ int InitSingleCamera(CameraPtr pCam, std::pair<INodeMap*, INodeMap*>& res)
     INodeMap& nodeMap = pCam->GetNodeMap();
 
     // Set width, height
+    cout << "[INFO] Setting frame width to "<< FRAME_WIDTH << endl;
     CIntegerPtr width = nodeMap.GetNode("Width");
-    width->SetValue( FRAME_WIDTH );
+    width->SetValue(FRAME_WIDTH);
 
+    cout << "[INFO] Setting frame height to "<< FRAME_HEIGHT << endl;
     CIntegerPtr height = nodeMap.GetNode("Height");
-    height->SetValue( FRAME_HEIGHT );
+    height->SetValue(FRAME_HEIGHT);
 
     // Set frame rate manually.
     CBooleanPtr pAcquisitionManualFrameRate = nodeMap.GetNode( "AcquisitionFrameRateEnable" );
@@ -533,10 +556,15 @@ void RunSingleCamera(CameraPtr pCam, INodeMap* pNodeMap, INodeMap* pNodeMapTLDev
 
 void initialize()
 {
-
     // Initialize opencv window.
     namedWindow(OPENCV_MAIN_WINDOW);
     setMouseCallback(OPENCV_MAIN_WINDOW, cvMouseCallback);
+
+    // initialize bbox.
+    vector<string> res;
+    boost::split(res, bbox_str_, boost::is_any_of(","));
+    for (size_t i = 0; i < 4; i++) 
+        bbox_[i] = (int) stoi(res[i]);
 
     // Make sure that data-dir exists.
     using namespace boost::filesystem;
@@ -557,8 +585,12 @@ int main(int argc, char** argv)
     po::options_description desc("Arduino/Camera client.");
     desc.add_options()
         ("help,h", "produce help message")
-        ("port,p", po::value<string>(&portPath_)->default_value(ARDUINO_SERIAL_PORT), "Serial port")
-        ("datadir,d", po::value<string>(&dataDir_)->default_value("/tmp"), "Directory to save images/data.")
+        ("port,p", po::value<string>(&portPath_)->default_value(ARDUINO_SERIAL_PORT)
+            , "Serial port")
+        ("bbox,b", po::value<string>(&bbox_str_)->default_value(DEFAULT_BBOX)
+            , "Bounding box in CSV format e.g. 'x0,y0,x1,y1'.")
+        ("datadir,d", po::value<string>(&dataDir_)->default_value("/tmp")
+            , "Directory to save images/data.")
         ;
 
     po::variables_map vm;
@@ -617,7 +649,15 @@ int main(int argc, char** argv)
     cout << "[INFO] Arduino client has been launched." << endl;
 
     pair<INodeMap*, INodeMap*> res;
-    InitSingleCamera(pCam, res);
+    try 
+    {
+        InitSingleCamera(pCam, res);
+    }
+    catch( std::exception& e)
+    {
+        cout << "[WARN] Failed to initialize camera. " << e.what() << endl;
+        return -1;
+    }
 
     // This function loops forever.
     RunSingleCamera(pCam, res.first, res.second);
