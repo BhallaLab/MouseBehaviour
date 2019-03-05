@@ -14,6 +14,7 @@
 
 // Libserial.
 #include <SerialStream.h>
+using namespace LibSerial;
 
 #include "config.h"
 
@@ -29,31 +30,65 @@ float fps_ = 0.0;                               /* Frame per second. */
 
 SystemPtr system_;
 CameraList cam_list_;
+bool all_done_ = false;
 
 // Global queue.
 queue<string> arduinoQ_({"", "", "", "", "", "", "", "", "", ""});
 
 void sig_handler( int s )
 {
-    throw runtime_error( "Ctrl+C pressed" );
+    cerr << "user pressed ctrl+c. Terminating everything.. " << endl;
+    all_done_ = true;
+}
+
+string ReadLine(SerialStream& serial)
+{
+    string res;
+    char next_char = ' ';
+    while(next_char != '\n')
+    {
+        serial.get(next_char);
+        res += next_char;
+        if(all_done_)
+            break;
+    }
+    return res;
 }
 
 void ArduinoClient()
 {
     // Connect to arduino client.
     bool connected = false;
-
-    LibSerial::SerialStream arduinoStream(string(ARDUINO_SERIAL_PORT));
-    arduinoStream.SetBaudRate(ARDUINO_SERIAL_BAUD_RATE);
+    SerialStream arduinoStream;
 
     while(! connected)
     {
         cout << "Trying to connect to arduino." << endl;
+        try 
+        {
+            arduinoStream.Open(string(ARDUINO_SERIAL_PORT));
+            connected = true;
+        } 
+        catch(std::exception& e) 
+        {
+            cerr << "Failed to open serial port." << e.what() << endl;
+            boost::this_thread::sleep_for(boost::chrono::milliseconds(1000));
+        }
     }
 
-    while(true)
+    // Config.
+    arduinoStream.SetCharSize(SerialStreamBuf::CHAR_SIZE_8);
+    arduinoStream.SetBaudRate(SerialStreamBuf::BAUD_115200);
+
+    string line;
+    while( ! all_done_)
     {
-        arduinoQ_.push("Nothing");
+        // Read line from serial.
+        line = ReadLine(arduinoStream);
+        if( ! line.empty() )
+            arduinoQ_.push(line);
+        else
+            arduinoQ_.push("Nothing");
         arduinoQ_.pop();
         boost::this_thread::sleep_for(boost::chrono::milliseconds(100));
     }
@@ -113,6 +148,13 @@ int ProcessFrame(void* data, size_t width, size_t height)
     msg += "|" + string(arduinoQ_.back());
     putText(img, msg, Point(10,10), FONT_HERSHEY_SIMPLEX, 0.3, 255);
 
+    // Convert msg to array of uint8 and append to first frame.
+    msg.resize(width, ' ');
+    cv::Mat infoRow(1, width, CV_8UC1, (void*) msg.data());
+    
+    // Prepent to image.
+    cv::vconcat(infoRow, img, img);
+
 #if 1
     if( total_frames_ % 10 == 0)
     {
@@ -166,9 +208,7 @@ int AcquireImages(CameraPtr pCam, INodeMap& nodeMap, INodeMap& nodeMapTLDevice)
                  << endl;
         }
 
-
-        char notification[100] = "running ..";
-        while( true )
+        while(! all_done_)
         {
             try
             {
@@ -266,138 +306,130 @@ int PrintDeviceInfo(INodeMap & nodeMap)
 
 // This function acts as the body of the example; please see NodeMapInfo example
 // for more in-depth comments on setting up cameras.
-int RunSingleCamera(CameraPtr pCam)
+int InitSingleCamera(CameraPtr pCam, std::pair<INodeMap*, INodeMap*>& res)
 {
-    int result = 0;
+    // Retrieve TL device nodemap and print device information
+    INodeMap& nodeMapTLDevice = pCam->GetTLDeviceNodeMap();
+    PrintDeviceInfo(nodeMapTLDevice);
+
+    // Initialize camera
+    pCam->Init();
+
+    // Retrieve GenICam nodemap
+    INodeMap& nodeMap = pCam->GetNodeMap();
+
+    // Set width, height
+    CIntegerPtr width = nodeMap.GetNode("Width");
+    width->SetValue( FRAME_WIDTH );
+
+    CIntegerPtr height = nodeMap.GetNode("Height");
+    height->SetValue( FRAME_HEIGHT );
+
+    // Set frame rate manually.
+    CBooleanPtr pAcquisitionManualFrameRate = nodeMap.GetNode( "AcquisitionFrameRateEnable" );
+    pAcquisitionManualFrameRate->SetValue( true );
+
+    CFloatPtr ptrAcquisitionFrameRate = nodeMap.GetNode("AcquisitionFrameRate");
+
     try
     {
-        // Retrieve TL device nodemap and print device information
-        INodeMap & nodeMapTLDevice = pCam->GetTLDeviceNodeMap();
-
-        result = PrintDeviceInfo(nodeMapTLDevice);
-
-        // Initialize camera
-        pCam->Init();
-
-        // Retrieve GenICam nodemap
-        INodeMap & nodeMap = pCam->GetNodeMap();
-
-        // Set width, height
-        CIntegerPtr width = nodeMap.GetNode("Width");
-        width->SetValue( FRAME_WIDTH );
-
-        CIntegerPtr height = nodeMap.GetNode("Height");
-        height->SetValue( FRAME_HEIGHT );
-
-        // Set frame rate manually.
-        CBooleanPtr pAcquisitionManualFrameRate = nodeMap.GetNode( "AcquisitionFrameRateEnable" );
-        pAcquisitionManualFrameRate->SetValue( true );
-
-        CFloatPtr ptrAcquisitionFrameRate = nodeMap.GetNode("AcquisitionFrameRate");
-
-        try
-        {
-            cout << "Trying to set frame rate to " << EXPECTED_FPS << endl;
-            ptrAcquisitionFrameRate->SetValue( EXPECTED_FPS );
-        }
-        catch ( std::exception & e )
-        {
-            cout << "Failed to set frame rate. Using default ... " << endl;
-            cout << "\tError was " << e.what( ) << endl;
-        }
-
-        if (!IsAvailable(ptrAcquisitionFrameRate) || !IsReadable(ptrAcquisitionFrameRate))
-            cout << "Unable to retrieve frame rate. " << endl << endl;
-        else
-        {
-            fps_ = static_cast<float>(ptrAcquisitionFrameRate->GetValue());
-            cout << "[INFO] Expected frame set to " << fps_ << endl;
-        }
-
-        // Switch off auto-exposure and set it manually.
-        CEnumerationPtr ptrExposureAuto = nodeMap.GetNode("ExposureAuto");
-        if (!IsAvailable(ptrExposureAuto) || !IsWritable(ptrExposureAuto))
-        {
-            cout << "Unable to disable automatic exposure (node retrieval). Aborting..." << endl << endl;
-            return -1;
-        }
-
-        CEnumEntryPtr ptrExposureAutoOff = ptrExposureAuto->GetEntryByName("Off");
-        if (!IsAvailable(ptrExposureAutoOff) || !IsReadable(ptrExposureAutoOff))
-        {
-            cout << "Unable to disable automatic exposure (enum entry retrieval). Aborting..." << endl << endl;
-            return -1;
-        }
-
-        ptrExposureAuto->SetIntValue(ptrExposureAutoOff->GetValue());
-        cout << "Automatic exposure disabled..." << endl;
-        CFloatPtr ptrExposureTime = nodeMap.GetNode("ExposureTime");
-        if (!IsAvailable(ptrExposureTime) || !IsWritable(ptrExposureTime))
-        {
-            cout << "Unable to set exposure time. Aborting..." << endl << endl;
-            return -1;
-        }
-
-        // Ensure desired exposure time does not exceed the maximum
-        const double exposureTimeMax = ptrExposureTime->GetMax();
-
-        ptrExposureTime->SetValue( EXPOSURE_TIME_IN_US );
-        cout << "Exposure time set to " << ptrExposureTime->GetValue( ) << " us..." << endl << endl;
-
-#if 1
-        // Turn of automatic gain
-        CEnumerationPtr ptrGainAuto = nodeMap.GetNode("GainAuto");
-        if (!IsAvailable(ptrGainAuto) || !IsWritable(ptrGainAuto))
-        {
-            cout << "Unable to disable automatic gain (node retrieval). Aborting..." << endl << endl;
-            return -1;
-        }
-        CEnumEntryPtr ptrGainAutoOff = ptrGainAuto->GetEntryByName("Off");
-        if (!IsAvailable(ptrGainAutoOff) || !IsReadable(ptrGainAutoOff))
-        {
-            cout << "Unable to disable automatic gain (enum entry retrieval). Aborting..." << endl << endl;
-            return -1;
-        }
-
-        // Set gain; gain recorded in decibels
-        CFloatPtr ptrGain = nodeMap.GetNode("Gain");
-        if (!IsAvailable(ptrGain) || !IsWritable(ptrGain))
-        {
-            cout << "[WARN] Unable to set gain (node retrieval). Using default ..." << endl;
-        }
-        else
-        {
-            double gainMax = ptrGain->GetMax();
-            double gainToSet = ptrGain->GetMin( );
-            ptrGain->SetValue(gainToSet);
-        }
-
-#endif
-
-        /*-----------------------------------------------------------------------------
-         *  IMAGE ACQUISITION
-         *  Infinite loop.
-         *-----------------------------------------------------------------------------*/
-        result = AcquireImages(pCam, nodeMap, nodeMapTLDevice);
-
-        // Reset settings.
-        ResetExposure( nodeMap );
-
-        // Deinitialize camera
-        pCam->DeInit();
+        cout << "Trying to set frame rate to " << EXPECTED_FPS << endl;
+        ptrAcquisitionFrameRate->SetValue( EXPECTED_FPS );
     }
-    catch (Spinnaker::Exception &e)
+    catch ( std::exception & e )
     {
-        cout << "Error: " << e.what() << endl;
-        result = -1;
+        cout << "Failed to set frame rate. Using default ... " << endl;
+        cout << "\tError was " << e.what( ) << endl;
     }
 
-    return result;
+    if (!IsAvailable(ptrAcquisitionFrameRate) || !IsReadable(ptrAcquisitionFrameRate))
+        cout << "Unable to retrieve frame rate. " << endl << endl;
+    else
+    {
+        fps_ = static_cast<float>(ptrAcquisitionFrameRate->GetValue());
+        cout << "[INFO] Expected frame set to " << fps_ << endl;
+    }
+
+    // Switch off auto-exposure and set it manually.
+    CEnumerationPtr ptrExposureAuto = nodeMap.GetNode("ExposureAuto");
+    if (!IsAvailable(ptrExposureAuto) || !IsWritable(ptrExposureAuto))
+    {
+        cout << "Unable to disable automatic exposure (node retrieval). Aborting..." << endl << endl;
+        return -1;
+    }
+
+    CEnumEntryPtr ptrExposureAutoOff = ptrExposureAuto->GetEntryByName("Off");
+    if (!IsAvailable(ptrExposureAutoOff) || !IsReadable(ptrExposureAutoOff))
+    {
+        cout << "Unable to disable automatic exposure (enum entry retrieval). Aborting..." << endl << endl;
+        return -1;
+    }
+
+    ptrExposureAuto->SetIntValue(ptrExposureAutoOff->GetValue());
+    cout << "Automatic exposure disabled..." << endl;
+    CFloatPtr ptrExposureTime = nodeMap.GetNode("ExposureTime");
+    if (!IsAvailable(ptrExposureTime) || !IsWritable(ptrExposureTime))
+    {
+        cout << "Unable to set exposure time. Aborting..." << endl << endl;
+        return -1;
+    }
+
+    // Ensure desired exposure time does not exceed the maximum
+    const double exposureTimeMax = ptrExposureTime->GetMax();
+
+    ptrExposureTime->SetValue( EXPOSURE_TIME_IN_US );
+    cout << "Exposure time set to " << ptrExposureTime->GetValue( ) << " us..." << endl << endl;
+
+    // Turn of automatic gain
+    CEnumerationPtr ptrGainAuto = nodeMap.GetNode("GainAuto");
+    if (!IsAvailable(ptrGainAuto) || !IsWritable(ptrGainAuto))
+    {
+        cout << "Unable to disable automatic gain (node retrieval). Aborting..." << endl << endl;
+        return -1;
+    }
+    CEnumEntryPtr ptrGainAutoOff = ptrGainAuto->GetEntryByName("Off");
+    if (!IsAvailable(ptrGainAutoOff) || !IsReadable(ptrGainAutoOff))
+    {
+        cout << "Unable to disable automatic gain (enum entry retrieval). Aborting..." << endl << endl;
+        return -1;
+    }
+
+    // Set gain; gain recorded in decibels
+    CFloatPtr ptrGain = nodeMap.GetNode("Gain");
+    if (!IsAvailable(ptrGain) || !IsWritable(ptrGain))
+    {
+        cout << "[WARN] Unable to set gain (node retrieval). Using default ..." << endl;
+    }
+    else
+    {
+        double gainMax = ptrGain->GetMax();
+        double gainToSet = ptrGain->GetMin( );
+        ptrGain->SetValue(gainToSet);
+    }
+
+    res.first = &nodeMap;
+    res.second = &nodeMapTLDevice;
+    return 0;
+}
+
+void RunSingleCamera(CameraPtr pCam, INodeMap* pNodeMap, INodeMap* pNodeMapTLDevice)
+{
+    /*-----------------------------------------------------------------------------
+     *  IMAGE ACQUISITION
+     *  Infinite loop.
+     *-----------------------------------------------------------------------------*/
+    AcquireImages(pCam, *pNodeMap, *pNodeMapTLDevice);
+
+    // Reset settings.
+    ResetExposure( *pNodeMap );
+
+    // Deinitialize camera
+    pCam->DeInit();
 }
 
 // Example entry point; please see Enumeration example for more in-depth
 // comments on preparing and cleaning up the system.
-int main(int /*argc*/, char** /*argv*/)
+int main(int argc, char** argv)
 {
     signal(SIGINT, sig_handler );
 
@@ -414,7 +446,6 @@ int main(int /*argc*/, char** /*argv*/)
 
     // Retrieve list of cameras from the system
     cam_list_ = system_->GetCameras();
-
     unsigned int numCameras = cam_list_.GetSize();
 
     cout << "Number of cameras detected: " << numCameras << endl << endl;
@@ -434,10 +465,13 @@ int main(int /*argc*/, char** /*argv*/)
     CameraPtr pCam = cam_list_.GetByIndex( 0 );
 
     auto t = boost::thread(ArduinoClient);
-    cout << "info: Arduino client has been launched." << endl;
+    cout << "[INFO] Arduino client has been launched." << endl;
+
+    pair<INodeMap*, INodeMap*> res;
+    InitSingleCamera(pCam, res);
 
     // This function loops forever.
-    RunSingleCamera(pCam);
+    RunSingleCamera(pCam, res.first, res.second);
 
     pCam = 0;
     // Clear camera list before releasing system_
