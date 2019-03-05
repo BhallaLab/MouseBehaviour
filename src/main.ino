@@ -241,8 +241,8 @@ void print_trial_info( )
     Serial.print( ANIMAL_NAME );
     Serial.print( " SESSION NUM: " );
     Serial.print( SESSION_NUM );
-    Serial.print( " SESSION TYPE: " );
-    Serial.println(CS_TYPE );
+    Serial.print( " PROTO CODE: " );
+    Serial.println(PROTO_CODE);
 }
 
 

@@ -38,7 +38,6 @@ logging.basicConfig(level=logging.INFO)
 
 start_ = time.time()
 total_trials_ = 0
-cs_type_ = None
 prev_trial_ = 0
 
 # Frame and main window.
@@ -134,8 +133,8 @@ else:
 
 # Arduino data storate
 def trial_file_path( trial = 0 ):
-    filename = "name=%s_st=%s_sn=%s" % (
-        config.args_.name, config.args_.cs_type, config.args_.session_num
+    filename = "name=%s_sn=%s" % (
+        config.args_.name, config.args_.session_num
             )
     filename += 'trial=%d.dat' % trial
     trial_file_ = os.path.join( data_dir_, filename )
@@ -163,7 +162,6 @@ def read_line():
 
 def arduino_client(writeP, trialIndex, cameraPinValue):
     global running_trial_
-    global cs_type_
     global next_probe_in_
     global select_sent_
     global finished_all_
@@ -515,12 +513,6 @@ if __name__ == '__main__':
         required=True,
         type=str,
         help='Mouse name (string)')
-    parser.add_argument(
-        '--cs-type',
-        '-ct',
-        required=True,
-        type=str,
-        help='CS Type [S, L, M]')
     parser.add_argument(
         '--session-num',
         '-sn',
