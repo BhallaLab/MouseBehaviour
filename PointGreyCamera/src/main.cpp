@@ -1,12 +1,13 @@
 #include "Spinnaker.h"
 #include "SpinGenApi/SpinnakerGenApi.h"
-#include "gnuplot-iostream.h"
+// #include "gnuplot-iostream.h"
 #include <iostream>
 #include <csignal>
 #include <queue>
 #include <exception>
 
 #include <opencv2/highgui/highgui.hpp>
+
 #include <boost/thread/thread.hpp>
 #include <boost/chrono.hpp>
 #include <boost/asio.hpp>
@@ -53,10 +54,10 @@ string dataDir_ = "/tmp";
 // ROI for the eye.
 string bbox_str_;
 array<int,4> bbox_={0,0,0,0};
-vector<double> gnuplotVec_(1000, 0);
+vector<double> gnuplotVec_(1000, 0.0);
 
 // gnuplot
-Gnuplot gp_;
+// Gnuplot gp_;
 
 // Storage for images.
 vector<Mat> frames_;
@@ -87,12 +88,23 @@ string get_timestamp()
 /* ----------------------------------------------------------------------------*/
 void show_fame( cv::Mat img)
 {
+    // Draw a plot.
     rectangle(img, Point(bbox_[0], bbox_[1]), Point(bbox_[2], bbox_[3]), 1, 1, 128);
-    imshow(OPENCV_MAIN_WINDOW,  img);
+    static cv::Mat plt(40, img.cols, CV_8UC1);
+    plt = Scalar(0);
+    size_t x, y;
 
-    // Plot in gnuplotlib.
-    gp_ << "plot '-' with lines title 'Blinks'" << endl;
-    gp_.send1d(gnuplotVec_);
+    // Maximum mean value could be 128.
+    for (size_t i = 1; i < gnuplotVec_.size()-1; i++)
+    {
+        x = (size_t)(i*img.cols/gnuplotVec_.size());
+        y = (size_t)(gnuplotVec_[i]/5.0)+1;
+        x = x % plt.cols;
+        y = y % plt.rows;
+        plt.at<uchar>(y, x) = 255;
+    }
+    vconcat(img, plt, img);
+    imshow(OPENCV_MAIN_WINDOW,  img);
 }
 
 void SaveAllFrames(vector<Mat>& frames, const size_t trial)
@@ -563,10 +575,6 @@ void RunSingleCamera(CameraPtr pCam, INodeMap* pNodeMap, INodeMap* pNodeMapTLDev
 
 void initialize()
 {
-    // initialize gnuplot.
-    gp_ << "set terminal x11 noraise" << endl;
-    gp_ << "set yrange [0:100]" << endl;
-
     // Initialize opencv window.
     namedWindow(OPENCV_MAIN_WINDOW);
     setMouseCallback(OPENCV_MAIN_WINDOW, cvMouseCallback);
