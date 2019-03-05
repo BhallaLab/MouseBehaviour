@@ -1,9 +1,11 @@
 #include "Spinnaker.h"
 #include "SpinGenApi/SpinnakerGenApi.h"
+#include "gnuplot-iostream.h"
 #include <iostream>
 #include <csignal>
 #include <queue>
 #include <exception>
+
 #include <opencv2/highgui/highgui.hpp>
 #include <boost/thread/thread.hpp>
 #include <boost/chrono.hpp>
@@ -37,11 +39,11 @@ namespace po = boost::program_options;
 /*-----------------------------------------------------------------------------
  *  Globals.
  *-----------------------------------------------------------------------------*/
-int total_frames_ = 0;
-double fps_       = 0.0;                          /* Frame per second. */
-SystemPtr system_;
-CameraList cam_list_;
-bool all_done_ = false;
+int total_frames_     = 0;
+double fps_           = 0.0;                          /* Frame per second. */
+SystemPtr system_     = 0;
+CameraList cam_list_  = {};
+bool all_done_        = false;
 string validCommands_ = "stlr";                   // Valid char commands.
 
 // Command line arguments.
@@ -51,6 +53,10 @@ string dataDir_ = "/tmp";
 // ROI for the eye.
 string bbox_str_;
 array<int,4> bbox_={0,0,0,0};
+vector<double> gnuplotVec_(1000, 0);
+
+// gnuplot
+Gnuplot gp_;
 
 // Storage for images.
 vector<Mat> frames_;
@@ -83,6 +89,10 @@ void show_fame( cv::Mat img)
 {
     rectangle(img, Point(bbox_[0], bbox_[1]), Point(bbox_[2], bbox_[3]), 1, 1, 128);
     imshow(OPENCV_MAIN_WINDOW,  img);
+
+    // Plot in gnuplotlib.
+    gp_ << "plot '-' with lines title 'Blinks'" << endl;
+    gp_.send1d(gnuplotVec_);
 }
 
 void SaveAllFrames(vector<Mat>& frames, const size_t trial)
@@ -161,6 +171,7 @@ void ReadLine(string& res)
         if(all_done_)
             break;
     }
+
     // Append timestamp to the line.
     res = get_timestamp() + ',' + res;
 }
@@ -210,10 +221,8 @@ int ResetExposure(INodeMap & nodeMap)
 {
     try
     {
-        // *** NOTES ***
         // Automatic exposure is turned on in order to return the camera to its
         // default state.
-        //
         CEnumerationPtr ptrExposureAuto = nodeMap.GetNode("ExposureAuto");
         if (!IsAvailable(ptrExposureAuto) || !IsWritable(ptrExposureAuto))
         {
@@ -224,7 +233,8 @@ int ResetExposure(INodeMap & nodeMap)
         CEnumEntryPtr ptrExposureAutoContinuous = ptrExposureAuto->GetEntryByName("Continuous");
         if (!IsAvailable(ptrExposureAutoContinuous) || !IsReadable(ptrExposureAutoContinuous))
         {
-            cout << "Unable to enable automatic exposure (enum entry retrieval). Non-fatal error..." << endl << endl;
+            cout << "Unable to enable automatic exposure (enum entry retrieval)."
+                << " Non-fatal error..." << endl << endl;
             return -1;
         }
         ptrExposureAuto->SetIntValue(ptrExposureAutoContinuous->GetValue());
@@ -254,21 +264,28 @@ int ProcessFrame(void* data, size_t width, size_t height)
 
     // Write frame number on the frame.
     string aLine = arduinoQ_.back();
-    if( '<' == aLine[0] )
-        cout << aLine << endl;
 
-    string arduinoData = get_timestamp() + ',' + aLine;
+    // Compute mean in ROI. This is the signal value.
+    double eyeValue = 0.0;
+    try 
+    {
+        // Get the ROI.
+        auto roi = img(cv::Range(bbox_[1], bbox_[3]), cv::Range(bbox_[0], bbox_[2]));
+        eyeValue = cv::mean(roi)[0];
+        gnuplotVec_.push_back(eyeValue);
+        gnuplotVec_.erase(gnuplotVec_.begin());
+    } 
+    catch(std::exception& e)
+    {
+        cout << "[WARN] " << e.what() << endl;
+    }
+
+    string arduinoData = get_timestamp() + ',' + aLine + ',' + boost::str(boost::format("%.2f")%eyeValue);
 
     // Draw a back rectangle on the top.
     rectangle(img, Point(10,2), Point(width, 16), 0, -1);
     putText(img, arduinoData, Point(10,10), FONT_HERSHEY_SIMPLEX, 0.3, 200);
 
-    // Get the ROI.
-    for(auto c: bbox_) cout << c << ',';
-    cout << endl;
-
-    auto roi = img(cv::Range(bbox_[0], bbox_[2]), cv::Range(bbox_[1], bbox_[3]));
-    imshow("roi", roi);
 
     // Convert msg to array of uint8 and append to first frame.
     string toWrite = arduinoData;
@@ -278,12 +295,9 @@ int ProcessFrame(void* data, size_t width, size_t height)
     // Prepent to image.
     cv::vconcat(infoRow, img, img);
 
-
     // Show every 25th frame.
     if( total_frames_ % 25 == 0)
-    {
         show_fame(img);
-    }
 
     // This frame and arduino data are stamped together.
     AddToStoreHouse(img, arduinoData);
@@ -388,9 +402,7 @@ int AcquireImages(CameraPtr pCam, INodeMap& nodeMap, INodeMap& nodeMapTLDevice)
 int PrintDeviceInfo(INodeMap & nodeMap)
 {
     int result = 0;
-
     cout << endl << "*** DEVICE INFORMATION ***" << endl << endl;
-
     try
     {
         FeatureList_t features;
@@ -408,19 +420,15 @@ int PrintDeviceInfo(INodeMap & nodeMap)
                 cout << (IsReadable(pValue) ? pValue->ToString() : "Node not readable");
                 cout << endl;
             }
-
         }
         else
-        {
             cout << "Device control information not available." << endl;
-        }
     }
     catch (Spinnaker::Exception &e)
     {
         cout << "Error: " << e.what() << endl;
         result = -1;
     }
-
     return result;
 }
 
@@ -455,7 +463,6 @@ int InitSingleCamera(CameraPtr pCam, std::pair<INodeMap*, INodeMap*>& res)
     // Set frame rate manually.
     CBooleanPtr pAcquisitionManualFrameRate = nodeMap.GetNode( "AcquisitionFrameRateEnable" );
     pAcquisitionManualFrameRate->SetValue( true );
-
     CFloatPtr ptrAcquisitionFrameRate = nodeMap.GetNode("AcquisitionFrameRate");
 
     try
@@ -556,6 +563,10 @@ void RunSingleCamera(CameraPtr pCam, INodeMap* pNodeMap, INodeMap* pNodeMapTLDev
 
 void initialize()
 {
+    // initialize gnuplot.
+    gp_ << "set terminal x11 noraise" << endl;
+    gp_ << "set yrange [0:100]" << endl;
+
     // Initialize opencv window.
     namedWindow(OPENCV_MAIN_WINDOW);
     setMouseCallback(OPENCV_MAIN_WINDOW, cvMouseCallback);
@@ -629,7 +640,7 @@ int main(int argc, char** argv)
     // Retrieve list of cameras from the system
     cam_list_ = system_->GetCameras();
     unsigned int numCameras = cam_list_.GetSize();
-    cout << "Number of cameras detected: " << numCameras << endl << endl;
+    cout << "[INFO] Number of cameras detected: " << numCameras << endl << endl;
 
     // Finish if there are no cameras
     if (numCameras == 0)
@@ -639,7 +650,7 @@ int main(int argc, char** argv)
 
         // Release system_
         system_->ReleaseInstance();
-        cout << "Not enough cameras! Existing ..." << endl;
+        cerr << "[ERROR] Not enough cameras! Existing ..." << endl;
         return -1;
     }
 
@@ -670,7 +681,7 @@ int main(int argc, char** argv)
     system_->ReleaseInstance();
 
     destroyAllWindows();
-    if( t.joinable() )
+    if(t.joinable())
         t.join();
 
     std::cout << "All done" << std::endl;
