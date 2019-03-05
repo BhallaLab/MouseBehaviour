@@ -108,9 +108,9 @@ void show_fame( cv::Mat img)
 
 void SaveAllFrames(vector<Mat>& frames, const size_t trial)
 {
-    if(frames.size() < 1)
+    if(frames.size() < 1 or trial == 0)
     {
-        cout << "[WARN] No frames to save." << endl;
+        cout << "[WARN] No frames to save or 0th trial." << endl;
         return;
     }
 
