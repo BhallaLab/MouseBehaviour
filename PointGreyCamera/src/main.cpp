@@ -85,7 +85,7 @@ string get_timestamp()
  * @Param img
  */
 /* ----------------------------------------------------------------------------*/
-void show_fame( cv::Mat img)
+void show_frame( cv::Mat img)
 {
     // Draw a plot.
     rectangle(img, Point(bbox_[0], bbox_[1]), Point(bbox_[2], bbox_[3]), 1, 1, 128);
@@ -138,18 +138,16 @@ void SaveAllFrames(vector<Mat>& frames, const size_t trial)
  * @Param arduino
  */
 /* ----------------------------------------------------------------------------*/
-void AddToStoreHouse(Mat& mat, const string arduino)
+void AddToStoreHouse(Mat& mat, const vector<string>& arduinoData)
 {
     static int currentTrial = 0;
     static bool saveFrames = false;
 
-    vector<string> arduinoData;
-    boost::split(arduinoData, arduino, boost::is_any_of(","));
     if(arduinoData.size() < 13)
         return;
 
     if(currentTrial > 0)
-        lines_.push_back(arduino);
+        lines_.push_back(boost::algorithm::join(arduinoData, ","));
 
     // Else we have valid data.
     size_t storeFrameIdx = 8;
@@ -313,15 +311,22 @@ int ProcessFrame(void* data, size_t width, size_t height)
         cout << "[WARN] " << e.what() << endl;
     }
 
-    string arduinoData = get_timestamp() + ',' + aLine + ',' + boost::str(boost::format("%.2f")%eyeValue);
+    string arduino = get_timestamp() + ',' + aLine + ',' + boost::str(boost::format("%.2f")%eyeValue);
+    vector<string> arduinoData;
+    boost::split(arduinoData, arduino, boost::is_any_of(","));
 
     // Draw a back rectangle on the top.
-    rectangle(img, Point(10,2), Point(width, 16), 0, -1);
-    putText(img, arduinoData, Point(10,10), FONT_HERSHEY_SIMPLEX, 0.3, 200);
+    rectangle(img, Point(1,2), Point(width, 16), 0, -1);
+    putText(img, arduino, Point(10,10), FONT_HERSHEY_SIMPLEX, 0.3, 200);
 
+    // If  camera pin is high then show (ON) else show (OFF)
+    string cameraStatus = "(OFF)";
+    if(arduinoData.size() == 13 && arduinoData[8] == "1")
+        cameraStatus = "(ON)";
+    putText(img, cameraStatus, Point(img.cols-40, 10), FONT_HERSHEY_SIMPLEX, 0.3, 200);
 
     // Convert msg to array of uint8 and append to first frame.
-    string toWrite = arduinoData;
+    string toWrite = arduino;
     toWrite.resize(width, ' ');
     cv::Mat infoRow(1, width, CV_8UC1, (void*) toWrite.data());
     
@@ -330,7 +335,7 @@ int ProcessFrame(void* data, size_t width, size_t height)
 
     // Show every 25th frame.
     if( total_frames_ % 10 == 0)
-        show_fame(img);
+        show_frame(img);
 
     // This frame and arduino data are stamped together.
     AddToStoreHouse(img, arduinoData);
@@ -476,17 +481,19 @@ int PrintDeviceInfo(INodeMap & nodeMap)
 /* ----------------------------------------------------------------------------*/
 static void cvMouseCallback(int event, int x, int y, int, void*)
 {
-    if(event == EVENT_LBUTTONDOWN)
+    static bool drawing_rect = false;
+    static int x1 = bbox_[0], y1 = bbox_[1];
+    if((! drawing_rect) && (event == EVENT_LBUTTONDBLCLK))
     {
-        cout << "[INFO] Now drag to other corner." << endl;
-        bbox_[0] = x;
-        bbox_[1] = y;
+        cout << "[INFO] Now go to other corner and double click." << endl;
+        drawing_rect = true;
+        x1 = x; y1 = y;
     }
-    else if(event == EVENT_LBUTTONUP)
+    else if(drawing_rect && (event == EVENT_LBUTTONDBLCLK))
     {
         cout << "[INFO] Rectangle is complete." << endl;
-        bbox_[2] = x;
-        bbox_[3] = y;
+        bbox_[0] = x1; bbox_[1] = y1; bbox_[2] = x; bbox_[3] = y;
+        drawing_rect = false;
     }
 }
 
