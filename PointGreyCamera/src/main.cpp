@@ -464,9 +464,30 @@ int PrintDeviceInfo(INodeMap & nodeMap)
     return result;
 }
 
+/* --------------------------------------------------------------------------*/
+/**
+ * @Synopsis  Mousee callback.
+ *
+ * @Param event
+ * @Param x
+ * @Param y
+ * @Param int
+ */
+/* ----------------------------------------------------------------------------*/
 static void cvMouseCallback(int event, int x, int y, int, void*)
 {
-
+    if(event == EVENT_LBUTTONDOWN)
+    {
+        cout << "[INFO] Now drag to other corner." << endl;
+        bbox_[0] = x;
+        bbox_[1] = y;
+    }
+    else if(event == EVENT_LBUTTONUP)
+    {
+        cout << "[INFO] Rectangle is complete." << endl;
+        bbox_[2] = x;
+        bbox_[3] = y;
+    }
 }
 
 // This function acts as the body of the example; please see NodeMapInfo example
