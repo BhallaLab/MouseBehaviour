@@ -461,10 +461,11 @@ void do_trial( size_t trial_num, bool isprobe = false )
     Serial.println(" ms (ITI) before starting new trial." );
     stamp_ = millis();
     sprintf(trial_state_, "ITI_");
-    while((millis( ) - stamp_) <= rduration)
+    while((millis() - stamp_) <= rduration)
     {
         reset_watchdog( );
-        delay(10);
+        write_data_line();
+        delay(100);
     }
 }
 
