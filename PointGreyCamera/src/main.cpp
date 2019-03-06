@@ -46,7 +46,7 @@ double fps_           = 0.0;                          /* Frame per second. */
 SystemPtr system_     = 0;
 CameraList cam_list_  = {};
 bool all_done_        = false;
-string validCommands_ = "stlr";                   // Valid char commands.
+string validCommands_ = "stlrpt12";                   // Valid char commands.
 
 // Command line arguments.
 string portPath_;
@@ -194,6 +194,15 @@ void ReadLine(string& res)
             break;
     }
 
+    // If the line starts with '<' or '>' characters; then dump them to console.
+    if(res[0] == '<' || res[1] == '>')
+    {
+        cout << res << endl;
+        res = "";
+        return;
+    }
+
+
     // Append timestamp to the line.
     res = get_timestamp() + ',' + res;
 }
@@ -232,6 +241,8 @@ void ArduinoClient()
     {
         // Read line from serial.
         ReadLine(line);
+        if(line.empty())
+            continue;
         arduinoQ_.push(line);
         arduinoQ_.pop();
     }
