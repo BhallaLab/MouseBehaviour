@@ -450,18 +450,22 @@ void do_trial( size_t trial_num, bool isprobe = false )
             digitalWrite( CAMERA_TTL_PIN, LOW );
     }
 
+    digitalWrite( IMAGING_TRIGGER_PIN, LOW ); /* Shut down the imaging. */
 
     /*-----------------------------------------------------------------------------
-     *  End trial.
-     *  Just set the state to ITI_. The ITI delay is implemented in loop
-     *  function.
+     *  ITI.
      *-----------------------------------------------------------------------------*/
-    digitalWrite( IMAGING_TRIGGER_PIN, LOW ); /* Shut down the imaging. */
-    sprintf( trial_state_, "ITI_" );
-
-    Serial.print( ">>END Trial " );
-    Serial.print( trial_count_ );
-    Serial.println( " is over. Starting new");
+    unsigned long rduration = random(23000, 25001);
+    Serial.print(">>Trial is over. Waiting "); 
+    Serial.print(rduration - stamp_);
+    Serial.println(" ms (ITI) before starting new trial." );
+    stamp_ = millis();
+    sprintf(trial_state_, "ITI_");
+    while((millis( ) - stamp_) <= rduration)
+    {
+        reset_watchdog( );
+        delay(10);
+    }
 }
 
 void loop()
@@ -495,22 +499,6 @@ void loop()
                 nextProbeTrialIndex = random( (numProbeTrials+1)*10-2, (numProbeTrials+1)*10+3);
             }
             do_trial(i, isprobe);
-        }
-        /*************************************************************************
-        * MIXED TRIALS
-        *************************************************************************/
-
-
-        /*-----------------------------------------------------------------------------
-         *  ITI.
-         *-----------------------------------------------------------------------------*/
-        unsigned long rduration = random(23000, 25001);
-        stamp_ = millis( );
-        sprintf( trial_state_, "ITI_" );
-        while((millis( ) - stamp_) <= rduration )
-        {
-            reset_watchdog( );
-            delay(10);
         }
         trial_count_ += 1;
     }
