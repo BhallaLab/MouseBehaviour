@@ -117,7 +117,7 @@ void write_data_line( )
 
 void check_for_reset( void )
 {
-    if( is_command_read( 'r', true ) )
+    if( is_command_read('r', true ) )
     {
         Serial.println( ">>>Received r. Reboot in 2 seconds" );
         reboot_ = true;
@@ -226,7 +226,7 @@ void wait_for_start( )
         else
         {
             char c = Serial.read( );
-            if( c != -1 )
+            if(c > ' ')
             {
                 Serial.print( ">>> Unknown command: " );
                 Serial.println(c);
@@ -510,7 +510,7 @@ void loop()
         while((millis( ) - stamp_) <= rduration )
         {
             reset_watchdog( );
-            delay( 10 );
+            delay(10);
         }
         trial_count_ += 1;
     }
@@ -519,7 +519,7 @@ void loop()
     while( true )
     {
         reset_watchdog( );
-        Serial.println( ">>> All done" );
-        delay( 1000 );
+        Serial.println( ">>> Good job. All done. Go home and play!" );
+        delay( 2000 );
     }
 }

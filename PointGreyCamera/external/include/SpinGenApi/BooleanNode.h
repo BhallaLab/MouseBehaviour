@@ -48,7 +48,6 @@ namespace Spinnaker
 		class SPINNAKER_API BooleanNode : virtual public IBoolean, virtual public ValueNode
 		{
 		public:
-			struct Node::NodeImpl;
 			BooleanNode();
 
 			BooleanNode(std::shared_ptr<Node::NodeImpl> pBoolean);
