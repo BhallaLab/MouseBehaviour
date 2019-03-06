@@ -1,11 +1,5 @@
 cmake_minimum_required(VERSION 2.8)
-project(Blinky)
-
-set( SOCK_PATH "\"/tmp/eye_blink_socket\"" )
-
-# How many bytes should we write to socket in one go.
-# This is deprecated. We write whole frame in one go
-set( BLOCK_SIZE 4096 )
+project(CameraAndArduino)
 
 # NOTICE: Following values are optimized to achive FPS of 100. If you are changing them,
 # do it at your own risk. These values replaces macros in config.h.in file in
@@ -25,23 +19,26 @@ configure_file(
 
 set( CMAKE_MODULE_PATH  ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake )
 
-set( CMAKE_CXX_COMPILER g++ )
-set( CMAKE_C_COMPILER g++ )
+set(CMAKE_CXX_COMPILER g++)
 
-find_package( OpenCV REQUIRED )
-find_package( PkgConfig REQUIRED )
+find_package(OpenCV REQUIRED)
+find_package(Boost REQUIRED COMPONENTS chrono iostreams program_options system filesystem)
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(LIBSERIAL REQUIRED libserial)
+pkg_check_modules(LIBTIFF4 REQUIRED libtiff-4)
 
-include_directories( ${OpenCV_INCLUDE_DIRS} )
-
-
+include_directories(${OpenCV_INCLUDE_DIRS} )
+include_directories(${LIBSERIAL_INCLUDE_DIRS})
+include_directories(${LIBTIFF4_INCLUDE_DIRS})
 set(SPINNAKER_SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/external)
 
 set(CMAKE_BUILD_TYPE Release)
 
-add_definitions( -std=c++11 -Wall -Wno-unknown-pragmas )
+add_definitions(-std=c++11 -Wall -Wno-unknown-pragmas)
+add_definitions(-Wno-unused-variable -Wno-unused-function)
 
-include_directories( ${SPINNAKER_SRC_DIR} ${SPINNAKER_SRC_DIR}/include )
-include_directories( ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/include )
+include_directories(${SPINNAKER_SRC_DIR} ${SPINNAKER_SRC_DIR}/include)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 find_library( SPINNAKER_LIB Spinnaker 
     PATHS ${SPINNAKER_SRC_DIR}/lib
@@ -49,7 +46,7 @@ find_library( SPINNAKER_LIB Spinnaker
     )
 
 message(STATUS "Found ${SPINNAKER_LIB}")
-add_executable( cam_server ./src/main.cpp )
+add_executable(cam_server ./src/videoio.cpp ./src/main.cpp)
 
 # After building the server, copy required client and configuration files into
 # current binary directory.
@@ -60,7 +57,11 @@ add_custom_command( TARGET cam_server POST_BUILD
         ${CMAKE_CURRENT_SOURCE_DIR}/config.h ${CMAKE_BINARY_DIR}
     VERBATIM 
    )
-target_link_libraries(cam_server ${SPINNAKER_LIB} ${OpenCV_LIBRARIES} )
+target_link_libraries(cam_server ${SPINNAKER_LIB} 
+    ${OpenCV_LIBRARIES} ${Boost_LIBRARIES}
+    ${LIBSERIAL_LIBRARIES}
+    ${LIBTIFF4_LIBRARIES}
+    )
 
 set_target_properties( cam_server 
     PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}
@@ -70,9 +71,4 @@ enable_testing( )
 
 add_executable( test-socket ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_socket.cc )
 target_link_libraries( test-socket )
-
 add_test( test_socket test-socket )
-
-
-
-

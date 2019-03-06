@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+set -x
+set -e
 
 # Reset the camera by vendor id = 1e10 (Point Grey).
 for X in /sys/bus/usb/devices/*
