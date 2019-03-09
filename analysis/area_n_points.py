@@ -1,6 +1,7 @@
-"""area_n_points.py: 
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 
-"""
+"""area_n_points.py: """
     
 __author__           = "Dilawar Singh"
 __copyright__        = "Copyright 2017-, Dilawar Singh"
@@ -12,6 +13,8 @@ __status__           = "Development"
 import sys
 import os
 import math
+import io
+import pandas as pd
 import numpy as np
 
 
@@ -61,13 +64,65 @@ def test():
         plt.annotate(str(i), (x1, y1))
 
     plt.savefig( '%s.png' % __file__ )
-
     a = compute_area( X, Y )
     print( 'Area is %f' % a )
 
-def main():
-    test()
+def process(df, args):
+    df = df.filter(regex='a?tg')
+    ss = []
+    for i, row in df.iterrows():
+        r = df.iloc[i].values
+        xs = list(r[0::3])
+        ys = list(r[1::3])
+        ar = compute_area(xs, ys)
+        assert len(xs) == len(ys), \
+                "Header of csv are screwed up. I can't understadnd what is what now!"
+        keys = ['x%d'%i for i,x in enumerate(xs)]
+        keys += ['y%d'%i for i,x in enumerate(ys)]
+        keys.append('area')
+        vals = list(xs) + list(ys) + [ar]
+        assert len(keys) == len(vals), (len(keys), len(vals))
+        data = dict(zip(keys, vals))
+        s = pd.Series(data)
+        ss.append(s)
+    res =  pd.DataFrame(ss)
+    outfile = '%s.out.csv' % args.input
+    res.to_csv(outfile, sep=',', index=False)
+    print('[DONE] Saved to %s' % outfile)
+
+
+def reformat(args):
+    with open(args.input, 'r') as f:
+        lines = f.read().split('\n')
+    headers = lines[:args.num_header_rows]
+    hs = list(zip(*[x.split(',') for x in headers]))
+    hs = ','.join(['+'.join(x) for x in hs])
+    res = lines[args.num_header_rows:]
+    return hs + '\n' + '\n'.join(res)
+
+def main(args):
+    print( '[INFO] This version assumes that CSV has 3 header rows. '
+            ' Who does that ☹ !'
+            )
+    fstr = reformat(args)
+    df = pd.read_csv(io.StringIO(fstr))
+    process(df, args)
+        
 
 if __name__ == '__main__':
-    main()
-
+    import argparse
+    # Argument parser.
+    description = '''Compute area of contained by n points:'''
+    parser = argparse.ArgumentParser(description=description)
+    parser.add_argument('--input', '-i'
+        , required=True
+        , help='Input file'
+        )
+    parser.add_argument('--num-header-rows', '-nh'
+        , required=False, default=3, type=int
+        , help='Number of header rows.'
+        )
+    class Args: pass 
+    args = Args()
+    parser.parse_args(namespace=args)
+    main(args)
