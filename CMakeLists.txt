@@ -1,6 +1,12 @@
 cmake_minimum_required(VERSION 2.8)
 project(EyeBlinkBehavour)
 
+# Options
+option(WITH_CLASSIFIER "Enable using Eye Classifier" ON)
+if(WITH_CLASSIFIER)
+    set(CLASSIFIER_PATH ${CMAKE_CURRENT_SOURCE_DIR}/classifiers/mouse_eye.xml)
+endif()
+
 ################################################################################
 # ARDUINO BOARD 
 ################################################################################
@@ -30,13 +36,12 @@ endif (NOT PORT)
 # Options related to Arduino board.
 # Set the board tag
 set(ARDUINO_PROJECT_DIR ${CMAKE_CURRENT_SOURCE_DIR})
-
 # Extra paths to search for headers.
 set(ARDUINO_EXTRA_CXXFLAGS "")
-
 set(BOARD_TAG   uno)
 # Baud rate of 115200 roughly translates to 115 char per 10ms. 
 set(BAUD_RATE   115200)
+
 find_program(ARDUINO_BIN arduino )
 
 set(ARDUINO_BOARD_FILE hardware/arduino/boards.txt)
@@ -123,12 +128,15 @@ add_custom_target(reset_boards
     VERBATIM
     )
 
-# Pass animal options to run.sh which will will passed to python script.
+# Pass animal options to main program.
 SET(RUN_ARGS --port ${PORT} --datadir ${DATADIR})
+if(WITH_CLASSIFIER)
+    set(RUN_ARGS ${RUN_ARGS} --classifier ${CLASSIFIER_PATH})
+endif()
 
 add_custom_target(run  
-    DEPENDS cam_server upload
-    COMMAND ${CMAKE_BINARY_DIR}/cam_server ${RUN_ARGS}
+    DEPENDS main.run upload
+    COMMAND ${CMAKE_BINARY_DIR}/main.run ${RUN_ARGS}
     COMMENT "Run arduino client and camera client"
     WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
     VERBATIM

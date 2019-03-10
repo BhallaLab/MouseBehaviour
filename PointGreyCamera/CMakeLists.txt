@@ -46,29 +46,24 @@ find_library( SPINNAKER_LIB Spinnaker
     )
 
 message(STATUS "Found ${SPINNAKER_LIB}")
-add_executable(cam_server ./src/videoio.cpp ./src/main.cpp)
+add_executable(main.run ./src/videoio.cpp ./src/main.cpp)
 
 # After building the server, copy required client and configuration files into
 # current binary directory.
-add_custom_command( TARGET cam_server POST_BUILD
+add_custom_command( TARGET main.run POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory
         ${CMAKE_CURRENT_SOURCE_DIR}/camera_config_xml/ ${CMAKE_BINARY_DIR}
     COMMAND ${CMAKE_COMMAND} -E copy
         ${CMAKE_CURRENT_SOURCE_DIR}/config.h ${CMAKE_BINARY_DIR}
     VERBATIM 
    )
-target_link_libraries(cam_server ${SPINNAKER_LIB} 
+target_link_libraries(main.run ${SPINNAKER_LIB} 
     ${OpenCV_LIBRARIES} ${Boost_LIBRARIES}
     ${LIBSERIAL_LIBRARIES}
     ${LIBTIFF4_LIBRARIES}
     )
 
-set_target_properties( cam_server 
+set_target_properties(main.run 
     PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}
     )
-
 enable_testing( )
-
-add_executable( test-socket ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_socket.cc )
-target_link_libraries( test-socket )
-add_test( test_socket test-socket )
