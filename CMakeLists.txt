@@ -5,6 +5,7 @@ project(EyeBlinkBehavour)
 option(WITH_CLASSIFIER "Enable using Eye Classifier" ON)
 if(WITH_CLASSIFIER)
     set(CLASSIFIER_PATH ${CMAKE_CURRENT_SOURCE_DIR}/classifiers/mouse_eye.xml)
+    message(STATUS "Using LBP classfier: ${CLASSIFIER_PATH}")
 endif()
 
 ################################################################################

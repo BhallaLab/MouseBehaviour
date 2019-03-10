@@ -8,6 +8,8 @@
 #include <exception>
 
 #include <opencv2/highgui/highgui.hpp>
+#include <opencv2/features2d/features2d.hpp>
+#include <opencv2/objdetect/objdetect.hpp>
 
 #include <boost/thread/thread.hpp>
 #include <boost/chrono.hpp>
@@ -47,6 +49,11 @@ SystemPtr system_     = 0;
 CameraList cam_list_  = {};
 bool all_done_        = false;
 string validCommands_ = "stlrpt12";                   // Valid char commands.
+
+// Classifier.
+string lbpClassifier_ = "";                           // Path of LBP classifier
+cv::Ptr<cv::CascadeClassifier> cascade_;
+cv::Ptr<cv::CascadeClassifier> detector_;
 
 // Command line arguments.
 string portPath_;
@@ -333,9 +340,24 @@ int ProcessFrame(void* data, size_t width, size_t height)
     // Prepent to image.
     cv::vconcat(infoRow, img, img);
 
-    // Show every 25th frame.
+    // Show every 10th frame.
     if( total_frames_ % 10 == 0)
+    {
+        // Update bbox as well using classifier.
         show_frame(img);
+        if(! cascade_->empty())
+        {
+            std::vector<cv::Rect> eyes;
+            cascade_->detectMultiScale(img, eyes, 1.1, 20, 0, Size(150,150));
+            cout << " Detected eyes " << eyes.size() << endl;
+            for( size_t j = 0; j < eyes.size(); j++ )
+            {
+                Point center(eyes[j].x + eyes[j].width*0.5, eyes[j].y + eyes[j].height*0.5);
+                int radius = cvRound((eyes[j].width + eyes[j].height)*0.25 );
+                circle(img, center, radius, Scalar(255, 0, 0), 4, 8, 0);
+            }
+        }
+    }
 
     // This frame and arduino data are stamped together.
     AddToStoreHouse(img, arduinoData);
@@ -404,7 +426,6 @@ int AcquireImages(CameraPtr pCam, INodeMap& nodeMap, INodeMap& nodeMapTLDevice)
     while(! all_done_)
     {
         ImagePtr pResultImage = pCam->GetNextImage();
-        //cout << "Pixal format: " << pResultImage->GetPixelFormatName( ) << endl;
 
         if ( pResultImage->IsIncomplete() ) /* Image is incomplete. */
         {
@@ -418,7 +439,7 @@ int AcquireImages(CameraPtr pCam, INodeMap& nodeMap, INodeMap& nodeMapTLDevice)
             size_t size = pResultImage->GetBufferSize( );
             total_frames_ += 1;
 
-            ProcessFrame( pResultImage->GetData(), width, height);
+            ProcessFrame(pResultImage->GetData(), width, height);
 
             if( total_frames_ % 200 == 0)
             {
@@ -641,19 +662,34 @@ void initialize()
         cout << "[INFO] Creating directory " << p << endl;
         create_directories(p);
     }
+
+    // Opencv classifiers.
+    if(!lbpClassifier_.empty())
+    {
+        if(exists(lbpClassifier_))
+        {
+            cascade_->load(lbpClassifier_);
+            if(cascade_->empty())
+                cerr << "Error: Could not load cascade." << endl;
+        }
+        else
+            cerr << "Warn: Could not find cascade file. " << lbpClassifier_ 
+                << ". Disabling automatic eye search. " << endl;
+    }
 }
 
 // Example entry point; please see Enumeration example for more in-depth
 // comments on preparing and cleaning up the system.
 int main(int argc, char** argv)
 {
-
     // Most of these arguments are useless. 
     po::options_description desc("Arduino/Camera client.");
     desc.add_options()
         ("help,h", "produce help message")
         ("port,p", po::value<string>(&portPath_)->default_value(ARDUINO_SERIAL_PORT)
             , "Serial port")
+        ("classifier,c", po::value<string>(&lbpClassifier_)->default_value("")
+            , "Eye LBP XML classifier.")
         ("bbox,b", po::value<string>(&bbox_str_)->default_value(DEFAULT_BBOX)
             , "Bounding box in CSV format e.g. 'x0,y0,x1,y1'.")
         ("datadir,d", po::value<string>(&dataDir_)->default_value("/tmp")
