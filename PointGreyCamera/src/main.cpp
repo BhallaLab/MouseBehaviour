@@ -1,6 +1,5 @@
 #include "Spinnaker.h"
 #include "SpinGenApi/SpinnakerGenApi.h"
-// #include "gnuplot-iostream.h"
 #include <iostream>
 #include <csignal>
 #include <queue>
@@ -52,8 +51,7 @@ string validCommands_ = "stlrpt12";                   // Valid char commands.
 
 // Classifier.
 string lbpClassifier_ = "";                           // Path of LBP classifier
-cv::Ptr<cv::CascadeClassifier> cascade_;
-cv::Ptr<cv::CascadeClassifier> detector_;
+cv::CascadeClassifier cascade_;
 
 // Command line arguments.
 string portPath_;
@@ -345,10 +343,10 @@ int ProcessFrame(void* data, size_t width, size_t height)
     {
         // Update bbox as well using classifier.
         show_frame(img);
-        if(! cascade_->empty())
+        if(! cascade_.empty())
         {
             std::vector<cv::Rect> eyes;
-            cascade_->detectMultiScale(img, eyes, 1.1, 20, 0, Size(150,150));
+            cascade_.detectMultiScale(img, eyes, 1.1, 20, 0, Size(150,150));
             cout << " Detected eyes " << eyes.size() << endl;
             for( size_t j = 0; j < eyes.size(); j++ )
             {
@@ -668,8 +666,8 @@ void initialize()
     {
         if(exists(lbpClassifier_))
         {
-            cascade_->load(lbpClassifier_);
-            if(cascade_->empty())
+            cascade_.load(lbpClassifier_);
+            if(cascade_.empty())
                 cerr << "Error: Could not load cascade." << endl;
         }
         else

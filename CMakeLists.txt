@@ -138,7 +138,7 @@ endif()
 add_custom_target(run  
     DEPENDS main.run upload
     COMMAND ${CMAKE_BINARY_DIR}/main.run ${RUN_ARGS}
-    COMMENT "Run arduino client and camera client"
+    COMMENT "Runing command with arguments: ${RUN_ARGS}"
     WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
     VERBATIM
     )
