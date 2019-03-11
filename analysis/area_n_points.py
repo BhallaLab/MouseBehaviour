@@ -14,6 +14,7 @@ import math
 import io
 import pandas as pd
 import numpy as np
+import cv2
 
 def theta(x2, y2, x1, y1):
     return math.atan2(y2-y1, x2-x1)
@@ -36,32 +37,43 @@ def compute_area( X, Y ):
         area += areaTriangle(p1, p2, (x0,y0))
     return area
 
-def plot():
+def plot_points(X, Y, ax):
     import random
-    import matplotlib.pyplot as plt
-    #  mpl.style.use( ['bmh', 'fivethirtyeight'] )
-    N = 6
-    X = np.random.randint(0,  200, N)
-    Y = np.random.randint(0, 200, N)
     x0, y0 = np.mean(X), np.mean(Y)
-    plt.subplot(121)
-    plt.plot(X, Y, 'o' )
-    plt.plot( [x0], [y0], 'x' )
-
-    plt.subplot(122)
+    ax.plot(X, Y, 'o' )
+    ax.plot( [x0], [y0], 'x' )
     sortedPs = sort_points(zip(X,Y), x0, y0)
-
-    plt.plot( [x0], [y0], 'x' )
     for i, (p1, p2) in enumerate(zip(sortedPs, sortedPs[1:]+[sortedPs[0]])):
         color = (random.random(), random.random(), random.random())
         (x1, y1), (x2, y2) = p1, p2
-        plt.plot( [x1, x2], [y1, y2], color=color )
-        plt.plot( [x0, x1], [y0, y1], color=color )
-        plt.annotate(str(i), (x1, y1))
+        ax.plot( [x1, x2], [y1, y2], color=color )
+        ax.plot( [x0, x1], [y0, y1], color=color )
+        #  ax.annotate(str(i), (x1, y1))
 
-    plt.savefig( '%s.png' % __file__ )
-    a = compute_area( X, Y )
-    print( 'Area is %f' % a )
+def plot(data, outfile):
+    import matplotlib.pyplot as plt
+    plt.figure(figsize=(12,6))
+    XS = data.filter(regex='x').values
+    YS = data.filter(regex='y').values
+    area = data['area']
+    plt.subplot(121)
+    plt.plot(area)
+    plt.xlabel('Frame Index')
+    plt.title('Area')
+
+    ax = plt.subplot(122)
+    xmax, ymax = 400, 800
+    img = np.zeros(shape=(xmax,ymax, 3))
+    for i, (xs, ys) in enumerate(zip(XS, YS)):
+        assert len(xs) == len(ys)
+        assert len(xs) == 6
+        #  plot_points(xs, ys, ax)
+        pts = np.array([(int(x[0]), int(x[1])) for x in zip(xs,ys)])
+        cv2.fillConvexPoly(img, pts, (10*i,10*i,10*i) )
+    ax.imshow(img, interpolation='none', aspect='auto')
+    plt.tight_layout()
+    plt.savefig(outfile)
+    
 
 def process(df, args):
     df = df.filter(regex='a?tg')
@@ -84,6 +96,8 @@ def process(df, args):
     res =  pd.DataFrame(ss)
     outfile = '%s.out.csv' % args.input
     res.to_csv(outfile, sep=',', index=False)
+    if args.output:
+        plot(res, args.output)
     print('[DONE] Saved to %s' % outfile)
 
 
@@ -103,7 +117,6 @@ def main(args):
     fstr = reformat(args)
     df = pd.read_csv(io.StringIO(fstr))
     process(df, args)
-        
 
 if __name__ == '__main__':
     import argparse
@@ -117,6 +130,10 @@ if __name__ == '__main__':
     parser.add_argument('--num-header-rows', '-nh'
         , required=False, default=3, type=int
         , help='Number of header rows.'
+        )
+    parser.add_argument('--output', '-o'
+        , required = False, default = ''
+        , help = 'Plot the PNG file.'
         )
     class Args: pass 
     args = Args()
