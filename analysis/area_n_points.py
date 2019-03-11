@@ -56,8 +56,9 @@ def plot(data, outfile):
     XS = data.filter(regex='x').values
     YS = data.filter(regex='y').values
     area = data['area']
-    plt.subplot(121)
-    plt.plot(area)
+    ax = plt.subplot(121)
+    ax.plot(area)
+    ax.set_ylim(ymin=0)
     plt.xlabel('Frame Index')
     plt.title('Area')
 
