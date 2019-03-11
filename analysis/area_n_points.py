@@ -10,13 +10,10 @@ __maintainer__       = "Dilawar Singh"
 __email__            = "dilawars@ncbs.res.in"
 __status__           = "Development"
 
-import sys
-import os
 import math
 import io
 import pandas as pd
 import numpy as np
-
 
 def theta(x2, y2, x1, y1):
     return math.atan2(y2-y1, x2-x1)
@@ -25,7 +22,7 @@ def sort_points(ps, x0, y0):
     psorted = sorted(ps, key=lambda p: theta(p[0], p[1], x0, y0))
     return psorted
 
-def areaTriangle( p1, p2, p3 ):
+def areaTriangle(p1, p2, p3):
     (x1, y1), (x2,y2), (x3,y3) = p1, p2, p3
     return abs(x1*(y2-y3)+x2*(y3-y1)+x3*(y1-y2))
 
@@ -39,9 +36,8 @@ def compute_area( X, Y ):
         area += areaTriangle(p1, p2, (x0,y0))
     return area
 
-def test():
+def plot():
     import random
-    import matplotlib as mpl
     import matplotlib.pyplot as plt
     #  mpl.style.use( ['bmh', 'fivethirtyeight'] )
     N = 6
