@@ -30,7 +30,6 @@ kwargs_ = {}
 def tick_for_label(label, labels, ticks):
     return np.interp(label, labels, ticks)
 
-
 def computeXTicks(time, tstep=100):
     """
     Put a tick at 100ms
@@ -58,8 +57,8 @@ def process_file(f):
 
 def generate_pickels(tiffs, resdir):
     global kwargs_
-    for f in sorted(tiffs):
-        process_file(f)
+    p = multiprocessing.Pool(2)
+    p.map(process_file, sorted(tiffs))
 
 def process(**kwargs):
     global trial_data_
