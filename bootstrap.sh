@@ -18,7 +18,10 @@ echo "Now adding user to all the cool groups"
 sudo gpasswd -a $USER dialout
 if [ ! -f /etc/udev/rules.d/40-pgr.rules ]; then
     echo "Configuring for camera"
-    sudo bash ./PointGreyCamera/external/spin-conf
+    # DO NOT run it on travis.
+    if [ -z $TRAVIS ]; then
+        sudo bash ./PointGreyCamera/external/spin-conf
+    fi
 fi
 
 sudo mkdir -p /mnt/ramdisk
