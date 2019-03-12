@@ -10,7 +10,8 @@ sudo apt install -y  cmake
 sudo apt install -y  arduino
 sudo apt install -y  gnuplot-x11
 sudo apt install -y  libtiff-dev
-sudo apt install -y  python3-matplotlib python3-scipy python3-pip
+sudo apt install -y  python3-matplotlib python3-scipy python3-pip \
+    python3-setuptools python3-dev 
 sudo -E python3 -m pip install -r ./requirements.txt
 
 echo "Now adding user to all the cool groups"
