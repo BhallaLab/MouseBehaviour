@@ -31,7 +31,6 @@ def parse_timestamp(tstamp):
     date = datetime.datetime.strptime(tstamp, fmt_)
     return date
 
-
 def get_status_timeslice(data, status):
     status = [x for x in data if x[-4] == status]
     if not status:

@@ -14,6 +14,7 @@ import analyze_trial_video
 import pickle
 import numpy as np
 import config
+import multiprocessing
 from collections import defaultdict
 import matplotlib as mpl
 import matplotlib.pyplot as plt
@@ -23,6 +24,7 @@ except Exception as e:
     pass
 
 trial_data_ = []
+kwargs_ = {}
 
 
 def tick_for_label(label, labels, ticks):
@@ -44,6 +46,20 @@ def computeXTicks(time, tstep=100):
     newIndex = np.rint(np.interp(newlabels, labels, xticks))
     return newIndex, newlabels
 
+def process_file(f):
+    global kwargs_
+    resdir = kwargs_['outdir']
+    pickleFile = os.path.join(resdir, os.path.basename('%s.pickle' % f))
+    if not os.path.exists(pickleFile):
+        kwargs_['input'] = f
+        analyze_trial_video.process(**kwargs_)
+    else:
+        print('[INFO] Pickle file already exists.')
+
+def generate_pickels(tiffs, resdir):
+    global kwargs_
+    for f in sorted(tiffs):
+        process_file(f)
 
 def process(**kwargs):
     global trial_data_
@@ -61,14 +77,11 @@ def process(**kwargs):
             if ext in ['tiff', 'tif']:
                 tiffs.append(os.path.join(d, f))
 
+    generate_pickels(tiffs, resdir)
     for f in sorted(tiffs):
         pickleFile = os.path.join(resdir, os.path.basename('%s.pickle' % f))
-        if not os.path.exists(pickleFile):
-            kwargs['input'] = f
-            res = analyze_trial_video.process(**kwargs)
-            trial_data_.append((f, res))
-        else:
-            print('Pickle file is found. Reusing it')
+        if os.path.exists(pickleFile):
+            print('[INFO] Pickle file is found. Reusing it')
             with open(pickleFile, 'rb') as pF:
                 res = pickle.load(pF)
                 trial_data_.append((f, res))
@@ -178,8 +191,9 @@ def plot_trial_data(trial_data_, trialdir, outfile):
         stdOfProbeTrials = np.std(probeImg, axis=0)
         idx = range(len(meanOfProbeTrials))
         ax3.plot(idx, meanOfProbeTrials, color='red', label='Probe')
-        ax3.fill_between(idx, meanOfProbeTrials - stdOfProbeTrials, meanOfProbeTrials + stdOfProbeTrials, color='red', alpha=0.2
-                         )
+        ax3.fill_between(idx, meanOfProbeTrials - stdOfProbeTrials
+                , meanOfProbeTrials + stdOfProbeTrials, color='red', alpha=0.2
+                )
         ax3.legend(framealpha=0.1)
         summaryData['Probe'] = (meanOfProbeTrials, stdOfProbeTrials)
         plt.xlabel('Time (ms)')
@@ -262,6 +276,8 @@ def compute_performance(data):
 
 
 def main(**kwargs):
+    global kwargs_
+    kwargs_ = kwargs
     process(**kwargs)
 
 if __name__ == '__main__':
@@ -269,15 +285,18 @@ if __name__ == '__main__':
     # Argument parser.
     description = '''Analyze trial'''
     parser = argparse.ArgumentParser(description=description)
-    parser.add_argument('--datadir', '-d', required=True, help='Directory where tiff files are stored.'
-                        )
-    parser.add_argument('--outdir', '-o', required=False, default='', help='Where to store results.'
-                        )
-    parser.add_argument('--classifier', '-c', required=False, default='', help='Classifier to load'
-                        )
-    parser.add_argument('--plot', '-p', default=False, action='store_true', help='Plot while analysing.'
-                        )
-
+    parser.add_argument('--datadir', '-d'
+            , required=True, help='Directory where tiff files are stored.'
+            )
+    parser.add_argument('--outdir', '-o'
+            , required=False, default='', help='Where to store results.'
+            )
+    parser.add_argument('--classifier', '-c'
+            , required=False, default='', help='Classifier to load'
+            )
+    parser.add_argument('--plot', '-p'
+            , default=False, action='store_true', help='Plot while analysing.'
+            )
     class Args:
         pass
     args = Args()
