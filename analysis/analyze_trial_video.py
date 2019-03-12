@@ -1,56 +1,55 @@
 #!/usr/bin/env python3
 
-__author__           = "Dilawar Singh"
-__copyright__        = "Copyright 2016, Dilawar Singh"
-__credits__          = ["NCBS Bangalore"]
-__license__          = "GNU GPL"
-__version__          = "1.0.0"
-__maintainer__       = "Dilawar Singh"
-__email__            = "dilawars@ncbs.res.in"
-__status__           = "Development"
+__author__ = "Dilawar Singh"
+__copyright__ = "Copyright 2016, Dilawar Singh"
+__credits__ = ["NCBS Bangalore"]
+__license__ = "GNU GPL"
+__version__ = "1.0.0"
+__maintainer__ = "Dilawar Singh"
+__email__ = "dilawars@ncbs.res.in"
+__status__ = "Development"
 
 import sys
 import os
 import datetime
 import numpy as np
-import pickle 
+import pickle
 import cv2
 from libtiff import TIFF
 import matplotlib as mpl
-mpl.use( 'TkAgg')
+# mpl.use( 'pgf' )
 import matplotlib.pyplot as plt
-import config
-
 try:
-    mpl.style.use( 'seaborn-poster' )
+    mpl.style.use(['bmh', 'fivethirtyeight'])
 except Exception as e:
     pass
-plt.rc('font', family='serif')
+fmt_ = "%Y-%m-%dT%H:%M:%S.%f"
+eyeLoc_ = []
 
-fmt_ =  "%Y-%m-%dT%H:%M:%S.%f"
-
-def parse_timestamp( tstamp ):
+def parse_timestamp(tstamp):
     global fmt_
-    date = datetime.datetime.strptime( tstamp, fmt_ )
+    date = datetime.datetime.strptime(tstamp, fmt_)
     return date
+
 
 def get_status_timeslice(data, status):
     status = [x for x in data if x[-4] == status]
     if not status:
         return None, None
-    if len( status ) > 2:
-        startTime = parse_timestamp( status[0][1] )
-        endTime = parse_timestamp( status[-1][1] ) 
+    if len(status) > 2:
+        startTime = parse_timestamp(status[0][1])
+        endTime = parse_timestamp(status[-1][1])
         if startTime is None or endTime is None:
             return None, None
     else:
         startTime, endTime = 0, 0
     return startTime, endTime
 
+
 def compute_learning_yesno(time, blink, cs_start_time):
     baseline, signal = [], []
     for t, v in zip(time, blink):
-        t1 = (t - cs_start_time).total_seconds( )
+        t1 = (t - cs_start_time).total_seconds()
         if t1 > -0.200 and t1 <= 0:
             baseline.append(v)
         # 50ms from the starting of CS
@@ -59,31 +58,43 @@ def compute_learning_yesno(time, blink, cs_start_time):
 
     baseline = np.array(baseline)
     baseMean, baseStd = np.mean(baseline), np.std(baseline)
-    signal = np.array([abs(x-baseMean) for x in signal])
+    signal = np.array([abs(x - baseMean) for x in signal])
     hasLearnt = False
-    if max(signal) > 2*baseStd:
+    if max(signal) > 2 * baseStd:
         hasLearnt = True
     return baseline, signal, hasLearnt
 
+def show_frame(frame):
+    cv2.imshow("Frame", frame)
+    cv2.waitKey(1)
+
+
 def detectEye(frame, cascade, plot):
+    global eyeLoc_
     frame = cv2.equalizeHist(frame)
-    kernel = np.ones((3,3), np.uint8)
+    kernel = np.ones((3, 3), np.uint8)
     frame = cv2.morphologyEx(frame, cv2.MORPH_OPEN, kernel)
 
     eyes = cascade.detectMultiScale(frame, scaleFactor=1.05
-            , minNeighbors=20
-            , minSize=(150,150)
-            , maxSize=(350,350)
+            , minNeighbors=20, minSize=(150, 150), maxSize=(350, 350)
             )
 
+    blink = False
     if len(eyes) < 1:
-        return np.mean(frame)
-
-    x, y, w, h = sorted(eyes, key=lambda x: x[-1]*x[-2])[-1]
-    eyesImg = frame[y:y+h,x:x+w]
+        # Use the last known position of eye. May be get the mean.
+        blink = True
+        x0, y0, w0, h0 = np.mean(eyeLoc_, axis=0)
+        x, y, w, h = int(x0), int(y0), int(w0), int(h0)
+    else:
+        x, y, w, h = sorted(eyes, key=lambda x: x[-1]*x[-2])[-1]
+        eyeLoc_.append((x,y,w,h))
+    eyesImg = frame[y:y+h, x:x+w]
     if plot:
-        cv2.imshow("Eyes", eyesImg)
-        cv2.waitKey(1)
+        if blink:
+            cv2.putText(eyesImg, 'BLINK', (10,10), cv2.FONT_HERSHEY_SIMPLEX,
+                    0.5, 255, 1
+                    )
+        show_frame(eyesImg)
     return np.mean(eyesImg)
 
 def process(**kwargs):
@@ -103,7 +114,7 @@ def process(**kwargs):
     classifierValues = []
     for fi, frame in enumerate(frames):
         # print( frame.shape )
-        binline = frame[0,:]
+        binline = frame[0, :]
         txtline = (''.join(([chr(x) for x in binline]))).rstrip()
         data = txtline.split(',')
         if len(data) > 1:
@@ -129,81 +140,75 @@ def process(**kwargs):
             blinkVec.append(float(l[-1]))
             velocityVec.append(float(l[-2]))
         except Exception as e:
-            print( '[WARN] Failed to parse data line %s. Ignoring' % l )
-            print( '\t Error was %s' % e )
+            print('[WARN] Failed to parse data line %s. Ignoring' % l)
+            print('\t Error was %s' % e)
 
     if cascade is not None:
         blinkVec = classifierValues
 
-    mean_ = sum(blinkVec)/len(blinkVec)
+    mean_ = sum(blinkVec) / len(blinkVec)
     cspST, cspET = get_status_timeslice(arduinoData, 'CS+')
     assert cspST
-    usST, usET = get_status_timeslice( arduinoData, 'PUFF' )
+    usST, usET = get_status_timeslice(arduinoData, 'PUFF')
     probeTs = get_status_timeslice(arduinoData, 'PROB')
 
     if probeTs[0] is None and probeTs[1] is None:
         # Nowhere we found PROB in trial.
         isProbe = False
     else:
-        print( '[INFO] Trial %s is a PROBE trial' % tifffile )
+        print('[INFO] Trial %s is a PROBE trial' % tifffile)
         isProbe = True
 
     # Computer perfornace of this trial.
     baseline, signal, hasLearnt = compute_learning_yesno(tvec, blinkVec, cspST)
     if hasLearnt:
-        print( '|| Learning in %s' % tifffile )
+        print('|| Learning in %s' % tifffile)
 
-    temp = os.path.join(os.path.dirname(tifffile), config.tempdir)
+    temp = os.path.join(os.path.dirname(tifffile), '_results')
     datadir = kwargs.get('outdir',  temp)
-    if not os.path.isdir( datadir ):
+    if not os.path.isdir(datadir):
         os.makedirs(datadir)
 
     if kwargs.get('plot', False):
-        ax = plt.subplot( 211 )
+        ax = plt.subplot(211)
         if cspET > cspST:
-            ax.plot( [cspST, cspET] , [mean_, mean_] )
+            ax.plot([cspST, cspET], [mean_, mean_])
 
         if (usET and usST) and usET > usST:
-            ax.plot( [usST, usET] , [mean_, mean_] )
+            ax.plot([usST, usET], [mean_, mean_])
 
-        ax.plot(tvec, blinkVec, label = 'Learning? %s' % hasLearnt)
-        ax.axhline(y = np.mean(baseline) + np.std(baseline))
+        ax.plot(tvec, blinkVec, label='Learning? %s' % hasLearnt)
+        ax.axhline(y=np.mean(baseline) + np.std(baseline))
         plt.title('Trial Type=%s' % trialType)
-        plt.legend( framealpha = 0.4 )
-        plt.title( os.path.basename( sys.argv[1] ), fontsize = 8)
+        plt.legend(framealpha=0.4)
+        plt.title(os.path.basename(sys.argv[1]), fontsize=8)
 
-        ax2 = plt.subplot( 212, sharex=ax )
-        ax2.plot( tvec, velocityVec, label = 'Speed' )
-        plt.xlabel( 'Time' )
-        plt.ylabel( 'cm/sec (really?)' )
+        ax2 = plt.subplot(212, sharex=ax)
+        ax2.plot(tvec, velocityVec, label='Speed')
+        plt.xlabel('Time')
+        plt.ylabel('cm/sec (really?)')
 
         outfile = os.path.join(datadir, '%s.png' % os.path.basename(tifffile))
-        plt.tight_layout( pad = 3 )
-        plt.savefig( outfile )
-        plt.close( )
-        print( 'Saved to %s' % outfile )
-
+        plt.tight_layout(pad=3)
+        plt.savefig(outfile)
+        plt.close()
+        print('Saved to %s' % outfile)
 
     # Write processed data to pickle.
-    print('[INFO] Trial type %s' % trialType )
-    res = dict( time = tvec
-            , blinks = blinkVec
-            , cs = [ cspST, cspET ]
-            , us = [ usST, usET ]
-            , did_learn = hasLearnt
-            , is_probe = isProbe
-            , trial_type = trialType
-            )
+    print('[INFO] Trial type %s' % trialType)
+    res = dict(time=tvec, blinks=blinkVec, cs=[cspST, cspET], us=[usST, usET], did_learn=hasLearnt, is_probe=isProbe, trial_type=trialType
+               )
 
-    pickleFile = os.path.join( 
-            datadir, '%s.pickle' % os.path.basename(tifffile)
-            )
+    pickleFile = os.path.join(
+        datadir, '%s.pickle' % os.path.basename(tifffile)
+    )
 
-    with open( pickleFile, 'wb' ) as pF:
-        pickle.dump( res, pF )
+    with open(pickleFile, 'wb') as pF:
+        pickle.dump(res, pF)
 
-    print( '[INFO] Wrote pickle %s' % pickleFile )
+    print('[INFO] Wrote pickle %s' % pickleFile)
     return res
+
 
 def main(**kwargs):
     process(**kwargs)
@@ -213,22 +218,17 @@ if __name__ == '__main__':
     # Argument parser.
     description = '''Analyze a single tiff file'''
     parser = argparse.ArgumentParser(description=description)
-    parser.add_argument('--input', '-i'
-        , required = True, help = 'Input TIFF file'
-        )
-    parser.add_argument('--outdir', '-o'
-        , required = False
-        , help = 'Output directory'
-        )
-    parser.add_argument('--classifier', '-c'
-        , required = False, default = ''
-        , help = 'Classifier file'
-        )
-    parser.add_argument('--plot', '-p'
-        , action = 'store_true', default = False
-        , help = 'Plot while analysing.'
-        )
-    class Args: pass 
+    parser.add_argument('--input', '-i', required=True, help='Input TIFF file'
+                        )
+    parser.add_argument('--outdir', '-o', required=False, help='Output directory'
+                        )
+    parser.add_argument('--classifier', '-c', required=False, default='', help='Classifier file'
+                        )
+    parser.add_argument('--plot', '-p', action='store_true', default=False, help='Plot while analysing.'
+                        )
+
+    class Args:
+        pass
     args = Args()
     parser.parse_args(namespace=args)
     main(**vars(args))
