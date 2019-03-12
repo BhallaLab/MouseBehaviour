@@ -14,6 +14,7 @@ import os
 import datetime
 import numpy as np
 import pickle 
+import cv2
 from libtiff import TIFF
 import matplotlib as mpl
 mpl.use( 'TkAgg')
@@ -24,7 +25,6 @@ try:
     mpl.style.use( 'seaborn-poster' )
 except Exception as e:
     pass
-#mpl.rcParams['axes.linewidth'] = 0.1
 plt.rc('font', family='serif')
 
 fmt_ =  "%Y-%m-%dT%H:%M:%S.%f"
@@ -65,13 +65,42 @@ def compute_learning_yesno(time, blink, cs_start_time):
         hasLearnt = True
     return baseline, signal, hasLearnt
 
-def process(tifffile, plot=True, **kwargs):
-    print( '[INFO] Processing %s' % tifffile )
+def detectEye(frame, cascade, plot):
+    frame = cv2.equalizeHist(frame)
+    kernel = np.ones((3,3), np.uint8)
+    frame = cv2.morphologyEx(frame, cv2.MORPH_OPEN, kernel)
+
+    eyes = cascade.detectMultiScale(frame, scaleFactor=1.05
+            , minNeighbors=20
+            , minSize=(150,150)
+            , maxSize=(350,350)
+            )
+
+    if len(eyes) < 1:
+        return np.mean(frame)
+
+    x, y, w, h = sorted(eyes, key=lambda x: x[-1]*x[-2])[-1]
+    eyesImg = frame[y:y+h,x:x+w]
+    if plot:
+        cv2.imshow("Eyes", eyesImg)
+        cv2.waitKey(1)
+    return np.mean(eyesImg)
+
+def process(**kwargs):
+    tifffile = kwargs['input']
+    print('[INFO] Processing %s' % tifffile)
     tf = TIFF.open(tifffile)
     frames = tf.iter_images()
-    datalines = [ ]
-    arduinoData = [ ]
+    datalines, arduinoData = [], []
     trialType = 'NA'
+
+    # If classfier is found. Use it.
+    classifierFile = kwargs.get('classifier', '')
+    cascade = None
+    if classifierFile and os.path.isfile(classifierFile):
+        cascade = cv2.CascadeClassifier(classifierFile)
+
+    classifierValues = []
     for fi, frame in enumerate(frames):
         # print( frame.shape )
         binline = frame[0,:]
@@ -81,6 +110,10 @@ def process(tifffile, plot=True, **kwargs):
             datalines.append(data)
         if len(data) > 2:
             arduinoData.append(data)
+
+        if cascade is not None:
+            blinkValue = detectEye(frame, cascade, kwargs['plot'])
+            classifierValues.append(blinkValue)
 
     tvec, blinkVec, velocityVec = [], [], []
     for l in datalines:
@@ -92,12 +125,15 @@ def process(tifffile, plot=True, **kwargs):
                 elif tone == 1:
                     trialType = 'SOUND NO LIGHT'
         try:
-            tvec.append( parse_timestamp(l[0]))
+            tvec.append(parse_timestamp(l[0]))
             blinkVec.append(float(l[-1]))
             velocityVec.append(float(l[-2]))
         except Exception as e:
             print( '[WARN] Failed to parse data line %s. Ignoring' % l )
             print( '\t Error was %s' % e )
+
+    if cascade is not None:
+        blinkVec = classifierValues
 
     mean_ = sum(blinkVec)/len(blinkVec)
     cspST, cspET = get_status_timeslice(arduinoData, 'CS+')
@@ -122,7 +158,7 @@ def process(tifffile, plot=True, **kwargs):
     if not os.path.isdir( datadir ):
         os.makedirs(datadir)
 
-    if plot:
+    if kwargs.get('plot', False):
         ax = plt.subplot( 211 )
         if cspET > cspST:
             ax.plot( [cspST, cspET] , [mean_, mean_] )
@@ -169,9 +205,30 @@ def process(tifffile, plot=True, **kwargs):
     print( '[INFO] Wrote pickle %s' % pickleFile )
     return res
 
-def main( ):
-    tiff = sys.argv[1]
-    process(tiff)
+def main(**kwargs):
+    process(**kwargs)
 
 if __name__ == '__main__':
-    main()
+    import argparse
+    # Argument parser.
+    description = '''Analyze a single tiff file'''
+    parser = argparse.ArgumentParser(description=description)
+    parser.add_argument('--input', '-i'
+        , required = True, help = 'Input TIFF file'
+        )
+    parser.add_argument('--outdir', '-o'
+        , required = False
+        , help = 'Output directory'
+        )
+    parser.add_argument('--classifier', '-c'
+        , required = False, default = ''
+        , help = 'Classifier file'
+        )
+    parser.add_argument('--plot', '-p'
+        , action = 'store_true', default = False
+        , help = 'Plot while analysing.'
+        )
+    class Args: pass 
+    args = Args()
+    parser.parse_args(namespace=args)
+    main(**vars(args))
