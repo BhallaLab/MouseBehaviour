@@ -17,7 +17,6 @@ import config
 from collections import defaultdict
 import matplotlib as mpl
 import matplotlib.pyplot as plt
-import matplotlib as mpl
 try:
     mpl.style.use(['bmh', 'fivethirtyeight'])
 except Exception as e:
@@ -136,6 +135,7 @@ def plot_trial_data(trial_data_, trialdir, outfile):
 
     print('No of probe trials : %d' % len(probeImg))
     print('No of other trials: %s' % len(img))
+    plt.figure(figsize=(12,8))
     ax1 = plt.subplot(221)
     ax1.grid(False)
     im = ax1.imshow(img, interpolation='none', aspect='auto', cmap='viridis')
@@ -153,8 +153,9 @@ def plot_trial_data(trial_data_, trialdir, outfile):
     ax3 = plt.subplot(223, sharex=ax1)
     idx = range(len(meanOfTrials))
     plt.plot(idx, meanOfTrials, color='blue', label='CS+')
-    plt.fill_between(idx, meanOfTrials - stdOfTrials, meanOfTrials + stdOfTrials, color='blue', alpha=0.2
-                     )
+    plt.fill_between(
+            idx, meanOfTrials - stdOfTrials, meanOfTrials + stdOfTrials, color='blue', alpha=0.2
+            )
 
     ax2 = plt.subplot(222, sharex=ax1)
     ax2.grid(False)
@@ -214,7 +215,6 @@ def plot_trial_data(trial_data_, trialdir, outfile):
     ax4.plot([x3, x4], [-0.2, -0.2], color='black')
     ax4.set_title('FEC')
 
-    #  outfile = os.path.join( resdir, 'summary.png' )
     plt.tight_layout(pad=4)
     trialName = list(filter(None, trialdir.split('/')))[-1]
     ax4.set_xlabel('Time (ms)')
