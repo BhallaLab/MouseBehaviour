@@ -66,9 +66,3 @@ target_link_libraries(cam_server ${SPINNAKER_LIB}
 set_target_properties( cam_server 
     PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}
     )
-
-enable_testing( )
-
-add_executable( test-socket ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_socket.cc )
-target_link_libraries( test-socket )
-add_test( test_socket test-socket )

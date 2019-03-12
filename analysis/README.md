@@ -1,9 +1,9 @@
 # How to run the pipeline
 
-First install the dependencies
+First install the dependencies. 
 
 ```
-pip install -r ./requirements.txt --user
+python3 -m pip install -r ./requirements.txt --user
 ```
 
 Then, 
