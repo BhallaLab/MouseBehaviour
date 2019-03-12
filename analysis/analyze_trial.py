@@ -1,5 +1,4 @@
-#!/usr/bin/env python2
-from __future__ import print_function
+#!/usr/bin/env python3
     
 __author__           = "Dilawar Singh"
 __copyright__        = "Copyright 2016, Dilawar Singh "
@@ -11,22 +10,19 @@ __email__            = "dilawars@ncbs.res.in"
 __status__           = "Development"
 
 import os
-import sys
 import analyze_trial_video 
-try:
-    import cPickle as pickle
-except ImportError as e:
-    import pickle
+import pickle
 import numpy as np
 import config
-import itertools
 from collections import defaultdict
-
 import matplotlib as mpl
 import matplotlib.pyplot as plt
-mpl.style.use( 'seaborn-talk' )
-mpl.rcParams['axes.linewidth'] = 0.2
-mpl.rcParams['text.usetex'] = False
+try:
+    mpl.style.use( 'seaborn-talk' )
+    mpl.rcParams['axes.linewidth'] = 0.2
+    mpl.rcParams['text.usetex'] = False
+except Exception as e:
+    pass
 
 trial_data_ = [ ]
 
@@ -39,38 +35,36 @@ def computeXTicks( time, tstep = 100 ):
     """
     time = 1000 * time
     xticks = np.arange( 0, len(time), 1 )
-    nticks = int( ( time.max() - time.min( ) ) / tstep )
-
-    step = int( len( time ) / nticks)
-
+    nticks = int((time.max() - time.min())/tstep)
+    step = int(len(time)/nticks)
     xticks = xticks[::step]
     labels = time[::step]
-
-    newrange = np.int32( [ time.min( ) /100.0, time.max( )/100.0 ] ) * 100.0
-    newlabels = np.arange( newrange[0], newrange[1], tstep )
-
+    newrange = np.int32([time.min()/100.0, time.max()/100.0])*100.0
+    newlabels = np.arange(newrange[0], newrange[1], tstep)
     newIndex = np.rint( np.interp( newlabels, labels, xticks ) )
     return newIndex, newlabels
 
-
-def process( trialdir ):
+def process(**kwargs):
     global trial_data_
-    tiffs = [ ]
-    for d, sd, fs in os.walk( trialdir ):
+    datadir = kwargs['datadir']
+    print( '[INFO] Processing %s' % datadir )
+
+    resdir = kwargs.get('outdir', os.path.join(datadir, config.tempdir))
+    if not os.path.exists(resdir):
+        os.makedirs( resdir )
+
+    tiffs = []
+    for d, sd, fs in os.walk(datadir):
         for f in fs:
             ext = f.split( '.' )[-1]
             if ext in [ 'tiff', 'tif' ]:
                 tiffs.append( os.path.join( d, f ) )
 
-    resdir = os.path.join( trialdir, config.tempdir )
-    if not os.path.exists( resdir ):
-        os.makedirs( resdir )
-
-    for f in sorted( tiffs ):
+    for f in sorted(tiffs):
         pickleFile = os.path.join(resdir, os.path.basename( '%s.pickle' % f))
         if not os.path.exists( pickleFile ):
-            res = analyze_trial_video.process( f, plot = True )
-            trial_data_.append( (f, res) )
+            res = analyze_trial_video.process(f, plot = True, **kwargs)
+            trial_data_.append((f, res))
         else:
             print( 'Pickle file is found. Reusing it' )
             with open( pickleFile, 'rb' ) as pF:
@@ -79,7 +73,7 @@ def process( trialdir ):
 
     # Plot all data together.
     outfile = os.path.join( resdir, 'summary.png' )
-    plot_trial_data( trial_data_, trialdir, outfile )
+    plot_trial_data( trial_data_, datadir, outfile )
 
     # Ploting using trial type.
     groups = defaultdict(list)
@@ -91,12 +85,11 @@ def process( trialdir ):
         ext = gname.replace( ' ', '_' )
         outfile = os.path.join(resdir, 'summary_%s.png' % ext)
         data = groups[gname]
-        plot_trial_data(data, trialdir, outfile)
+        plot_trial_data(data, resdir, outfile)
 
 def plot_trial_data( trial_data_, trialdir, outfile ):
     times, allBlinks, probeTrial = [ ], [ ], [ ]
     for i, (f, d) in enumerate(trial_data_):
-        blinks = d[ 'blinks' ]
         tvec = d['time']
         cs = d['cs']
         trialType = d.get('trial_type', 'UNKNOWN')
@@ -104,9 +97,7 @@ def plot_trial_data( trial_data_, trialdir, outfile ):
         tvec = list( map(lambda x: (x - cs[0]).total_seconds( ), tvec) )
         duration = 1000 * (tvec[-1] - tvec[0])
         if duration < 900:
-            print( 
-                '[WARN] %s was shorter than 900 ms. Duration %d' % (f,duration) 
-                )
+            print('[WARN] %s was shorter than 900 ms. Duration %d' % (f,duration))
         times.append( tvec )
         allBlinks.append( d['blinks'] )
         if d['is_probe'] == True:
@@ -120,13 +111,10 @@ def plot_trial_data( trial_data_, trialdir, outfile ):
     minT, maxT = np.mean(tmins), np.mean(tmaxs)
     newTVec = np.linspace( minT, maxT, len(allBlinks[-1]) )
 
-    allLens = [ len(x) for x in allBlinks ]
-    minL = min( allLens )
-
-    img, probeImg = [ ], [ ]
-    alignedData, alignedProbeData = [ ], [ ]
+    img, probeImg = [], []
+    alignedData = []
     for i, (tvec, yvec) in enumerate(zip(times, allBlinks)):
-        row = np.interp( newTVec, tvec, yvec )
+        row = np.interp(newTVec, tvec, yvec)
         if i in probeTrial:
             probeImg.append( row )
         else:
@@ -141,9 +129,9 @@ def plot_trial_data( trial_data_, trialdir, outfile ):
         else:
             otherData.append( row )
 
-    numTicks = 10
-    stepSize = int(len(newTVec) / numTicks)
-    xlabels = [ '%d' % int(1000 * x) for x in newTVec[::stepSize] ]
+    #  numTicks = 10
+    #  stepSize = int(len(newTVec) / numTicks)
+    #  xlabels = [ '%d' % int(1000 * x) for x in newTVec[::stepSize] ]
     print( 'No of probe trials : %d' % len(probeImg) )
     print( 'No of other trials: %s' % len(img) )
 
@@ -172,10 +160,10 @@ def plot_trial_data( trial_data_, trialdir, outfile ):
 
     ax2 = plt.subplot( 222, sharex = ax1 )
     if len(probeImg) > 0:
-        plt.imshow( probeImg, interpolation = 'none', aspect = 'auto' )
-        plt.title( 'Probe' )
-        plt.colorbar( )
-        plt.xlabel( 'Time (ms)' )
+        im = ax2.imshow( probeImg, interpolation = 'none', aspect = 'auto' )
+        ax2.set_title( 'Probe' )
+        plt.colorbar(im, ax=ax2)
+        ax2.set_xlabel( 'Time (ms)' )
 
 
     # Compute performance index.
@@ -187,8 +175,8 @@ def plot_trial_data( trial_data_, trialdir, outfile ):
         meanOfProbeTrials = np.mean( probeImg, axis = 0 )
         stdOfProbeTrials = np.std( probeImg, axis = 0 )
         idx = range( len( meanOfProbeTrials ) )
-        plt.plot( idx, meanOfProbeTrials, color = 'red', label = 'Probe' ) 
-        plt.fill_between( idx, meanOfProbeTrials - stdOfProbeTrials
+        ax3.plot(idx, meanOfProbeTrials, color = 'red', label = 'Probe' ) 
+        ax3.fill_between( idx, meanOfProbeTrials - stdOfProbeTrials
                 , meanOfProbeTrials + stdOfProbeTrials
                 , color = 'red'
                 , alpha = 0.2
@@ -211,7 +199,7 @@ def plot_trial_data( trial_data_, trialdir, outfile ):
         yerr = yu * normFact
         ax4.plot( idx, ym, label = l )
         ax4.legend( framealpha = 0.1 )
-        plt.fill_between( idx, ym - yerr, ym + yerr, alpha = 0.2) 
+        ax4.fill_between( idx, ym - yerr, ym + yerr, alpha = 0.2) 
 
         # Mark CS and PUFF areas
         x1, x2 = tick_for_label( 0, labels, ticks ), tick_for_label( 50, labels, ticks)
@@ -230,7 +218,7 @@ def plot_trial_data( trial_data_, trialdir, outfile ):
     #  outfile = os.path.join( resdir, 'summary.png' )
     plt.tight_layout( pad = 4 )
     trialName = list( filter(None, trialdir.split( '/' )))[-1] 
-    plt.xlabel( 'Time (ms)' )
+    ax4.xlabel( 'Time (ms)' )
 
     plt.suptitle( r'Trial: %s' % trialName, x = 0.1)
     plt.savefig( outfile )
@@ -271,11 +259,23 @@ def compute_performance( data ):
         learnings.append( learning )
     return learnings
 
-def main( ):
-    datadir = sys.argv[1]
-    print( '[INFO] Processing %s' % datadir )
-    process( datadir )
-
+def main(**kwargs):
+    process(**kwargs)
 
 if __name__ == '__main__':
-    main()
+    import argparse
+    # Argument parser.
+    description = '''Analyze trial'''
+    parser = argparse.ArgumentParser(description=description)
+    parser.add_argument('--datadir', '-d'
+        , required = True
+        , help = 'Directory where tiff files are stored.'
+        )
+    parser.add_argument('--outdir', '-o'
+        , required = False, default = ''
+        , help = 'Where to store results.'
+        )
+    class Args: pass 
+    args = Args()
+    parser.parse_args(namespace=args)
+    main(**vars(args))

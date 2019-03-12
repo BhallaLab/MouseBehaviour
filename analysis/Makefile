@@ -1,4 +1,4 @@
-DATADIR:=$(HOME)/Work/DATA/Hrishikesh/829_S_8/
+DATADIR := /home/shomu/DATA/919/919_1_So1
 
 all :
-	python ./analyze_trial.py $(DATADIR)
+	python3 ./analyze_trial.py -d $(DATADIR) -o /tmp/results
