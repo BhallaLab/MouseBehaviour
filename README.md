@@ -9,36 +9,24 @@ Various protocols are supported. They are listed in
 `./Protocols/BehaviourProtocols.xlsx`). Make sure that you use the right
 protocol. See section __How to run the pipeline__ below.
 
-
-# What is included?
-
-A camera server written in C++ (PointGrey Camera) and arduino based behaviour
-setup (C++). Build system is based on `cmake` and uses `boost` libraries 
-
 # How to run the pipeline 
 
-Both arduino and camera must be connected to compute before doing the following.
+Both arduino and camera must be connected to computer before doing the following.
 
 ## Download and setup 
 
 This code will __only__ work on Ubuntu-16.04. Install arduino, c++ compiler
-(gcc), cmake, and boost libraries. More details below.
+(gcc), cmake, and boost libraries. More details below. 
 
 ### Dependencies
 
-You need to install the following. Script `bootstrap.sh` will install most of
-them. Required libraries for PointGrey camera is in the source.
-
-    - sudo apt install cmake g++ libboost-all-dev
-    - sudo apt install gnuplot-x11
-    - sudo apt install libopencv-dev
-    - sudo apt install libserial-dev
+Script `bootstrap.sh` will install all of the dependencies. Required libraries 
+for PointGrey camera is in the source.
     
 Download the code:
 
     $ git clone  https://github.com/BhallaLab/MouseBehaviour.git
     $ cd MouseBehaviour 
-    $ ./bootstrap.sh    # To setup your Ubuntu system.
 
 The script `bootstap.sh` will try to configure your system. You must have `sudo`
 permissions because we need to add to various groups (`pgrimaging` and `dialout`)
