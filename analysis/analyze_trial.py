@@ -19,12 +19,14 @@ from collections import defaultdict
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 try:
-    mpl.style.use(['bmh', 'fivethirtyeight'])
+    #  mpl.style.use(['bmh', 'fivethirtyeight'])
+    mpl.style.use(['bmh'])
 except Exception as e:
     pass
 
 trial_data_ = []
 kwargs_ = {}
+cmap_ = 'jet'
 
 
 def tick_for_label(label, labels, ticks):
@@ -64,11 +66,9 @@ def process(**kwargs):
     global trial_data_
     datadir = kwargs['datadir']
     print('[INFO] Processing %s' % datadir)
-
     resdir = kwargs.get('outdir', os.path.join(datadir, config.tempdir))
     if not os.path.exists(resdir):
         os.makedirs(resdir)
-
     tiffs = []
     for d, sd, fs in os.walk(datadir):
         for f in fs:
@@ -76,6 +76,7 @@ def process(**kwargs):
             if ext in ['tiff', 'tif']:
                 tiffs.append(os.path.join(d, f))
 
+    assert len(tiffs)>0, "No tiff file found"
     generate_pickels(tiffs, resdir)
     for f in sorted(tiffs):
         pickleFile = os.path.join(resdir, os.path.basename('%s.pickle' % f))
@@ -100,6 +101,13 @@ def process(**kwargs):
         outfile = os.path.join(resdir, 'summary_%s.png' % ext)
         data = groups[gname]
         plot_trial_data(data, resdir, outfile)
+
+def normalize(mat):
+    mat = np.array(mat)
+    baseline = np.mean(mat[:30])
+    mat = mat - baseline
+    mat = mat / mat.max()
+    return mat
 
 
 def plot_trial_data(trial_data_, trialdir, outfile):
@@ -127,38 +135,36 @@ def plot_trial_data(trial_data_, trialdir, outfile):
     minT, maxT = np.mean(tmins), np.mean(tmaxs)
     newTVec = np.linspace(minT, maxT, len(allBlinks[-1]))
 
-    img, probeImg = [], []
+    csImg, img, probeImg = [], [], []
     alignedData = []
+
     for i, (tvec, yvec) in enumerate(zip(times, allBlinks)):
         row = np.interp(newTVec, tvec, yvec)
+        img.append(row)
         if i in probeTrial:
             probeImg.append(row)
         else:
-            img.append(row)
+            csImg.append(row)
         alignedData.append(zip(newTVec, row))
 
-    # Separate probe trials.
-    probeData, otherData = [], []
-    for i, row in enumerate(alignedData):
-        if i in probeTrial:
-            probeData.append(row)
-        else:
-            otherData.append(row)
+    #  img = normalize(img)
+    #  probeImg = normalize(probeImg)
 
     print('No of probe trials : %d' % len(probeImg))
     print('No of other trials: %s' % len(img))
     plt.figure(figsize=(12,8))
     ax1 = plt.subplot(221)
     ax1.grid(False)
-    im = ax1.imshow(img, interpolation='none', aspect='auto', cmap='viridis')
+    im = ax1.imshow(img, interpolation='none', aspect='auto', cmap=cmap_)
     plt.colorbar(im, ax=ax1)
-    plt.title('CS+')
+    plt.title('CS+ and PROBE')
     ticks, labels = computeXTicks(newTVec, tstep=200)
     plt.xticks(ticks, ['%d' % x for x in labels])
     plt.xlabel('Time (ms)')
 
     # Collect for final summary.
     summaryData = {}
+    img = normalize(img)
     meanOfTrials = np.mean(img, axis=0)
     stdOfTrials = np.std(img, axis=0)
     summaryData['CS+'] = (meanOfTrials, stdOfTrials)
@@ -174,9 +180,8 @@ def plot_trial_data(trial_data_, trialdir, outfile):
     if len(probeImg) > 0:
         print("[INFO ] Plotting PROBE trials.")
         im = ax2.imshow(probeImg, interpolation='none',
-                        aspect='auto', cmap='viridis'
-                        )
-        ax2.set_title('Probe')
+                        aspect='auto', cmap=cmap_)
+        ax2.set_title('PROBE')
         plt.colorbar(im, ax=ax2)
         ax2.set_xlabel('Time (ms)')
 
@@ -186,6 +191,7 @@ def plot_trial_data(trial_data_, trialdir, outfile):
 
     ax3 = plt.subplot(223, sharex=ax1)
     if len(probeImg) > 0:
+        probeImg = normalize(probeImg)
         meanOfProbeTrials = np.mean(probeImg, axis=0)
         stdOfProbeTrials = np.std(probeImg, axis=0)
         idx = range(len(meanOfProbeTrials))
@@ -201,17 +207,15 @@ def plot_trial_data(trial_data_, trialdir, outfile):
     ax4 = plt.subplot(224, sharex=ax1)
     csM, csU = summaryData['CS+']
     baseline = np.mean(csM[:20])
-    y = baseline - csM
+    y = csM - baseline
     normFact = 1.0 / y.max()
-    for l in summaryData:
-        ym, yu = summaryData[l]
+    for l, c in zip(summaryData, ['blue', 'red']):
+        ym, yerr = summaryData[l]
+        baseline = np.mean(ym[:20])
         ym -= baseline
-        ym = np.abs(ym)
-        ym *= normFact
-        yerr = yu * normFact
-        ax4.plot(idx, ym, label=l)
+        ax4.plot(idx, ym, label=l, color=c, alpha=0.8)
         ax4.legend(framealpha=0.1)
-        ax4.fill_between(idx, ym - yerr, ym + yerr, alpha=0.2)
+        ax4.fill_between(idx, ym - yerr, ym + yerr, color=c, alpha=0.1)
 
         # Mark CS and PUFF areas
         x1, x2 = tick_for_label(
@@ -219,19 +223,19 @@ def plot_trial_data(trial_data_, trialdir, outfile):
         x3, x4 = tick_for_label(
             300, labels, ticks), tick_for_label(350, labels, ticks)
         ax4.plot([x1, x2], [-0.2, -0.2], color='black')
-        ax4.text(x1, -0.35, 'CS')
+        ax4.text(x1, -0.35, 'CS', fontsize=10)
         ax4.set_xlim(xmin = tick_for_label( -200, labels, ticks ) )
         ax4.set_yticks([0, 0.5, 1.0], [0, 0.5, 1.0])
-        ax4.text(x3, -0.35, 'PUFF')
+        ax4.text(x3, -0.35, 'PUFF', fontsize=10)
         ax4.set_xlabel('Time (ms)')
 
     ax4.plot([x3, x4], [-0.2, -0.2], color='black')
     ax4.set_title('FEC')
 
-    plt.tight_layout(pad=4)
     trialName = list(filter(None, trialdir.split('/')))[-1]
     ax4.set_xlabel('Time (ms)')
-    plt.suptitle(r'Trial: %s' % trialName, x=0.1)
+    #  plt.suptitle(r'Trial: %s' % trialName, x=0.1)
+    plt.tight_layout(pad=2)
     plt.savefig(outfile)
     plt.close()
     print('Wrote summary to %s' % outfile)
