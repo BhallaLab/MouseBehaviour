@@ -386,7 +386,7 @@ void do_trial( size_t trial_num, bool isprobe = false )
     {
         stamp_ = millis( );
         sprintf( trial_state_, "CS+" );
-        if(String("LED") == String(PROTO_CSValue))
+        if(String("LIGHT") == String(PROTO_CSValue))
         {
             led_on( duration );
         }
