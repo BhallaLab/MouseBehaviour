@@ -13,8 +13,6 @@
  *  See the GIT changelog for more details.
  */
 
-#include <avr/wdt.h>
-
 // Pin configurations and other global variables.
 #include "config.h"
 
@@ -24,7 +22,7 @@
 
 // Functions and variable related to rotary encoder.
 #include "RotaryEncoder.h"
-
+#include "Shocker.h"
 
 unsigned long stamp_            = 0;
 unsigned dt_                    = 2;
@@ -39,20 +37,8 @@ char trial_state_[5]            = "PRE_";
 int incoming_byte_              = 0;
 bool reboot_                    = false;
 
-/**
- * @brief Interrupt serviving routine (watchdog).
- * @param _vect
- */
-ISR(WDT_vect)
-{
-    // Handle interuppts here.
-    // Nothing to handle.
-}
-
 void reset_watchdog( )
 {
-    if( not reboot_ )
-        wdt_reset( );
 }
 
 /**
@@ -98,9 +84,9 @@ void write_data_line( )
     unsigned long timestamp = millis() - trial_start_time_;
 
     char msg[100];
-    sprintf(msg, "%lu,%s,%d,%d,%d,%d,%d,%d,%s,%ld"
+    sprintf(msg, "%lu,%s,%d,%d,%d,%d,%d,%d,%s,%d,%ld"
             , timestamp, PROTO_CODE, trial_count_, puff, tone, led
-            , camera, microscope, trial_state_, encoder_value_
+            , camera, microscope, trial_state_, shock_pin_readout, encoder_value_
            );
 
     // sprintf does not support float. Therefore this convoluted way of printing
@@ -135,7 +121,7 @@ void check_for_reset( void )
  */
 void play_tone( unsigned long period, double duty_cycle = 0.5 )
 {
-    reset_watchdog( );
+    // reset_watchdog( );
     check_for_reset( );
     unsigned long toneStart = millis();
     while( (millis() - toneStart) <= period )
@@ -178,6 +164,22 @@ void led_on( unsigned int duration )
     digitalWrite( LED_PIN, LOW );
 }
 
+/* --------------------------------------------------------------------------*/
+/**
+ * @Synopsis  Apply shock to animal.
+ *
+ * @Param duration
+ */
+/* ----------------------------------------------------------------------------*/
+void apply_shock( int duration )
+{
+    stamp_ = millis();
+    digitalWrite(SHOCK_STIM_ISOLATER_PIN, HIGH);
+    while( (millis() - stamp_) < duration)
+        write_data_line();
+    digitalWrite(SHOCK_STIM_ISOLATER_PIN, LOW);
+}
+
 
 /**
  * @brief Wait for trial to start.
@@ -207,6 +209,15 @@ void wait_for_start( )
         {
             Serial.println( ">>>Received t. Playing tone" );
             play_tone( TONE_DURATION, 1.0);
+        }
+        else if( is_command_read( 'c', true ) )
+        {
+            Serial.println( ">>>Received c. Giving shock" );
+            digitalWrite(SHOCK_RELAY_PIN, HIGH);
+            delay(10);
+            apply_shock( 50 );
+            delay(10);
+            digitalWrite(SHOCK_RELAY_PIN, LOW);
         }
         else if( is_command_read( 'l', true ) )
         {
@@ -257,10 +268,14 @@ void setup()
     randomSeed( analogRead(A5) );
 
     //esetup watchdog. If not reset in 2 seconds, it reboots the system.
-    wdt_enable( WDTO_2S );
-    wdt_reset();
     stamp_ = millis( );
 
+    // SHOCK.
+    pinMode( SHOCK_PWM_PIN, OUTPUT );
+    pinMode( SHOCK_RELAY_PIN, OUTPUT);
+    pinMode( SHOCK_STIM_ISOLATER_PIN, OUTPUT);
+
+    // CS AND US
     pinMode( TONE_PIN, OUTPUT );
     pinMode( PUFF_PIN, OUTPUT );
     pinMode( LED_PIN, OUTPUT );
@@ -279,20 +294,15 @@ void setup()
     //on interrupt 0 (pin 2), or interrupt 1 (pin 3)
     attachInterrupt(0, updateEncoder, CHANGE);
     attachInterrupt(1, updateEncoder, CHANGE);
+    
 
-
-#ifdef USE_MOUSE
-    // Configure mouse here
-    mouse.initialize( );
-    Serial.println( "Stuck in setup() ... mostly due to MOUSE" );
-#else
-    Serial.println( "Using LED/DIODE pair" );
-    pinMode( MOTION1_PIN, INPUT );
-    pinMode( MOTION2_PIN, INPUT );
-#endif
+    // fixme: move after wait_for_start
+    start_shocker();
 
     print_trial_info( );
     wait_for_start( );
+
+
 }
 
 void do_zero_trial( )
@@ -319,6 +329,32 @@ void do_empty_trial( size_t trial_num, int duration = 10 )
     Serial.println( ">>     TRIAL OVER." );
 }
 
+void monitor_for_shock(void)
+{
+    if ( numLoops > STIM_INTERVAL ) 
+    {
+        if ( shock_pin_readout < TOUCH_THRESHOLD ) 
+        {
+            // Oops, the animal isn't even touching the pad. Wait a bit.
+            numLoops = NUM_LOOP_RESET;
+        } 
+        else 
+        { 
+            // Give the tingle stimulus.
+            digitalWrite( SHOCK_RELAY_PIN, LOW ); // Switch in the stim, switch out ADC
+            delay(10);
+            digitalWrite( SHOCK_STIM_ISOLATER_PIN, HIGH ); // Deliver stimulus.
+            delay(50);
+            digitalWrite( SHOCK_STIM_ISOLATER_PIN, LOW );
+            delay(10);
+            digitalWrite( SHOCK_RELAY_PIN, HIGH ); // Switch back to ADC
+            numLoops = 0;
+        }
+    }
+    numLoops ++;
+}
+
+
 /**
  * @brief Do a single trial.
  *
@@ -327,7 +363,7 @@ void do_empty_trial( size_t trial_num, int duration = 10 )
  */
 void do_trial( size_t trial_num, bool isprobe = false )
 {
-    reset_watchdog( );
+    // reset_watchdog( );
     check_for_reset( );
 
     print_trial_info( );
@@ -411,13 +447,24 @@ void do_trial( size_t trial_num, bool isprobe = false )
     stamp_ = millis( );
 
     /*-----------------------------------------------------------------------------
-     *  TRACE. The duration of trace varies from trial to trial.
+     *  TRACE. The duration of trace varies from trial to trial. If US is shock
+     *  then 10ms before the US, switch on the relay pin.
      *-----------------------------------------------------------------------------*/
-    duration = PROTO_TraceDuration;
+    if(String(PROTO_USValue) == String("SHOCK"))
+        duration = PROTO_TraceDuration - 10;
+    else
+        duration = PROTO_TraceDuration;
+
     sprintf( trial_state_, "TRAC" );
     while( (millis() - stamp_) <= duration )
         write_data_line();
     stamp_ = millis();
+
+    if(String(PROTO_USValue) == String("SHOCK"))
+    {
+        digitalWrite(SHOCK_RELAY_PIN, HIGH);
+        delay(10);
+    }
 
     /*-----------------------------------------------------------------------------
      *  US for 50 ms if trial is not a probe type.
@@ -432,16 +479,31 @@ void do_trial( size_t trial_num, bool isprobe = false )
     else
     {
         sprintf( trial_state_, PROTO_USValue );
-        play_puff( duration );
+        if(String(PROTO_USValue) == String("PUFF"))
+            play_puff( duration );
+        else if(String(PROTO_USValue) == String("SHOCK"))
+            apply_shock(duration);
+        else
+        {
+            while( (millis( ) - stamp_) <= duration )
+                write_data_line( );
+        }
     }
+
+    // POST has started.
     stamp_ = millis( );
+    sprintf( trial_state_, "POST" );
+    if(String(PROTO_USValue) == String("SHOCK"))
+    {
+        delay(10);
+        digitalWrite(SHOCK_RELAY_PIN, LOW);
+    }
 
     /*-----------------------------------------------------------------------------
      *  POST, flexible duration till trial is over. It is 8 second long.
      *-----------------------------------------------------------------------------*/
     // Last phase is post. If we are here just spend rest of time here.
     duration = PROTO_PostStimDuration;
-    sprintf( trial_state_, "POST" );
     while( (millis( ) - stamp_) <= duration )
     {
         write_data_line( );
@@ -472,7 +534,7 @@ void do_trial( size_t trial_num, bool isprobe = false )
 
 void loop()
 {
-    reset_watchdog( );
+    reset_watchdog();
 
     // Initialize probe trials index. Mean 6 +/- 2 trials.
     unsigned numProbeTrials = 0;
