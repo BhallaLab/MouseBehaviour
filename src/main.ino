@@ -164,6 +164,22 @@ void led_on( unsigned int duration )
     digitalWrite( LED_PIN, LOW );
 }
 
+/* --------------------------------------------------------------------------*/
+/**
+ * @Synopsis  Apply shock to animal.
+ *
+ * @Param duration
+ */
+/* ----------------------------------------------------------------------------*/
+void apply_shock( int duration )
+{
+    stamp_ = millis();
+    digitalWrite(SHOCK_STIM_ISOLATER_PIN, HIGH);
+    while( (millis() - stamp_) < duration)
+        write_data_line();
+    digitalWrite(SHOCK_STIM_ISOLATER_PIN, LOW);
+}
+
 
 /**
  * @brief Wait for trial to start.
@@ -193,6 +209,15 @@ void wait_for_start( )
         {
             Serial.println( ">>>Received t. Playing tone" );
             play_tone( TONE_DURATION, 1.0);
+        }
+        else if( is_command_read( 'c', true ) )
+        {
+            Serial.println( ">>>Received c. Giving shock" );
+            digitalWrite(SHOCK_RELAY_PIN, HIGH);
+            delay(10);
+            apply_shock( 50 );
+            delay(10);
+            digitalWrite(SHOCK_RELAY_PIN, LOW);
         }
         else if( is_command_read( 'l', true ) )
         {
@@ -329,6 +354,7 @@ void monitor_for_shock(void)
     numLoops ++;
 }
 
+
 /**
  * @brief Do a single trial.
  *
@@ -421,13 +447,24 @@ void do_trial( size_t trial_num, bool isprobe = false )
     stamp_ = millis( );
 
     /*-----------------------------------------------------------------------------
-     *  TRACE. The duration of trace varies from trial to trial.
+     *  TRACE. The duration of trace varies from trial to trial. If US is shock
+     *  then 10ms before the US, switch on the relay pin.
      *-----------------------------------------------------------------------------*/
-    duration = PROTO_TraceDuration;
+    if(String(PROTO_USValue) == String("SHOCK"))
+        duration = PROTO_TraceDuration - 10;
+    else
+        duration = PROTO_TraceDuration;
+
     sprintf( trial_state_, "TRAC" );
     while( (millis() - stamp_) <= duration )
         write_data_line();
     stamp_ = millis();
+
+    if(String(PROTO_USValue) == String("SHOCK"))
+    {
+        digitalWrite(SHOCK_RELAY_PIN, HIGH);
+        delay(10);
+    }
 
     /*-----------------------------------------------------------------------------
      *  US for 50 ms if trial is not a probe type.
@@ -442,16 +479,31 @@ void do_trial( size_t trial_num, bool isprobe = false )
     else
     {
         sprintf( trial_state_, PROTO_USValue );
-        play_puff( duration );
+        if(String(PROTO_USValue) == String("PUFF"))
+            play_puff( duration );
+        else if(String(PROTO_USValue) == String("SHOCK"))
+            apply_shock(duration);
+        else
+        {
+            while( (millis( ) - stamp_) <= duration )
+                write_data_line( );
+        }
     }
+
+    // POST has started.
     stamp_ = millis( );
+    sprintf( trial_state_, "POST" );
+    if(String(PROTO_USValue) == String("SHOCK"))
+    {
+        delay(10);
+        digitalWrite(SHOCK_RELAY_PIN, LOW);
+    }
 
     /*-----------------------------------------------------------------------------
      *  POST, flexible duration till trial is over. It is 8 second long.
      *-----------------------------------------------------------------------------*/
     // Last phase is post. If we are here just spend rest of time here.
     duration = PROTO_PostStimDuration;
-    sprintf( trial_state_, "POST" );
     while( (millis( ) - stamp_) <= duration )
     {
         write_data_line( );
