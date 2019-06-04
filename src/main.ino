@@ -89,6 +89,7 @@ void write_data_line( )
     reset_watchdog( );
 
     // Just read the registers where pin data is saved.
+    int shock = analogRead( SHOCK_PIN );
     int puff = digitalRead( PUFF_PIN );
     int tone = digitalRead( TONE_PIN );
     int led = digitalRead( LED_PIN );
@@ -98,9 +99,9 @@ void write_data_line( )
     unsigned long timestamp = millis() - trial_start_time_;
 
     char msg[100];
-    sprintf(msg, "%lu,%s,%d,%d,%d,%d,%d,%d,%s,%ld"
+    sprintf(msg, "%lu,%s,%d,%d,%d,%d,%d,%d,%s,%d,%ld"
             , timestamp, PROTO_CODE, trial_count_, puff, tone, led
-            , camera, microscope, trial_state_, encoder_value_
+            , camera, microscope, trial_state_, shock, encoder_value_
            );
 
     // sprintf does not support float. Therefore this convoluted way of printing

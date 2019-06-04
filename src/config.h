@@ -11,6 +11,7 @@
 #define         ANIMAL_NAME         "k3"
 
 // Pins etc.
+#define         SHOCK_PIN                   5
 #define         ROTARY_ENC_A                2 
 #define         ROTARY_ENC_B                3 
 #define         TONE_PIN                    8

@@ -24,7 +24,7 @@ set(CMAKE_CXX_COMPILER g++)
 find_package(OpenCV REQUIRED)
 find_package(Boost REQUIRED COMPONENTS chrono iostreams program_options system filesystem)
 find_package(PkgConfig REQUIRED)
-pkg_check_modules(LIBSERIAL REQUIRED libserial)
+pkg_search_module(LIBSERIAL REQUIRED libserial libserialport)
 pkg_check_modules(LIBTIFF4 REQUIRED libtiff-4)
 
 include_directories(${OpenCV_INCLUDE_DIRS} )
