@@ -75,7 +75,6 @@ void write_data_line( )
     reset_watchdog( );
 
     // Just read the registers where pin data is saved.
-    int shock = analogRead( SHOCK_PAD_READOUT_PIN );
     int puff = digitalRead( PUFF_PIN );
     int tone = digitalRead( TONE_PIN );
     int led = digitalRead( LED_PIN );
@@ -87,7 +86,7 @@ void write_data_line( )
     char msg[100];
     sprintf(msg, "%lu,%s,%d,%d,%d,%d,%d,%d,%s,%d,%ld"
             , timestamp, PROTO_CODE, trial_count_, puff, tone, led
-            , camera, microscope, trial_state_, shock, encoder_value_
+            , camera, microscope, trial_state_, shock_pin_readout, encoder_value_
            );
 
     // sprintf does not support float. Therefore this convoluted way of printing
@@ -270,9 +269,15 @@ void setup()
     //on interrupt 0 (pin 2), or interrupt 1 (pin 3)
     attachInterrupt(0, updateEncoder, CHANGE);
     attachInterrupt(1, updateEncoder, CHANGE);
+    
+
+    // fixme: move after wait_for_start
+    start_shocker();
 
     print_trial_info( );
     wait_for_start( );
+
+
 }
 
 void do_zero_trial( )
@@ -297,6 +302,31 @@ void do_empty_trial( size_t trial_num, int duration = 10 )
     //print_trial_info( );
     delay( duration );
     Serial.println( ">>     TRIAL OVER." );
+}
+
+void monitor_for_shock(void)
+{
+    if ( numLoops > STIM_INTERVAL ) 
+    {
+        if ( shock_pin_readout < TOUCH_THRESHOLD ) 
+        {
+            // Oops, the animal isn't even touching the pad. Wait a bit.
+            numLoops = NUM_LOOP_RESET;
+        } 
+        else 
+        { 
+            // Give the tingle stimulus.
+            digitalWrite( SHOCK_RELAY_PIN, LOW ); // Switch in the stim, switch out ADC
+            delay(10);
+            digitalWrite( SHOCK_STIM_ISOLATER_PIN, HIGH ); // Deliver stimulus.
+            delay(50);
+            digitalWrite( SHOCK_STIM_ISOLATER_PIN, LOW );
+            delay(10);
+            digitalWrite( SHOCK_RELAY_PIN, HIGH ); // Switch back to ADC
+            numLoops = 0;
+        }
+    }
+    numLoops ++;
 }
 
 /**
@@ -452,7 +482,7 @@ void do_trial( size_t trial_num, bool isprobe = false )
 
 void loop()
 {
-    reset_watchdog( );
+    reset_watchdog();
 
     // Initialize probe trials index. Mean 6 +/- 2 trials.
     unsigned numProbeTrials = 0;

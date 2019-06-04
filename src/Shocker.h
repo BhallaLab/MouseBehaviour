@@ -22,9 +22,9 @@ int NUM_LOOP_RESET   = 50;
 // Minimum reading for foot touch to allow stimulus to go ahead.
 int TOUCH_THRESHOLD  = 50; 
 
-int numLoops         = 0;
+int numLoops                    = 0;
 
-int  shock_pack_readout         =  0;
+int  shock_pin_readout         =  0;
 
 
 /* --------------------------------------------------------------------------*/
@@ -44,7 +44,7 @@ ISR(TIMER1_COMPA_vect)
     if (idx >= SAMPLING_DIVIDER) 
     {
         idx = 0;
-        shock_pack_readout = analogRead( SHOCK_PAD_READOUT_PIN );
+        shock_pin_readout = analogRead( SHOCK_PAD_READOUT_PIN );
         // stopPlayback();
     }
 }
