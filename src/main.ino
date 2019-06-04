@@ -13,8 +13,6 @@
  *  See the GIT changelog for more details.
  */
 
-#include <avr/wdt.h>
-
 // Pin configurations and other global variables.
 #include "config.h"
 
@@ -24,7 +22,7 @@
 
 // Functions and variable related to rotary encoder.
 #include "RotaryEncoder.h"
-
+#include "Shocker.h"
 
 unsigned long stamp_            = 0;
 unsigned dt_                    = 2;
@@ -39,20 +37,8 @@ char trial_state_[5]            = "PRE_";
 int incoming_byte_              = 0;
 bool reboot_                    = false;
 
-/**
- * @brief Interrupt serviving routine (watchdog).
- * @param _vect
- */
-ISR(WDT_vect)
-{
-    // Handle interuppts here.
-    // Nothing to handle.
-}
-
 void reset_watchdog( )
 {
-    if( not reboot_ )
-        wdt_reset( );
 }
 
 /**
@@ -89,7 +75,7 @@ void write_data_line( )
     reset_watchdog( );
 
     // Just read the registers where pin data is saved.
-    int shock = analogRead( SHOCK_PIN );
+    int shock = analogRead( SHOCK_PAD_READOUT_PIN );
     int puff = digitalRead( PUFF_PIN );
     int tone = digitalRead( TONE_PIN );
     int led = digitalRead( LED_PIN );
@@ -136,7 +122,7 @@ void check_for_reset( void )
  */
 void play_tone( unsigned long period, double duty_cycle = 0.5 )
 {
-    reset_watchdog( );
+    // reset_watchdog( );
     check_for_reset( );
     unsigned long toneStart = millis();
     while( (millis() - toneStart) <= period )
@@ -258,10 +244,14 @@ void setup()
     randomSeed( analogRead(A5) );
 
     //esetup watchdog. If not reset in 2 seconds, it reboots the system.
-    wdt_enable( WDTO_2S );
-    wdt_reset();
     stamp_ = millis( );
 
+    // SHOCK.
+    pinMode( SHOCK_PWM_PIN, OUTPUT );
+    pinMode( SHOCK_RELAY_PIN, OUTPUT);
+    pinMode( SHOCK_STIM_ISOLATER_PIN, OUTPUT);
+
+    // CS AND US
     pinMode( TONE_PIN, OUTPUT );
     pinMode( PUFF_PIN, OUTPUT );
     pinMode( LED_PIN, OUTPUT );
@@ -280,17 +270,6 @@ void setup()
     //on interrupt 0 (pin 2), or interrupt 1 (pin 3)
     attachInterrupt(0, updateEncoder, CHANGE);
     attachInterrupt(1, updateEncoder, CHANGE);
-
-
-#ifdef USE_MOUSE
-    // Configure mouse here
-    mouse.initialize( );
-    Serial.println( "Stuck in setup() ... mostly due to MOUSE" );
-#else
-    Serial.println( "Using LED/DIODE pair" );
-    pinMode( MOTION1_PIN, INPUT );
-    pinMode( MOTION2_PIN, INPUT );
-#endif
 
     print_trial_info( );
     wait_for_start( );
@@ -328,7 +307,7 @@ void do_empty_trial( size_t trial_num, int duration = 10 )
  */
 void do_trial( size_t trial_num, bool isprobe = false )
 {
-    reset_watchdog( );
+    // reset_watchdog( );
     check_for_reset( );
 
     print_trial_info( );
