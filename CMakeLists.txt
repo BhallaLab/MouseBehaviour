@@ -81,7 +81,14 @@ file(WRITE ${CMAKE_CURRENT_SOURCE_DIR}/src/protocol.h "${PROTOCOL_CONFIG}")
 
 # Set DATA DIRirectory to store data for given animal, session, and protocol
 # code. 
-set(DATADIR "$ENV{HOME}/DATA/${ANIMAL_NAME}/${SESSION_NUM}_${PROTO_CODE}/${COMPILE_TIME}")
+set(DATADIR
+    "$ENV{HOME}/DATA/${ANIMAL_NAME}/${ANIMAL_NAME}_${PROTO_CODE}_${SESSION_NUM}")
+if(EXISTS ${DATADIR})
+    set(DATADIR
+        "$ENV{HOME}/DATA/${ANIMAL_NAME}/${ANIMAL_NAME}_${PROTO_CODE}_${SESSION_NUM}/${COMPILE_TIME}")
+endif()
+message(STATUS "Data will be stored in ${DATADIR}")
+file(MAKE_DIRECTORY ${DATADIR})
 configure_file( ${CMAKE_SOURCE_DIR}/Makefile.arduino.in
     ${CMAKE_SOURCE_DIR}/Makefile.arduino
     )
