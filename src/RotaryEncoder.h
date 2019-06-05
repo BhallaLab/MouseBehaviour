@@ -22,34 +22,36 @@
 
 #include "config.h"
 
+volatile int pin2_;
+volatile int pin3_;
+
 // Global for rotary encoder.
-long last_encoded_  = 0;
+long last_encoded_       = 0;
 long encoder_value_      = 0;
 long prev_encoder_value_ = 0;
-
 unsigned long lastT_     = 0;
+long pin2Count_          = 0;
+long pin3Count_          = 0;
+long val_                = 0;
+
 // radian per second.
 double angular_velocity_ = 0.0;
  
-// This code is from  https://robu.in/product/incremental-optical-rotary-encoder-6002400-pulse-600-ppr/
-void updateEncoder()
+void ISR_ON_PIN2( )
 {
+    // Read the other pin. This pin is HIGH.
+    pin3_ = digitalRead( 3 ); 
+    // If this pin leads the other pin then add 1 else substract 1.
+    pin2Count_ += pin3_ ? -1 : +1;
+    encoder_value_ = (pin3Count_ + pin2Count_);
+}
 
-    // get the anular velocity
-    // This rotary encode has 2400 transitions per second.
-    // https://robokits.co.in/automation-control-cnc/encoders/rotary-quadrature-encoder-600ppr-2400cpr?gclid=EAIaIQobChMI-62Y8-Co3gIVVxOPCh29fgXcEAQYBCABEgJK6_D_BwE
-    // Rotary Quadrature Encoder 600PPR/2400CPR
-
-    int MSB = digitalRead(ROTARY_ENC_A); //MSB = most significant bit
-    int LSB = digitalRead(ROTARY_ENC_B); //LSB = least significant bit
-
-    int encoded = (MSB << 1) |LSB; //converting the 2 pin value to single number
-    int sum  = (last_encoded_ << 2) | encoded; //adding it to the previous encoded value
- 
-    if(sum == 0b1101 || sum == 0b0100 || sum == 0b0010 || sum == 0b1011) encoder_value_ ++;
-    if(sum == 0b1110 || sum == 0b0111 || sum == 0b0001 || sum == 0b1000) encoder_value_ --;
-
-    last_encoded_ = encoded; //store this value for next time
+void ISR_ON_PIN3( )
+{
+    // Read the other pin. This pin is HIGH.
+    pin2_ = digitalRead(2);
+    // If this pin leads the other pin then subtract 1 else add 1.
+    pin3Count_ += pin2_ ? +1 : -1;
 }
 
 #endif   /* ----- #ifndef RotaryEncoder_INC  ----- */

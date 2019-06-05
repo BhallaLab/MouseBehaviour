@@ -89,13 +89,12 @@ void write_data_line( )
             , camera, microscope, trial_state_, shock_pin_readout, encoder_value_
            );
 
-    // sprintf does not support float. Therefore this convoluted way of printing
-    // float.
-    double dt = millis() - lastT_;
+    // Compute angular velocity.
+    int dt = millis() - lastT_;
     lastT_ = millis();
-    // In radian per second.
-    angular_velocity_ = 1000 * 2 * 3.1416 * (encoder_value_ - prev_encoder_value_) / 2400.0 / dt;
+    angular_velocity_ = 2*3.1416*(encoder_value_ - prev_encoder_value_)/1200.0/dt;
     prev_encoder_value_ = encoder_value_;
+
     Serial.print(msg + String(","));
     Serial.println(angular_velocity_, 5);
     delay( 3 );
@@ -291,9 +290,8 @@ void setup()
     digitalWrite(ROTARY_ENC_B, HIGH); //turn pullup resistor on
 
     //call updateEncoder() when any high/low changed seen
-    //on interrupt 0 (pin 2), or interrupt 1 (pin 3)
-    attachInterrupt(0, updateEncoder, CHANGE);
-    attachInterrupt(1, updateEncoder, CHANGE);
+    attachInterrupt( digitalPinToInterrupt(2), ISR_ON_PIN2, RISING);
+    attachInterrupt( digitalPinToInterrupt(3), ISR_ON_PIN3, RISING);
     
 
     // fixme: move after wait_for_start
