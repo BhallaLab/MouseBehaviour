@@ -1,6 +1,10 @@
 cmake_minimum_required(VERSION 2.8)
 project(EyeBlinkBehavour)
 
+###############################################################################
+# TIMESTAMP
+string(TIMESTAMP COMPILE_TIME "%Y-%m-%d%H:%M:%S")
+
 ################################################################################
 # ARDUINO BOARD 
 ################################################################################
@@ -76,9 +80,15 @@ message(STATUS "Writing protocol ${PROTO_CODE} config to file.")
 file(WRITE ${CMAKE_CURRENT_SOURCE_DIR}/src/protocol.h "${PROTOCOL_CONFIG}")
 
 # Set DATA DIRirectory to store data for given animal, session, and protocol
-# code. No need to create this directory from CMake, python script which saves
-# data takes care for it.
-set(DATADIR "$ENV{HOME}/DATA/${ANIMAL_NAME}/${ANIMAL_NAME}_${SESSION_NUM}_${PROTO_CODE}")
+# code. 
+set(DATADIR
+    "$ENV{HOME}/DATA/${ANIMAL_NAME}/${ANIMAL_NAME}_${PROTO_CODE}_${SESSION_NUM}")
+if(EXISTS ${DATADIR})
+    set(DATADIR
+        "$ENV{HOME}/DATA/${ANIMAL_NAME}/${ANIMAL_NAME}_${PROTO_CODE}_${SESSION_NUM}/${COMPILE_TIME}")
+endif()
+message(STATUS "Data will be stored in ${DATADIR}")
+file(MAKE_DIRECTORY ${DATADIR})
 configure_file( ${CMAKE_SOURCE_DIR}/Makefile.arduino.in
     ${CMAKE_SOURCE_DIR}/Makefile.arduino
     )

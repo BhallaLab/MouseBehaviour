@@ -7,9 +7,15 @@ All5,4,puff2 only,8000,8000,50,NONE,250,50,PUFF,8000,6,10,60,All
 So1,5,tone+puff1,8000,8000,50,TONE,250,50,PUFF,8000,6,10,60,soumya
 SoAn1,6,light+puff1,8000,8000,50,LIGHT,250,50,PUFF,8000,6,10,60,"soumya, Ananth"
 So2,7,mixed (tone+light) + puff1,8000,8000,50,TONE/LIGHT,250,50,PUFF,8000,0,0,60,"soumya 6X[5x( tone-trace-US), 5x(light-trace-US)]"
-Hr1,8,light+ mixed (puff1 + puff2),8000,8000,50,LIGHT,250,50,PUFF,8000,0,0,60,"Hrishi 6X[5x( light-trace-puff1), 5x(light-trace-puff2)]"
+
 An1,9,light + 350 trace + puff1,6000,8000,50,LIGHT,350,50,PUFF,8000,6,10,60,Ananth
 An2,10,light + 450 trace + puff1,6000,8000,50,LIGHT,450,50,PUFF,8000,6,10,60,Ananth
 An3,11,light + 550 trace + puff1,6000,8000,50,LIGHT,550,50,PUFF,8000,6,10,60,Ananth
 An4,12,light + 650 trace + puff1,6000,8000,50,LIGHT,650,50,PUFF,8000,6,10,60,Ananth
 An5,13,light + 750 trace + puff1,6000,8000,50,LIGHT,750,50,PUFF,8000,6,10,60,Ananth
+
+Hr1,14,Shock only,8000,8000,50,NONE,250,50,SHOCK,8000,6,10,60,Hrishi
+Hr2,15,tone+shock,8000,8000,50,TONE,250,50,SHOCK,8000,6,10,60,Hrishi
+Hr3,16,light+shock,8000,8000,50,LIGHT,250,50,SHOCK,8000,6,10,60,Hrishi
+Hr4,17,tone+mixed(puff1/shock),8000,8000,50,TONE,250,50,SHOCK/PUFF,8000,6,10,60,"Hrishi 6X[5x( tone-trace-puff1), 5x(tone-trace-shock)]"
+Hr5,18,light+mixed(puff1/shock),8000,8000,50,LIGHT,250,50,SHOCK/PUFF,8000,6,10,60,"Hrishi 6X[5x( light-trace-puff1), 5x(light-trace-shock)]"
