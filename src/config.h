@@ -8,7 +8,7 @@
 #include "protocol.h"
 
 #define         SESSION_NUM         1
-#define         ANIMAL_NAME         "M27"
+#define         ANIMAL_NAME         "k3"
 
 /*-----------------------------------------------------------------------------
  *  PINS
