@@ -380,7 +380,7 @@ void do_trial( size_t trial_num, bool isprobe = false )
     // From Ananth. He suggested that 60ms delay is required for every protocol. This is
     // apprently shutter delay for the camera and only required for trial number
     // 1.
-    if (trial_num == 1)
+    if (trial_num > 0)
         delay(60); // Shutter delay; Only for the first trial
 
     stamp_ = millis( );

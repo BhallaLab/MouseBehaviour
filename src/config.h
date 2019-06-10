@@ -7,7 +7,7 @@
 
 #include "protocol.h"
 
-#define         SESSION_NUM         1
+#define         SESSION_NUM         3
 #define         ANIMAL_NAME         "k3"
 
 /*-----------------------------------------------------------------------------
