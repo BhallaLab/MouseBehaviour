@@ -13,6 +13,8 @@
  *  See the GIT changelog for more details.
  */
 
+#include <avr/wdt.h>
+
 // Pin configurations and other global variables.
 #include "config.h"
 
@@ -37,9 +39,24 @@ char trial_state_[5]            = "PRE_";
 int incoming_byte_              = 0;
 bool reboot_                    = false;
 
+ISR(WDT_vect)
+{
+    // Handle interuppts here.
+    // Nothing to handle.
+}
+
+/* --------------------------------------------------------------------------*/
+/**
+ * @Synopsis  When ctrl+c is pressed, reboot_ is set true and we restart the
+ * arduino else ctrl+c will not stop arduino from giving stimulus.
+ */
+/* ----------------------------------------------------------------------------*/
 void reset_watchdog( )
 {
+    if( not reboot_ )
+        wdt_reset( );
 }
+
 
 /**
  * @brief  Read a command from command line. Consume when character is matched.
@@ -65,6 +82,16 @@ bool is_command_read( char command, bool consume = true )
     return false;
 }
 
+void check_for_reset( void )
+{
+    if( is_command_read('r', true ) )
+    {
+        Serial.println( ">>> Received r. Reboot in 2 seconds" );
+        reboot_ = true;
+    }
+}
+
+
 /**
  * @brief Write data line to Serial port in csv format.
  * @param data
@@ -72,7 +99,8 @@ bool is_command_read( char command, bool consume = true )
  */
 void write_data_line( )
 {
-    reset_watchdog( );
+    check_for_reset();
+    reset_watchdog();
 
     // Just read the registers where pin data is saved.
     int puff = digitalRead( PUFF_PIN );
@@ -100,15 +128,6 @@ void write_data_line( )
     delay( 3 );
 }
 
-void check_for_reset( void )
-{
-    if( is_command_read('r', true ) )
-    {
-        Serial.println( ">>>Received r. Reboot in 2 seconds" );
-        reboot_ = true;
-    }
-}
-
 /**
  * @brief Play tone for given period and duty cycle.
  *
@@ -120,7 +139,7 @@ void check_for_reset( void )
  */
 void play_tone( unsigned long period, double duty_cycle = 0.5 )
 {
-    // reset_watchdog( );
+    reset_watchdog( );
     check_for_reset( );
     unsigned long toneStart = millis();
     while( (millis() - toneStart) <= period )
@@ -228,6 +247,11 @@ void wait_for_start( )
             Serial.println( ">>>Received 1. Start capturing frame" );
             digitalWrite( CAMERA_TTL_PIN, HIGH );
         }
+        else if( is_command_read( 'r', true ) )
+        {
+            Serial.println( ">>>Received r. Rebooting " );
+            reboot_ = true;
+        }
         else if( is_command_read( '2', true ) )
         {
             Serial.println( ">>>Received 2. Stop capturing frames" );
@@ -263,6 +287,9 @@ void setup()
     // chars per ms i.e. baud rate should be higher than 100,000.
     Serial.begin( 115200 );
 
+    //esetup watchdog. If not reset in 2 seconds, it reboots the system.
+    wdt_enable( WDTO_2S );
+    wdt_reset();
     // Random seed.
     randomSeed( analogRead(A5) );
 
@@ -363,7 +390,7 @@ void monitor_for_shock(void)
  */
 void do_trial( size_t trial_num, bool isprobe = false )
 {
-    // reset_watchdog( );
+    reset_watchdog( );
     check_for_reset( );
 
     print_trial_info( );
@@ -526,7 +553,7 @@ void do_trial( size_t trial_num, bool isprobe = false )
     sprintf(trial_state_, "ITI_");
     while((millis() - stamp_) <= rduration)
     {
-        reset_watchdog( );
+        reset_watchdog();
         write_data_line();
         delay(200);
     }
@@ -542,9 +569,10 @@ void loop()
 
     for (size_t i = 1; i <= PROTO_NumTrialsInABlock; i++)
     {
-
-        reset_watchdog( );
+        check_for_reset();
+        reset_watchdog();
         trial_count_ = i;
+
         if(String("TONE/LIGHT") == String(PROTO_CSValue))
         {
             // FOR Shomu. Mixed trials.

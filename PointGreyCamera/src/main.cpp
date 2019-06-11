@@ -205,11 +205,10 @@ void ReadLine(string& res)
     // If the line starts with '<' or '>' characters; then dump them to console.
     if(res[0] == '<' || res[1] == '>')
     {
-        cout << res << endl;
+        cout << "[ARDUINO] " << res << endl;
         res = "";
         return;
     }
-
 
     // Append timestamp to the line.
     res = get_timestamp() + ',' + res;
@@ -254,6 +253,11 @@ void ArduinoClient()
         arduinoQ_.push(line);
         arduinoQ_.pop();
     }
+
+    // Send 'r' to arduino to reboot it.
+    cout << "[INFO] All done or Ctrl+C. Writing r to arduino. Reboot it." << endl;
+    serial_ << 'r' << endl;
+    return;
 }
 
 // This function returns the camera to its default state by re-enabling automatic
@@ -354,12 +358,14 @@ int ProcessFrame(void* data, size_t width, size_t height)
     if( k < ' ')
         return 0;
 
-    cout << "[INFO] Key pressed " << k << endl;
+    cout << "[INFO] Key pressed " << k;
     if(validCommands_.find(k) != std::string::npos)
     {
-        cout << "[INFO] Got valid command. Writing to serial." << k << endl;
         serial_ << k << endl;
+        cout << ". Valid command. Sending to Arduino: " << endl;
     }
+    else 
+        cout << ". Invalid. Ignoring ... " << endl;
     return 0;
 }
 
@@ -745,8 +751,8 @@ int main(int argc, char** argv)
 
     // Release system_
     system_->ReleaseInstance();
-
     destroyAllWindows();
+
     if(t.joinable())
         t.join();
 

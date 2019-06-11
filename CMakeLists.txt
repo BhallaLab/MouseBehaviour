@@ -133,9 +133,8 @@ add_custom_target(reset_boards
     VERBATIM
     )
 
-# Pass animal options to run.sh which will will passed to python script.
+# pass these arguments to camera server.
 SET(RUN_ARGS --port ${PORT} --datadir ${DATADIR})
-
 add_custom_target(run  
     DEPENDS cam_server upload
     COMMAND ${CMAKE_BINARY_DIR}/cam_server ${RUN_ARGS}
