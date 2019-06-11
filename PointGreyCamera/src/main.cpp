@@ -122,13 +122,11 @@ void SaveAllFrames(vector<Mat>& frames, const size_t trial)
     // Check if file arealy exists. If yes, raise all the hell.
     using namespace boost::filesystem;
     path p(outfile);
-    if(! exists(p))
+    if(exists(p))
     {
         cout << "[ERROR] Files " << outfile << " already exists. I will not overwrite " << p << endl;
         throw runtime_error( "WILL NOT OVERWRITE EXISTING DATA.");
     }
-
-
 
     write_frames_to_tiff(outfile, frames);
     cout << "[INFO] Saved data to " << outfile << endl;

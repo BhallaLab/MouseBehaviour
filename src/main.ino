@@ -540,13 +540,14 @@ void loop()
     unsigned numProbeTrials = 0;
     unsigned nextProbeTrialIndex = random(5, 10);
 
-    for (size_t i = 0; i <= PROTO_NumTrialsInABlock; i++)
+    for (size_t i = 1; i <= PROTO_NumTrialsInABlock; i++)
     {
 
         reset_watchdog( );
+        trial_count_ = i;
         if(String("TONE/LIGHT") == String(PROTO_CSValue))
         {
-            // mixed trials.
+            // FOR Shomu. Mixed trials.
             bool isprobe = false;
             if( i % 5 == 0 )
                 isprobe = true;
@@ -564,7 +565,6 @@ void loop()
             }
             do_trial(i, isprobe);
         }
-        trial_count_ += 1;
     }
 
     // Don't do anything once all trails are over.
