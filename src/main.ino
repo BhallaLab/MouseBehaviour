@@ -316,11 +316,16 @@ void setup()
     digitalWrite(ROTARY_ENC_A, HIGH); //turn pullup resistor on
     digitalWrite(ROTARY_ENC_B, HIGH); //turn pullup resistor on
 
+#if 0
     //call updateEncoder() when any high/low changed seen
     attachInterrupt( digitalPinToInterrupt(2), ISR_ON_PIN2, RISING);
-    // attachInterrupt( (2), ISR_ON_PIN2, RISING);
     attachInterrupt( digitalPinToInterrupt(3), ISR_ON_PIN3, RISING);
-    // attachInterrupt( (3), ISR_ON_PIN3, RISING);
+#else
+    // NOTE: This changes with board. Testing with UNO. The above snippet is
+    // preferred when available.
+    attachInterrupt(0, ISR_ON_PIN2, RISING);
+    attachInterrupt(1, ISR_ON_PIN3, RISING);
+#endif
     
 
     // fixme: move after wait_for_start
