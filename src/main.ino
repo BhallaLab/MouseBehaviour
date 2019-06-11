@@ -317,10 +317,10 @@ void setup()
     digitalWrite(ROTARY_ENC_B, HIGH); //turn pullup resistor on
 
     //call updateEncoder() when any high/low changed seen
-    //attachInterrupt( digitalPinToInterrupt(2), ISR_ON_PIN2, RISING);
-    attachInterrupt( (2), ISR_ON_PIN2, RISING);
-    //attachInterrupt( digitalPinToInterrupt(3), ISR_ON_PIN3, RISING);
-    attachInterrupt( (3), ISR_ON_PIN3, RISING);
+    attachInterrupt( digitalPinToInterrupt(2), ISR_ON_PIN2, RISING);
+    // attachInterrupt( (2), ISR_ON_PIN2, RISING);
+    attachInterrupt( digitalPinToInterrupt(3), ISR_ON_PIN3, RISING);
+    // attachInterrupt( (3), ISR_ON_PIN3, RISING);
     
 
     // fixme: move after wait_for_start
