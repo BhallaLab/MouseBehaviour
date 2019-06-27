@@ -48,18 +48,18 @@ void loop() {
   Serial.println( sample );
   delay(8);
   if ( numLoops > STIM_INTERVAL ) {
-     if ( sample < TOUCH_THRESHOLD ) {
-		// Oops, the animal isn't even touching the pad. Wait a bit.
-        numLoops = NUM_LOOP_RESET;
-	 } else { // Give the tingle stimulus.
-     	digitalWrite( relay, LOW ); // Switch in the stim, switch out ADC
-     	delay(10);
-     	digitalWrite( stimIsolator, HIGH ); // Deliver stimulus.
-     	delay(50);
-     	digitalWrite( stimIsolator, LOW );
-     	delay(10);
-     	digitalWrite( relay, HIGH ); // Switch back to ADC
-     	numLoops = 0;
+      if ( sample < TOUCH_THRESHOLD ) {
+          // Oops, the animal isn't even touching the pad. Wait a bit.
+          numLoops = NUM_LOOP_RESET;
+      } else { // Give the tingle stimulus.
+          digitalWrite( relay, LOW ); // Switch in the stim, switch out ADC
+          delay(10);
+          digitalWrite( stimIsolator, HIGH ); // Deliver stimulus.
+          delay(50);
+          digitalWrite( stimIsolator, LOW );
+          delay(10);
+          digitalWrite( relay, HIGH ); // Switch back to ADC
+          numLoops = 0;
      }
   }
   numLoops++;
