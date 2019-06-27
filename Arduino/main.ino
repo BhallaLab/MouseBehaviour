@@ -54,15 +54,13 @@ void reset_watchdog( )
 // Set relay pins before delivering stilumus.
 void relay_pins_before( )
 {
-    digitalWrite( SHOCK_RELAY_PIN_CHAN_13, HIGH );
-    digitalWrite( SHOCK_RELAY_PIN_CHAN_24, LOW );
+    enableShockPad();
 }
 
 // Set relay pins after delivering stimulus.
 void relay_pins_after( )
 {
-    digitalWrite( SHOCK_RELAY_PIN_CHAN_13, LOW );
-    digitalWrite( SHOCK_RELAY_PIN_CHAN_24, HIGH );
+    disableShockPad();
 }
 
 
@@ -372,32 +370,6 @@ void do_empty_trial( size_t trial_num, int duration = 10 )
     //print_trial_info( );
     delay( duration );
     Serial.println( ">>     TRIAL OVER." );
-}
-
-void monitor_for_shock(void)
-{
-    if ( numLoops > STIM_INTERVAL ) 
-    {
-        if ( shock_pin_readout < TOUCH_THRESHOLD ) 
-        {
-            // Oops, the animal isn't even touching the pad. Wait a bit.
-            numLoops = NUM_LOOP_RESET;
-        } 
-        else 
-        { 
-            // Give the tingle stimulus.
-            // Switch in the stim, switch out ADC
-            relay_pins_before();
-            delay(10);
-            digitalWrite( SHOCK_STIM_ISOLATER_PIN, HIGH ); // Deliver stimulus.
-            delay(50);
-            digitalWrite( SHOCK_STIM_ISOLATER_PIN, LOW );
-            delay(10);
-            relay_pins_after();
-            numLoops = 0;
-        }
-    }
-    numLoops ++;
 }
 
 
