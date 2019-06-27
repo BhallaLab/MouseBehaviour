@@ -114,6 +114,7 @@ void check_for_reset( void )
  */
 void write_data_line( )
 {
+    start_shocker();
     check_for_reset();
     reset_watchdog();
 
@@ -349,14 +350,8 @@ void setup()
     attachInterrupt(1, ISR_ON_PIN3, RISING);
 #endif
     
-
-    // fixme: move after wait_for_start
-    start_shocker();
-
     print_trial_info( );
     wait_for_start( );
-
-
 }
 
 void do_zero_trial( )
