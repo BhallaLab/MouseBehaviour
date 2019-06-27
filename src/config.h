@@ -15,9 +15,16 @@
  *-----------------------------------------------------------------------------*/
 #define         ROTARY_ENC_A                2   // have callback
 #define         ROTARY_ENC_B                3   // have callback.
+
+// FIXME:What do I do?
 #define         SHOCK_PWM_PIN               5   // PWM
-#define         SHOCK_RELAY_PIN             6   
+
+// Two pins which should switch on/off the relays. 
+#define         SHOCK_RELAY_PIN_CHAN_13     4
+#define         SHOCK_RELAY_PIN_CHAN_24     6
+
 #define         SHOCK_STIM_ISOLATER_PIN     7
+
 #define         TONE_PIN                    8
 #define         LED_PIN                     9
 #define         CAMERA_TTL_PIN              10

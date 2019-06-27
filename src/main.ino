@@ -57,6 +57,21 @@ void reset_watchdog( )
         wdt_reset( );
 }
 
+void relay_pins_before( )
+{
+
+    digitalWrite( SHOCK_RELAY_PIN_CHAN_13, HIGH );
+    digitalWrite( SHOCK_RELAY_PIN_CHAN_24, LOW );
+
+}
+
+void relay_pins_after( )
+{
+
+    digitalWrite( SHOCK_RELAY_PIN_CHAN_13, LOW );
+    digitalWrite( SHOCK_RELAY_PIN_CHAN_24, HIGH );
+}
+
 
 /**
  * @brief  Read a command from command line. Consume when character is matched.
@@ -112,7 +127,7 @@ void write_data_line( )
     unsigned long timestamp = millis() - trial_start_time_;
 
     char msg[100];
-    sprintf(msg, "%lu,%s,%d,%d,%d,%d,%d,%d,%s,%d,%ld"
+    sprintf(msg, "%lu,%s,%d,%d,%d,%d,%d,%d,%s,%4d,%ld"
             , timestamp, PROTO_CODE, trial_count_, puff, tone, led
             , camera, microscope, trial_state_, shock_pin_readout, encoder_value_
            );
@@ -230,12 +245,12 @@ void wait_for_start( )
         }
         else if( is_command_read( 'c', true ) )
         {
-            Serial.println( ">>>Received c. Giving shock" );
-            digitalWrite(SHOCK_RELAY_PIN, HIGH);
+            Serial.println( ">>>Received c. Giving shock for 10 sec" );
+            relay_pins_before();
             delay(10);
-            apply_shock( 50 );
+            apply_shock( 10000 );
             delay(10);
-            digitalWrite(SHOCK_RELAY_PIN, LOW);
+            relay_pins_after();
         }
         else if( is_command_read( 'l', true ) )
         {
@@ -298,7 +313,14 @@ void setup()
 
     // SHOCK.
     pinMode( SHOCK_PWM_PIN, OUTPUT );
-    pinMode( SHOCK_RELAY_PIN, OUTPUT);
+
+    // HIGH Pin -> relay OFF
+    pinMode( SHOCK_RELAY_PIN_CHAN_13, OUTPUT);
+    digitalWrite(SHOCK_RELAY_PIN_CHAN_13, HIGH);
+
+    pinMode( SHOCK_RELAY_PIN_CHAN_24, OUTPUT);
+    digitalWrite(SHOCK_RELAY_PIN_CHAN_24, HIGH);
+
     pinMode( SHOCK_STIM_ISOLATER_PIN, OUTPUT);
 
     // CS AND US
@@ -373,13 +395,14 @@ void monitor_for_shock(void)
         else 
         { 
             // Give the tingle stimulus.
-            digitalWrite( SHOCK_RELAY_PIN, LOW ); // Switch in the stim, switch out ADC
+            // Switch in the stim, switch out ADC
+            relay_pins_before();
             delay(10);
             digitalWrite( SHOCK_STIM_ISOLATER_PIN, HIGH ); // Deliver stimulus.
             delay(50);
             digitalWrite( SHOCK_STIM_ISOLATER_PIN, LOW );
             delay(10);
-            digitalWrite( SHOCK_RELAY_PIN, HIGH ); // Switch back to ADC
+            relay_pins_after();
             numLoops = 0;
         }
     }
@@ -494,7 +517,7 @@ void do_trial( size_t trial_num, bool isprobe = false )
 
     if(String(PROTO_USValue) == String("SHOCK"))
     {
-        digitalWrite(SHOCK_RELAY_PIN, HIGH);
+        relay_pins_before();
         delay(10);
     }
 
@@ -514,7 +537,11 @@ void do_trial( size_t trial_num, bool isprobe = false )
         if(String(PROTO_USValue) == String("PUFF"))
             play_puff( duration );
         else if(String(PROTO_USValue) == String("SHOCK"))
+        {
+            // See above where SHOCK_RELAY_PIN_CHAN_13 and
+            // SHOCK_RELAY_PIN_CHAN_24 are configured.
             apply_shock(duration);
+        }
         else
         {
             while( (millis( ) - stamp_) <= duration )
@@ -528,7 +555,7 @@ void do_trial( size_t trial_num, bool isprobe = false )
     if(String(PROTO_USValue) == String("SHOCK"))
     {
         delay(10);
-        digitalWrite(SHOCK_RELAY_PIN, LOW);
+        relay_pins_after();
     }
 
     /*-----------------------------------------------------------------------------
