@@ -32,42 +32,35 @@ unsigned write_dt_              = 2;
 unsigned trial_count_           = 0;
 unsigned long trial_start_time_ = 0;
 char trial_state_[5]            = "PRE_";
-
-/*-----------------------------------------------------------------------------
- *  User response
- *-----------------------------------------------------------------------------*/
 int incoming_byte_              = 0;
 bool reboot_                    = false;
 
-ISR(WDT_vect)
-{
-    // Handle interuppts here.
-    // Nothing to handle.
-}
 
 /* --------------------------------------------------------------------------*/
-/**
+/** WATCHDOG TIMER:
  * @Synopsis  When ctrl+c is pressed, reboot_ is set true and we restart the
- * arduino else ctrl+c will not stop arduino from giving stimulus.
+ * arduino. Without watchdog timer, I could not think of any other way to
+ * implement ctrl+C resetting the board.
  */
 /* ----------------------------------------------------------------------------*/
+ISR(WDT_vect)
+{ }
 void reset_watchdog( )
 {
     if( not reboot_ )
         wdt_reset( );
 }
 
+// Set relay pins before delivering stilumus.
 void relay_pins_before( )
 {
-
     digitalWrite( SHOCK_RELAY_PIN_CHAN_13, HIGH );
     digitalWrite( SHOCK_RELAY_PIN_CHAN_24, LOW );
-
 }
 
+// Set relay pins after delivering stimulus.
 void relay_pins_after( )
 {
-
     digitalWrite( SHOCK_RELAY_PIN_CHAN_13, LOW );
     digitalWrite( SHOCK_RELAY_PIN_CHAN_24, HIGH );
 }
@@ -114,7 +107,6 @@ void check_for_reset( void )
  */
 void write_data_line( )
 {
-    start_shocker();
     check_for_reset();
     reset_watchdog();
 
@@ -303,9 +295,9 @@ void setup()
     // chars per ms i.e. baud rate should be higher than 100,000.
     Serial.begin( 115200 );
 
-    //esetup watchdog. If not reset in 2 seconds, it reboots the system.
-    wdt_enable( WDTO_2S );
-    wdt_reset();
+    // It is in Shocker.h file.
+    configureShockingTimer();
+
     // Random seed.
     randomSeed( analogRead(A5) );
 
@@ -349,6 +341,10 @@ void setup()
     attachInterrupt(0, ISR_ON_PIN2, RISING);
     attachInterrupt(1, ISR_ON_PIN3, RISING);
 #endif
+
+    // setup watchdog. If not reset in 2 seconds, it reboots the system.
+    wdt_enable( WDTO_2S );
+    wdt_reset();
     
     print_trial_info( );
     wait_for_start( );

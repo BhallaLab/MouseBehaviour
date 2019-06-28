@@ -22,33 +22,9 @@ int TOUCH_THRESHOLD    = 50;
 int numLoops           = 0;
 int shock_pin_readout  = 0;
 
-
-/* --------------------------------------------------------------------------*/
-/**
- * @Synopsis  ISR.
- *
- * @Param TIMER1_COMPA_vect  When Timer1 overflows, the interrupt vector
- * TIMER1_COMPA is read by the CPU. 
- * NOTE: Timer2 is used by rotary encoder which is on PIN3.
- *       Time1 controlls pin 5 which is Shocker.
- */
-/* ----------------------------------------------------------------------------*/
-ISR(TIMER1_COMPA_vect) 
+void configureShockingTimer() 
 {
-    // do analog read
-    Serial.println("Int");
-    idx++;
-    if (idx >= SAMPLING_DIVIDER) 
-    {
-        idx = 0;
-        shock_pin_readout = analogRead( SHOCK_PAD_READOUT_PIN );
-        stop_shocker();
-    }
-}
-
-void start_shocker() 
-{
-    Serial.println('+');
+    Serial.println("[INFO] Configuring ShockingTimer --- ");
     cli(); // stop interrupts
     TCCR1A = _BV( COM1A1 ) | _BV(COM1B1) | _BV(WGM11) | _BV(WGM10);
 
@@ -62,7 +38,7 @@ void start_shocker()
 
 void stop_shocker() 
 {
-    Serial.println('.');
+    Serial.print('.');
     cli();
     // Disable interrupt
     TIMSK1 &= ~_BV(OCIE1A);
@@ -73,5 +49,33 @@ void stop_shocker()
     // digitalWrite( pwm, 0);
 }
 
+
+/* --------------------------------------------------------------------------*/
+/**
+ * @Synopsis  ISR.
+ *
+ * THIS TIMER IS 8 bit.
+ *
+ * NOTE: Timer1 controlls pin 5. This PIN acts as a fast switch: switching
+ *       between stimulus delivery (when available) and reading value from
+ *       SHOCK pad. When reading values from SHOCK_VALUE, a 5V 
+ *
+ *       TIMER0 is used by millis(), delays() etc. Better I do not touch it.
+ *       TIMER2 is used by tone(). You can't use it here.
+ *
+ *       TIMER1 is used which is 16 bits.
+ */
+/* ----------------------------------------------------------------------------*/
+ISR(TIMER1_COMPA_vect) 
+{
+    // do analog read
+    idx++;
+    if (idx >= SAMPLING_DIVIDER) 
+    {
+        idx = 0;
+        shock_pin_readout = analogRead( SHOCK_PAD_READOUT_PIN );
+        // stop_shocker();
+    }
+}
 
 #endif /* end of include guard: SHOCKER_H */

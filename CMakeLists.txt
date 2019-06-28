@@ -30,6 +30,7 @@ else (NOT PORT)
     message(STATUS "Default serial port ${PORT}" )
 endif (NOT PORT)
 
+find_package(PythonInterp REQUIRED)
 
 # Options related to Arduino board.
 # Set the board tag
@@ -77,7 +78,7 @@ execute_process(COMMAND
     OUTPUT_STRIP_TRAILING_WHITESPACE
     )
 message(STATUS "Writing protocol ${PROTO_CODE} config to file.")
-file(WRITE ${CMAKE_CURRENT_SOURCE_DIR}/src/protocol.h "${PROTOCOL_CONFIG}")
+file(WRITE ${CMAKE_CURRENT_SOURCE_DIR}/Arduino/protocol.h "${PROTOCOL_CONFIG}")
 
 # Set DATA DIRirectory to store data for given animal, session, and protocol
 # code. 
@@ -94,7 +95,7 @@ configure_file( ${CMAKE_SOURCE_DIR}/Makefile.arduino.in
     )
 
 set(ARDUINO_TARGET_NAME protocol_${PROTO_CODE})
-set(ARDUINO_SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
+set(ARDUINO_SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/Arduino)
 
 # Write variables to config.h file.
 configure_file(${ARDUINO_SRC_DIR}/config.h.in ${ARDUINO_SRC_DIR}/config.h)
@@ -122,7 +123,7 @@ add_custom_target(upload
 # make miniterm will launch the miniterm.py .
 add_custom_target(miniterm
     DEPENDS upload 
-    COMMAND miniterm.py ${PORT} ${BAUD_RATE}
+    COMMAND ${PYTHON_EXECUTABLE} -m serial.tools.miniterm ${PORT} ${BAUD_RATE}
     VERBATIM 
     )
 
