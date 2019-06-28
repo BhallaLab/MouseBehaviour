@@ -9,6 +9,8 @@
 #ifndef SHOCKER_H
 #define SHOCKER_H
 
+#include "TimerOne/TimerOne.h"
+
 int NUM_SAMPLES        = 100;
 int idx                = 0;
 
@@ -20,35 +22,16 @@ int NUM_LOOP_RESET     = 50;
 // Minimum reading for foot touch to allow stimulus to go ahead.
 int TOUCH_THRESHOLD    = 50;
 int numLoops           = 0;
-int shock_pin_readout  = 0;
+volatile int shock_pin_readout  = 0;
 
-void configureShockingTimer() 
+void shockMonitor() 
 {
-    Serial.println("[INFO] Configuring ShockingTimer --- ");
-    cli(); // stop interrupts
-    TCCR1A = _BV( COM1A1 ) | _BV(COM1B1) | _BV(WGM11) | _BV(WGM10);
-
-    // Respectively: set Waveform Generation Mode to fast PWM, prescaler (CS) to 64x.
-    TCCR1B = _BV(WGM12) | _BV(CS12);
-    TIMSK1 |= _BV( OCIE1A ); // Enable timer compare interrupt.
-    OCR1A = 255; // half duty cycle
-    OCR1B = 128;
-    sei(); // enable interrupts
+   // before we read the value. We don't read any other value which is changed
+   // by any ISR.
+    noInterrupts();
+    shock_pin_readout = analogRead( SHOCK_PAD_READOUT_PIN );
+    interrupts();  // enable interrupts again. We are done reading values.
 }
-
-void stop_shocker() 
-{
-    Serial.print('.');
-    cli();
-    // Disable interrupt
-    TIMSK1 &= ~_BV(OCIE1A);
-
-    // Disable the timer: We don't do this now to avoid on-off clicks.
-    // TCCR1B &= ~(_BV(WGM12) | _BV(CS10));
-    sei();
-    // digitalWrite( pwm, 0);
-}
-
 
 /* --------------------------------------------------------------------------*/
 /**
@@ -66,16 +49,13 @@ void stop_shocker()
  *       TIMER1 is used which is 16 bits.
  */
 /* ----------------------------------------------------------------------------*/
-ISR(TIMER1_COMPA_vect) 
+
+void configureShockingTimer() 
 {
-    // do analog read
-    idx++;
-    if (idx >= SAMPLING_DIVIDER) 
-    {
-        idx = 0;
-        shock_pin_readout = analogRead( SHOCK_PAD_READOUT_PIN );
-        // stop_shocker();
-    }
+    Serial.println("[INFO] Configuring ShockingTimer --- ");
+    Timer1.initialize(1000);  // every ms
+    Timer1.attachInterrupt( shockMonitor );
 }
+
 
 #endif /* end of include guard: SHOCKER_H */
