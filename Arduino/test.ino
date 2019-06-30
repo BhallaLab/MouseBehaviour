@@ -78,8 +78,6 @@ void setup()
 void loop()
 {
     startPlayback();
-    // Serial.println( sample );
-    //Serial.flush();
     delay(1);
     if ( numLoops > STIM_INTERVAL )
     {
