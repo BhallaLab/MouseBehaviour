@@ -57,7 +57,7 @@ OBJDIR            = $(PROJECT_DIR)/bin/$(BOARD_TAG)/$(CURRENT_DIR)
 ARDUINO_LIBS      = 
 
 # INO file and other cpp files
-LOCAL_INO_SRCS     = $(PROJECT_DIR)/Arduino/test.ino 
+LOCAL_INO_SRCS     = $(PROJECT_DIR)/Arduino/main.ino 
 LOCAL_CPP_SRCS     = $(PROJECT_DIR)/Arduino/TimerOne/TimerOne.cpp
 
 ### Do not touch - the path to Arduino.mk, inside the ARDMK_DIR

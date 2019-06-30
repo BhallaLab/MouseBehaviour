@@ -16,8 +16,8 @@
 #define         ROTARY_ENC_A                2   // have callback
 #define         ROTARY_ENC_B                3   // have callback.
 #define         SHOCK_PWM_PIN               5   // PWM
-#define         SHOCK_RELAY_PIN_CHAN_13     4   
-#define         SHOCK_RELAY_PIN_CHAN_24     6   
+#define         SHOCK_RELAY_PIN_CHAN_12     4   
+#define         SHOCK_RELAY_PIN_CHAN_34     6   
 #define         SHOCK_STIM_ISOLATER_PIN     7
 #define         TONE_PIN                    8
 #define         LED_PIN                     9

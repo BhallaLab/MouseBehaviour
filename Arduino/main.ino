@@ -307,11 +307,11 @@ void setup()
     tone(SHOCK_PWM_PIN, 20000);
 
     // HIGH Pin -> relay OFF
-    pinMode( SHOCK_RELAY_PIN_CHAN_13, OUTPUT);
-    digitalWrite(SHOCK_RELAY_PIN_CHAN_13, HIGH);
+    pinMode( SHOCK_RELAY_PIN_CHAN_12, OUTPUT);
+    digitalWrite(SHOCK_RELAY_PIN_CHAN_12, HIGH);
 
-    pinMode( SHOCK_RELAY_PIN_CHAN_24, OUTPUT);
-    digitalWrite(SHOCK_RELAY_PIN_CHAN_24, HIGH);
+    pinMode( SHOCK_RELAY_PIN_CHAN_34, OUTPUT);
+    digitalWrite(SHOCK_RELAY_PIN_CHAN_34, HIGH);
 
     pinMode( SHOCK_STIM_ISOLATER_PIN, OUTPUT);
 
@@ -502,8 +502,8 @@ void do_trial( size_t trial_num, bool isprobe = false )
             play_puff( duration );
         else if(String(PROTO_USValue) == String("SHOCK"))
         {
-            // See above where SHOCK_RELAY_PIN_CHAN_13 and
-            // SHOCK_RELAY_PIN_CHAN_24 are configured.
+            // See above where SHOCK_RELAY_PIN_CHAN_12 and
+            // SHOCK_RELAY_PIN_CHAN_34 are configured.
             apply_shock(duration);
         }
         else

@@ -27,14 +27,14 @@ volatile int shock_pin_readout  = 0;
 // Voltage across shock pad should be 5v.
 void disableShockPad()
 {
-    digitalWrite( SHOCK_RELAY_PIN_CHAN_13, LOW );
-    digitalWrite( SHOCK_RELAY_PIN_CHAN_24, HIGH );
+    digitalWrite( SHOCK_RELAY_PIN_CHAN_12, LOW );
+    digitalWrite( SHOCK_RELAY_PIN_CHAN_34, HIGH );
 }
 
 void enableShockPad()
 {
-    digitalWrite( SHOCK_RELAY_PIN_CHAN_13, HIGH );
-    digitalWrite( SHOCK_RELAY_PIN_CHAN_24, LOW );
+    digitalWrite( SHOCK_RELAY_PIN_CHAN_12, HIGH );
+    digitalWrite( SHOCK_RELAY_PIN_CHAN_34, LOW );
 }
 
 void shockMonitor() 
