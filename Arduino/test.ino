@@ -25,7 +25,6 @@ int numLoops = 0;
 
 void startPlayback()
 {
-    Serial.print('s');
     cli(); // stop interrupts
     TCCR2A = _BV( COM2A1 ) | _BV(COM2B1) | _BV(WGM21) | _BV(WGM20);
     // Respectively: set Waveform Generation Mode to fast PWM, prescaler (CS) to 64x
@@ -38,7 +37,6 @@ void startPlayback()
 
 void stopPlayback()
 {
-    Serial.print('t');
     cli();
     // Disable interrupt
     TIMSK2 &= ~_BV(OCIE2A);
@@ -56,6 +54,8 @@ ISR(TIMER2_COMPA_vect)
     {
         idx = 0;
         sample = analogRead( A3 );
+        Serial.print('x');
+        Serial.println(sample);
         stopPlayback();
     }
 }
@@ -67,6 +67,7 @@ void setup()
     // declare pin 3 to be an output:
     pinMode(pwm, OUTPUT);
     pinMode(relay, OUTPUT);
+    pinMode(A3, INPUT);
     pinMode(stimIsolator, OUTPUT);
     digitalWrite( relay, HIGH ); // set relay to connect ADC to touch pad
     //pinMode(11, OUTPUT);
@@ -77,8 +78,9 @@ void setup()
 void loop()
 {
     startPlayback();
-    Serial.println( sample );
-    delay(8);
+    // Serial.println( sample );
+    //Serial.flush();
+    delay(1);
     if ( numLoops > STIM_INTERVAL )
     {
         if ( sample < TOUCH_THRESHOLD )
