@@ -205,17 +205,9 @@ Wire Wire Line
 Wire Wire Line
 	5550 3200 5550 3650
 Wire Wire Line
-	5550 3650 4850 3500
-Wire Wire Line
 	5550 3200 6300 3200
 Wire Wire Line
 	5400 3100 5400 4500
-Wire Wire Line
-	5400 4500 6525 4500
-Wire Wire Line
-	6525 4500 6525 4850
-Wire Wire Line
-	6525 4850 6425 4850
 Wire Wire Line
 	5400 3100 6300 3100
 $Sheet
@@ -252,18 +244,12 @@ Wire Wire Line
 	8475 3875 8975 3875
 Wire Wire Line
 	8475 4225 8975 4225
-Text GLabel 6600 4975 2    50   Input ~ 0
-PAD+
 Wire Wire Line
 	7200 4425 7200 5025
 Wire Wire Line
 	7200 5025 7600 5025
 Wire Wire Line
 	6075 4425 7200 4425
-Wire Wire Line
-	6925 5250 6925 4600
-Wire Wire Line
-	6925 4600 7500 4600
 Wire Wire Line
 	7500 4600 7500 3500
 $Comp
@@ -301,10 +287,6 @@ Wire Wire Line
 	5050 5300 5300 5300
 Wire Wire Line
 	5300 5475 4850 5475
-Wire Wire Line
-	4850 3500 4850 5475
-Text GLabel 6600 5450 2    50   Input ~ 0
-PAD-
 $Sheet
 S 5300 4750 1125 950 
 U 5D1ADABF
@@ -323,4 +305,20 @@ Wire Wire Line
 	6425 5450 6600 5450
 Wire Wire Line
 	6425 4975 6600 4975
+Wire Wire Line
+	5550 3650 4850 3650
+Wire Wire Line
+	4850 3650 4850 5475
+Text GLabel 6600 4850 2    50   Input ~ 0
+CH1Load
+Wire Wire Line
+	6600 4850 6425 4850
+Text GLabel 6600 4975 2    50   Input ~ 0
+~CH1Load
+Text GLabel 6600 5325 2    50   Input ~ 0
+CH2Load
+Text GLabel 6600 5450 2    50   Input ~ 0
+~CH2Load
+Wire Wire Line
+	6425 5325 6600 5325
 $EndSCHEMATC

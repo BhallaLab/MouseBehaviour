@@ -48,26 +48,6 @@ Wire Wire Line
 	5800 2600 5800 2900
 Wire Wire Line
 	5800 2900 6300 2900
-$Sheet
-S 5300 4750 1125 950 
-U 5D1ADABF
-F0 "SSR 4Channel" 50
-F1 "SSR_4CH.sch" 50
-F2 "DC+" I L 5300 4950 50 
-F3 "DC-" I L 5300 5075 50 
-F4 "CH1" I L 5300 5300 50 
-F5 "CH2" I L 5300 5400 50 
-F6 "CH3" I L 5300 5500 50 
-F7 "CH4" I L 5300 5600 50 
-F8 "A1" O R 6425 4850 50 
-F9 "B1" O R 6425 4925 50 
-F10 "B2" O R 6425 5100 50 
-F11 "A3" O R 6425 5250 50 
-F12 "B3" O R 6425 5350 50 
-F13 "A4" O R 6425 5475 50 
-F14 "B4" O R 6425 5550 50 
-F15 "A2" O R 6425 5025 50 
-$EndSheet
 $Comp
 L Device:Speaker LS?
 U 1 1 5D18ABCB
@@ -212,22 +192,6 @@ Wire Wire Line
 	5000 2800 5300 2800
 Wire Wire Line
 	5300 2800 5300 3000
-Wire Wire Line
-	5050 5300 5125 5300
-Wire Wire Line
-	5125 5300 5125 5500
-Wire Wire Line
-	5125 5500 5300 5500
-Connection ~ 5125 5300
-Wire Wire Line
-	5125 5300 5300 5300
-Wire Wire Line
-	5300 5400 5200 5400
-Wire Wire Line
-	5200 5400 5200 5600
-Connection ~ 5200 5600
-Wire Wire Line
-	5200 5600 5300 5600
 Text Notes 5300 6050 0    50   ~ 0
 CH1=CH3 \nCH2=CH4=~CH1\nImplemented in Arduino.
 Wire Wire Line
@@ -241,21 +205,7 @@ Wire Wire Line
 Wire Wire Line
 	5550 3200 5550 3650
 Wire Wire Line
-	5550 3650 4950 3650
-Wire Wire Line
-	4950 3650 4950 5600
-Wire Wire Line
 	5550 3200 6300 3200
-Wire Wire Line
-	4950 5600 5200 5600
-Wire Wire Line
-	6425 4925 6575 4925
-Wire Wire Line
-	6575 5025 6425 5025
-Wire Wire Line
-	6425 5350 6575 5350
-Wire Wire Line
-	6575 5475 6425 5475
 Wire Wire Line
 	5400 3100 5400 4500
 Wire Wire Line
@@ -281,10 +231,6 @@ Wire Wire Line
 	6075 3300 6075 4425
 Wire Wire Line
 	7500 3500 7300 3500
-Wire Wire Line
-	6575 5350 6575 5425
-Wire Wire Line
-	6575 4925 6575 4975
 $Comp
 L Schematic-rescue:ShockPad-BhallaLabComponents ShockPad?
 U 1 1 5D197A8E
@@ -306,38 +252,12 @@ Wire Wire Line
 	8475 4225 8975 4225
 Text GLabel 6600 4975 2    50   Input ~ 0
 PAD+
-Text GLabel 6600 5425 2    50   Input ~ 0
-PAD-
-Wire Wire Line
-	6600 4975 6575 4975
-Connection ~ 6575 4975
-Wire Wire Line
-	6575 4975 6575 5025
-Wire Wire Line
-	6600 5425 6575 5425
-Connection ~ 6575 5425
-Wire Wire Line
-	6575 5425 6575 5475
-Wire Wire Line
-	7600 5400 7225 5400
-Wire Wire Line
-	7225 5400 7225 5550
-Wire Wire Line
-	7225 5550 6425 5550
-Wire Wire Line
-	7600 5300 7200 5300
-Wire Wire Line
-	7200 5300 7200 5100
-Wire Wire Line
-	7200 5100 6425 5100
 Wire Wire Line
 	7200 4425 7200 5025
 Wire Wire Line
 	7200 5025 7600 5025
 Wire Wire Line
 	6075 4425 7200 4425
-Wire Wire Line
-	6425 5250 6925 5250
 Wire Wire Line
 	6925 5250 6925 4600
 Wire Wire Line
@@ -375,4 +295,32 @@ Wire Wire Line
 Connection ~ 7500 3500
 Text Notes 5600 4500 2    50   ~ 0
 PWM
+Wire Wire Line
+	5050 5300 5300 5300
+Wire Wire Line
+	5300 5475 4850 5475
+Text GLabel 6600 5450 2    50   Input ~ 0
+PAD-
+$Sheet
+S 5300 4750 1125 950 
+U 5D1ADABF
+F0 "SSR 4Channel" 50
+F1 "SSR_4CH.sch" 50
+F2 "DC+" I L 5300 4950 50 
+F3 "DC-" I L 5300 5075 50 
+F4 "CH1" I L 5300 5300 50 
+F5 "CH2" I L 5300 5475 50 
+F6 "A1" O R 6425 4850 50 
+F7 "B1" O R 6425 4975 50 
+F8 "B2" O R 6425 5450 50 
+F9 "A2" O R 6425 5325 50 
+$EndSheet
+Wire Wire Line
+	6425 5450 6600 5450
+Wire Wire Line
+	6425 4975 6600 4975
+Wire Wire Line
+	5550 3650 4850 3650
+Wire Wire Line
+	4850 3650 4850 5475
 $EndSCHEMATC
