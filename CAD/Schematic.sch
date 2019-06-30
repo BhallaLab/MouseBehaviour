@@ -6,12 +6,12 @@ $Descr A4 11693 8268
 encoding utf-8
 Sheet 1 3
 Title "Shocking Protocol"
-Date ""
-Rev "0.0.1"
-Comp "Bhalla Lab"
-Comment1 ""
-Comment2 ""
-Comment3 ""
+Date "2019-06-30"
+Rev "0.1.0"
+Comp "Bhalla Lab, NCBS Bangalore"
+Comment1 "Shocking protocol for Hrishikesh"
+Comment2 "Stimlus Isolator is not implemented."
+Comment3 "Dilawar Singh, 2019"
 Comment4 ""
 $EndDescr
 $Comp
@@ -49,10 +49,10 @@ Wire Wire Line
 Wire Wire Line
 	5800 2900 6300 2900
 $Comp
-L Device:Speaker LS?
+L Device:Speaker LS1
 U 1 1 5D18ABCB
 P 8825 2400
-F 0 "LS?" H 8995 2396 50  0000 L CNN
+F 0 "LS1" H 8995 2396 50  0000 L CNN
 F 1 "Speaker" H 8995 2305 50  0000 L CNN
 F 2 "" H 8825 2200 50  0001 C CNN
 F 3 "~" H 8815 2350 50  0001 C CNN
@@ -60,10 +60,10 @@ F 3 "~" H 8815 2350 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L Device:LED D?
+L Device:LED D1
 U 1 1 5D18B2CE
 P 8775 2950
-F 0 "D?" H 8768 2695 50  0000 C CNN
+F 0 "D1" H 8768 2695 50  0000 C CNN
 F 1 "LED" H 8768 2786 50  0000 C CNN
 F 2 "" H 8775 2950 50  0001 C CNN
 F 3 "~" H 8775 2950 50  0001 C CNN
@@ -158,7 +158,7 @@ Wire Wire Line
 	8625 2500 8550 2500
 Wire Wire Line
 	8550 2500 8550 2650
-Text Notes 9300 3725 1    50   ~ 10
+Text Notes 9800 3400 2    50   ~ 0
 To solenoid.
 Text Notes 4250 2425 0    50   ~ 0
 1200 counts per cycle.
@@ -193,37 +193,31 @@ Wire Wire Line
 Wire Wire Line
 	5300 2800 5300 3000
 Text Notes 5300 6050 0    50   ~ 0
-CH1=CH3 \nCH2=CH4=~CH1\nImplemented in Arduino.
+CH1=CH2 \nCH3=CH4=~CH1\nImplemented in Arduino.
 Wire Wire Line
 	5475 3000 5475 3575
 Wire Wire Line
-	5475 3575 5050 3575
+	5475 3575 4900 3575
 Wire Wire Line
-	5050 3575 5050 5300
+	4900 3575 4900 5300
 Wire Wire Line
 	5475 3000 6300 3000
 Wire Wire Line
-	5550 3200 5550 3650
+	5550 3200 5550 3425
 Wire Wire Line
 	5550 3200 6300 3200
 Wire Wire Line
 	5400 3100 5400 4500
 Wire Wire Line
-	5400 4500 6525 4500
-Wire Wire Line
-	6525 4500 6525 4850
-Wire Wire Line
-	6525 4850 6425 4850
-Wire Wire Line
 	5400 3100 6300 3100
 $Sheet
-S 7600 4925 850  525 
+S 7150 5150 850  525 
 U 5D191D2C
 F0 "StimIsolator" 50
 F1 "StimIsolator.sch" 50
-F2 "INPUT" I L 7600 5025 50 
-F3 "OUT+" O L 7600 5300 50 
-F4 "OUT-" O L 7600 5400 50 
+F2 "INPUT" I L 7150 5250 50 
+F3 "OUT+" O L 7150 5525 50 
+F4 "OUT-" O L 7150 5625 50 
 $EndSheet
 Wire Wire Line
 	6300 3300 6075 3300
@@ -250,18 +244,8 @@ Wire Wire Line
 	8475 3875 8975 3875
 Wire Wire Line
 	8475 4225 8975 4225
-Text GLabel 6600 4975 2    50   Input ~ 0
-PAD+
 Wire Wire Line
-	7200 4425 7200 5025
-Wire Wire Line
-	7200 5025 7600 5025
-Wire Wire Line
-	6075 4425 7200 4425
-Wire Wire Line
-	6925 5250 6925 4600
-Wire Wire Line
-	6925 4600 7500 4600
+	6075 4425 7000 4425
 Wire Wire Line
 	7500 4600 7500 3500
 $Comp
@@ -296,11 +280,7 @@ Connection ~ 7500 3500
 Text Notes 5600 4500 2    50   ~ 0
 PWM
 Wire Wire Line
-	5050 5300 5300 5300
-Wire Wire Line
-	5300 5475 4850 5475
-Text GLabel 6600 5450 2    50   Input ~ 0
-PAD-
+	4900 5300 5300 5300
 $Sheet
 S 5300 4750 1125 950 
 U 5D1ADABF
@@ -309,18 +289,112 @@ F1 "SSR_4CH.sch" 50
 F2 "DC+" I L 5300 4950 50 
 F3 "DC-" I L 5300 5075 50 
 F4 "CH1" I L 5300 5300 50 
-F5 "CH2" I L 5300 5475 50 
+F5 "CH2" I L 5300 5400 50 
 F6 "A1" O R 6425 4850 50 
-F7 "B1" O R 6425 4975 50 
-F8 "B2" O R 6425 5450 50 
-F9 "A2" O R 6425 5325 50 
+F7 "B1" O R 6425 4925 50 
+F8 "B2" O R 6425 5100 50 
+F9 "A2" O R 6425 5025 50 
+F10 "CH3" I L 5300 5525 50 
+F11 "CH4" I L 5300 5625 50 
+F12 "A3" O R 6425 5325 50 
+F13 "B3" O R 6425 5400 50 
+F14 "A4" O R 6425 5525 50 
+F15 "B4" O R 6425 5600 50 
 $EndSheet
 Wire Wire Line
-	6425 5450 6600 5450
+	5400 4500 6525 4500
 Wire Wire Line
-	6425 4975 6600 4975
+	6525 4500 6525 4850
 Wire Wire Line
-	5550 3650 4850 3650
+	6525 4850 6425 4850
 Wire Wire Line
-	4850 3650 4850 5475
+	6925 4600 7500 4600
+Wire Wire Line
+	6925 5025 6925 4600
+Wire Wire Line
+	5550 3425 4825 3425
+Text GLabel 6550 4925 2    50   Input ~ 0
+PAD+
+Wire Wire Line
+	6425 4925 6550 4925
+Wire Wire Line
+	4900 5300 4900 5400
+Wire Wire Line
+	4900 5400 5300 5400
+Connection ~ 4900 5300
+Wire Wire Line
+	4825 5525 4900 5525
+Wire Wire Line
+	4825 3425 4825 5525
+Wire Wire Line
+	4900 5525 4900 5625
+Wire Wire Line
+	4900 5625 5300 5625
+Connection ~ 4900 5525
+Wire Wire Line
+	4900 5525 5300 5525
+Wire Wire Line
+	6925 5025 6425 5025
+Text GLabel 6550 5100 2    50   Input ~ 0
+PAD-
+Wire Wire Line
+	6425 5100 6550 5100
+Text GLabel 6550 5400 2    50   Input ~ 0
+PAD+
+Text GLabel 6550 5600 2    50   Input ~ 0
+PAD-
+Wire Wire Line
+	6425 5400 6550 5400
+Wire Wire Line
+	6425 5600 6550 5600
+Wire Wire Line
+	7000 4425 7000 5250
+Wire Wire Line
+	7150 5250 7000 5250
+Wire Wire Line
+	7150 5525 6875 5525
+Wire Wire Line
+	6875 5525 6875 5325
+Wire Wire Line
+	6875 5325 6425 5325
+Wire Wire Line
+	7150 5625 6825 5625
+Wire Wire Line
+	6825 5625 6825 5525
+Wire Wire Line
+	6825 5525 6425 5525
+Text Notes 8175 5450 2    50   ~ 0
+Not implemented.\nUsing as black-box.
+Text Notes 10200 4525 2    50   ~ 0
+Resistance of mouse's paw is of the order of 1M.\nThe value of R2 must be the same.
+$Comp
+L power:VCC #PWR?
+U 1 1 5D206B22
+P 5100 4900
+F 0 "#PWR?" H 5100 4750 50  0001 C CNN
+F 1 "VCC" H 5117 5073 50  0000 C CNN
+F 2 "" H 5100 4900 50  0001 C CNN
+F 3 "" H 5100 4900 50  0001 C CNN
+	1    5100 4900
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 5D208D90
+P 5125 5100
+F 0 "#PWR?" H 5125 4850 50  0001 C CNN
+F 1 "GND" H 5130 4927 50  0000 C CNN
+F 2 "" H 5125 5100 50  0001 C CNN
+F 3 "" H 5125 5100 50  0001 C CNN
+	1    5125 5100
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	5300 5075 5125 5075
+Wire Wire Line
+	5125 5075 5125 5100
+Wire Wire Line
+	5300 4950 5100 4950
+Wire Wire Line
+	5100 4950 5100 4900
 $EndSCHEMATC
