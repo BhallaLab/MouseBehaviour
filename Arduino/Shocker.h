@@ -12,7 +12,7 @@
 #include "TimerOne/TimerOne.h"
 
 int NUM_SAMPLES        = 100;
-int idx                = 0;
+unsigned idx           = 0;
 
 // Do analog sampling only 1 in 10 times, for a freq of of 100 Hz.
 int SAMPLING_DIVIDER   = 10;
@@ -24,13 +24,36 @@ int TOUCH_THRESHOLD    = 50;
 int numLoops           = 0;
 volatile int shock_pin_readout  = 0;
 
+// Voltage across shock pad should be 5v.
+void disableShockPad()
+{
+    digitalWrite( SHOCK_RELAY_PIN_CHAN_13, LOW );
+    digitalWrite( SHOCK_RELAY_PIN_CHAN_24, HIGH );
+}
+
+void enableShockPad()
+{
+    digitalWrite( SHOCK_RELAY_PIN_CHAN_13, HIGH );
+    digitalWrite( SHOCK_RELAY_PIN_CHAN_24, LOW );
+}
+
 void shockMonitor() 
 {
-   // before we read the value. We don't read any other value which is changed
-   // by any ISR.
+    // before we read the value. We don't read any other value which is changed
+    // by any ISR.
+
+    // Before reading value, disable the shock.
+    idx += 1;
+    if( idx == NUM_SAMPLES )
+    {
+        disableShockPad();
+        idx = 0;
+    }
     noInterrupts();
     shock_pin_readout = analogRead( SHOCK_PAD_READOUT_PIN );
     interrupts();  // enable interrupts again. We are done reading values.
+    if( idx == NUM_SAMPLES / 2 )
+        enableShockPad();
 }
 
 /* --------------------------------------------------------------------------*/
@@ -53,7 +76,9 @@ void shockMonitor()
 void configureShockingTimer() 
 {
     Serial.println("[INFO] Configuring ShockingTimer --- ");
-    Timer1.initialize(1000);  // every ms
+    // Timer1.initialize(microseconds);
+    // Begin using the timer. This function must be called first. "microseconds" is the period of time the timer takes.
+    Timer1.initialize(1000); 
     Timer1.attachInterrupt( shockMonitor );
 }
 
