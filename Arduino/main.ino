@@ -51,18 +51,6 @@ void reset_watchdog( )
         wdt_reset( );
 }
 
-// Set relay pins before delivering stilumus.
-void relay_pins_before( )
-{
-    enableShockPad();
-}
-
-// Set relay pins after delivering stimulus.
-void relay_pins_after( )
-{
-    disableShockPad();
-}
-
 
 /**
  * @brief  Read a command from command line. Consume when character is matched.
@@ -198,10 +186,13 @@ void led_on( unsigned int duration )
 void apply_shock( int duration )
 {
     stamp_ = millis();
-    digitalWrite(SHOCK_STIM_ISOLATER_PIN, HIGH);
+
+    enableInputToStimIsolator();
+
     while( (millis() - stamp_) < duration)
         write_data_line();
-    digitalWrite(SHOCK_STIM_ISOLATER_PIN, LOW);
+
+    disableInputToStimIsolator();
 }
 
 
@@ -237,11 +228,11 @@ void wait_for_start( )
         else if( is_command_read( 'c', true ) )
         {
             Serial.println( ">>>Received c. Giving shock for 10 sec" );
-            relay_pins_before();
+            disableReadingShockPad();
             delay(10);
             apply_shock( 10000 );
             delay(10);
-            relay_pins_after();
+            enableReadingShockPad();
         }
         else if( is_command_read( 'l', true ) )
         {
@@ -293,8 +284,6 @@ void setup()
     // chars per ms i.e. baud rate should be higher than 100,000.
     Serial.begin( 115200 );
 
-    // It is in Shocker.h file.
-    configureShockingTimer();
 
     // Random seed.
     randomSeed( analogRead(A5) );
@@ -303,17 +292,14 @@ void setup()
     stamp_ = millis( );
 
     // SHOCK.
-    pinMode( SHOCK_PWM_PIN, OUTPUT );
-    pinMode( SHOCK_PAD_READOUT_PIN, INPUT );
-    tone(SHOCK_PWM_PIN, 20000);
+    pinMode(SHOCK_PAD_READOUT_PIN, INPUT);
+    pinMode(SHOCK_PWM_PIN, OUTPUT);
+    tone(SHOCK_PWM_PIN, 30000);
 
-    // HIGH Pin -> relay OFF
+
+    // 
     pinMode( SHOCK_RELAY_PIN_CHAN_12, OUTPUT);
-    digitalWrite(SHOCK_RELAY_PIN_CHAN_12, HIGH);
-
     pinMode( SHOCK_RELAY_PIN_CHAN_34, OUTPUT);
-    digitalWrite(SHOCK_RELAY_PIN_CHAN_34, HIGH);
-
     pinMode( SHOCK_STIM_ISOLATER_PIN, OUTPUT);
 
     // CS AND US
@@ -331,16 +317,16 @@ void setup()
     digitalWrite(ROTARY_ENC_A, HIGH); //turn pullup resistor on
     digitalWrite(ROTARY_ENC_B, HIGH); //turn pullup resistor on
 
-#if 0
-    //call updateEncoder() when any high/low changed seen
-    attachInterrupt( digitalPinToInterrupt(2), ISR_ON_PIN2, RISING);
-    attachInterrupt( digitalPinToInterrupt(3), ISR_ON_PIN3, RISING);
-#else
     // NOTE: This changes with board. Testing with UNO. The above snippet is
     // preferred when available.
     attachInterrupt(0, ISR_ON_PIN2, RISING);
     attachInterrupt(1, ISR_ON_PIN3, RISING);
-#endif
+
+    // It is in Shocker.h file.
+    configureShockingTimer();
+
+    // Enable reading from shock pad.
+    enableReadingShockPad();
 
     // setup watchdog. If not reset in 2 seconds, it reboots the system.
     wdt_enable( WDTO_2S );
@@ -482,7 +468,7 @@ void do_trial( size_t trial_num, bool isprobe = false )
 
     if(String(PROTO_USValue) == String("SHOCK"))
     {
-        relay_pins_before();
+        disableReadingShockPad();
         delay(10);
     }
 
@@ -520,7 +506,7 @@ void do_trial( size_t trial_num, bool isprobe = false )
     if(String(PROTO_USValue) == String("SHOCK"))
     {
         delay(10);
-        relay_pins_after();
+        enableReadingShockPad();
     }
 
     /*-----------------------------------------------------------------------------

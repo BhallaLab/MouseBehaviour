@@ -11,6 +11,9 @@
 
 #include "TimerOne/TimerOne.h"
 
+void enableReadingShockPad();
+void disableReadingShockPad();
+
 int NUM_SAMPLES        = 100;
 unsigned idx           = 0;
 
@@ -24,37 +27,38 @@ int TOUCH_THRESHOLD    = 50;
 int numLoops           = 0;
 volatile int shock_pin_readout  = 0;
 
-// Voltage across shock pad should be 5v.
-void disableShockPad()
+// Enable disable STIM isolator.
+void enableInputToStimIsolator()
 {
-    digitalWrite( SHOCK_RELAY_PIN_CHAN_12, LOW );
-    digitalWrite( SHOCK_RELAY_PIN_CHAN_34, HIGH );
+    digitalWrite(SHOCK_STIM_ISOLATER_PIN, HIGH);
 }
 
-void enableShockPad()
+void disableInputToStimIsolator()
+{
+    digitalWrite(SHOCK_STIM_ISOLATER_PIN, LOW);
+}
+
+// Voltage across shock pad should be 5v.
+void disableReadingShockPad()
 {
     digitalWrite( SHOCK_RELAY_PIN_CHAN_12, HIGH );
     digitalWrite( SHOCK_RELAY_PIN_CHAN_34, LOW );
 }
 
+void enableReadingShockPad()
+{
+    // For safety.
+    digitalWrite( SHOCK_RELAY_PIN_CHAN_12, LOW );
+    digitalWrite( SHOCK_RELAY_PIN_CHAN_34, HIGH );
+}
+
 void shockMonitor() 
 {
-    // before we read the value. We don't read any other value which is changed
-    // by any ISR.
-
-    // Before reading value, disable the shock.
-    idx += 1;
-    if( idx == NUM_SAMPLES )
-    {
-        disableShockPad();
-        idx = 0;
-    }
     noInterrupts();
     shock_pin_readout = analogRead( SHOCK_PAD_READOUT_PIN );
     interrupts();  // enable interrupts again. We are done reading values.
-    if( idx == NUM_SAMPLES / 2 )
-        enableShockPad();
 }
+
 
 /* --------------------------------------------------------------------------*/
 /**
