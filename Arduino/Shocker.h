@@ -77,7 +77,8 @@ void configureShockingTimer()
 {
     Serial.println("[INFO] Configuring ShockingTimer --- ");
     // Timer1.initialize(microseconds);
-    // Begin using the timer. This function must be called first. "microseconds" is the period of time the timer takes.
+    // Begin using the timer. This function must be called first. "microseconds" 
+    // is the period of time the timer takes.
     Timer1.initialize(1000); 
     Timer1.attachInterrupt( shockMonitor );
 }

@@ -15,7 +15,7 @@ Comment3 ""
 Comment4 ""
 $EndDescr
 $Comp
-L BhallaLabComponents:G3MB202PDC12 K2
+L Schematic-rescue:G3MB202PDC12-BhallaLabComponents K2
 U 1 1 5D18AD83
 P 5225 3975
 F 0 "K2" V 4460 4045 50  0000 C CNN
@@ -49,7 +49,7 @@ B2
 Wire Wire Line
 	5725 4125 5740 4125
 $Comp
-L BhallaLabComponents:G3MB202PDC12 K1
+L Schematic-rescue:G3MB202PDC12-BhallaLabComponents K1
 U 1 1 5D18ADB3
 P 4575 3975
 F 0 "K1" V 3810 4045 50  0000 C CNN
@@ -126,7 +126,7 @@ Wire Wire Line
 	4750 3225 4900 3225
 Connection ~ 4900 3225
 $Comp
-L BhallaLabComponents:G3MB202PDC12 K3
+L Schematic-rescue:G3MB202PDC12-BhallaLabComponents K3
 U 1 1 5D1D4113
 P 5950 3975
 F 0 "K3" V 5185 4045 50  0000 C CNN
@@ -142,7 +142,7 @@ F 8 "Unavailable" H 5950 3975 50  0001 L BNN "Field8"
 	0    1    1    0   
 $EndComp
 $Comp
-L BhallaLabComponents:G3MB202PDC12 K4
+L Schematic-rescue:G3MB202PDC12-BhallaLabComponents K4
 U 1 1 5D1D5B7E
 P 6800 3975
 F 0 "K4" V 6035 4045 50  0000 C CNN

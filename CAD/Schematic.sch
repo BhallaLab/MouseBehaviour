@@ -26,7 +26,7 @@ F 3 "https://www.arduino.cc/en/Main/arduinoBoardUno" H 4700 4000 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L Schematic-rescue:RotaryEncoder-OrangeRotaryEncoder RotaryEncoder1
+L Schematic-rescue:RotaryEncoder-OrangeRotaryEncoder-Schematic-rescue RotaryEncoder1
 U 1 1 5D191567
 P 2750 2450
 F 0 "RotaryEncoder1" H 2750 2450 50  0001 C CNN
@@ -226,7 +226,7 @@ Wire Wire Line
 Wire Wire Line
 	5600 3250 5400 3250
 $Comp
-L Schematic-rescue:ShockPad-BhallaLabComponents ShockPad1
+L Schematic-rescue:ShockPad-BhallaLabComponents-Schematic-rescue ShockPad1
 U 1 1 5D197A8E
 P 7525 3775
 F 0 "ShockPad1" H 7875 3625 50  0001 C CNN
@@ -249,15 +249,15 @@ Wire Wire Line
 Wire Wire Line
 	5600 4350 5600 3250
 $Comp
-L Device:R R2
+L Device:R RA3
 U 1 1 5D1B22CC
 P 5850 3425
-F 0 "R2" H 5920 3471 50  0000 L CNN
-F 1 "1M" H 5920 3380 50  0000 L CNN
+F 0 "RA3" V 5920 3471 50  0000 L CNN
+F 1 "1.2 M" H 5920 3380 50  0000 R TNN
 F 2 "" V 5780 3425 50  0001 C CNN
 F 3 "~" H 5850 3425 50  0001 C CNN
 	1    5850 3425
-	1    0    0    -1  
+	-1   0    0    1   
 $EndComp
 $Comp
 L power:GND #PWR0106
@@ -271,14 +271,14 @@ F 3 "" H 5850 3650 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	5850 3575 5850 3650
+	5850 3575 5850 3600
 Wire Wire Line
 	5850 3275 5850 3250
 Wire Wire Line
 	5850 3250 5600 3250
 Connection ~ 5600 3250
-Text Notes 3700 4250 2    50   ~ 0
-PWM
+Text Notes 3700 4250 0    50   ~ 0
+D5, PWM, 20 kHz 
 Wire Wire Line
 	3000 5050 3400 5050
 $Sheet
@@ -397,4 +397,25 @@ Wire Wire Line
 	3400 4700 3200 4700
 Wire Wire Line
 	3200 4700 3200 4650
+$Comp
+L Device:C CA3
+U 1 1 5D1B6EF2
+P 6100 3450
+F 0 "CA3" H 6215 3496 50  0000 L CNN
+F 1 "47nF" H 6215 3405 50  0000 L CNN
+F 2 "" H 6138 3300 50  0001 C CNN
+F 3 "~" H 6100 3450 50  0001 C CNN
+	1    6100 3450
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	6100 3300 6100 3250
+Wire Wire Line
+	6100 3250 5850 3250
+Connection ~ 5850 3250
+Wire Wire Line
+	6100 3600 5850 3600
+Connection ~ 5850 3600
+Wire Wire Line
+	5850 3600 5850 3650
 $EndSCHEMATC

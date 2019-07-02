@@ -304,6 +304,7 @@ void setup()
 
     // SHOCK.
     pinMode( SHOCK_PWM_PIN, OUTPUT );
+    pinMode( SHOCK_PAD_READOUT_PIN, INPUT );
     tone(SHOCK_PWM_PIN, 20000);
 
     // HIGH Pin -> relay OFF
