@@ -92,8 +92,11 @@ void show_frame( cv::Mat img)
 {
     // Draw a plot.
     rectangle(img, Point(bbox_[0], bbox_[1]), Point(bbox_[2], bbox_[3]), 1, 1, 128);
+
+    // Create plot plt and assign 0.
     static cv::Mat plt(40, img.cols, CV_8UC1);
     plt = Scalar(0);
+
     size_t x, yShock, yRoi;
 
     // Maximum mean value could be 128.
@@ -111,6 +114,39 @@ void show_frame( cv::Mat img)
         plt.at<uchar>(yShock, x) = 128;
 
     }
+    vconcat(img, plt, img);
+    imshow(OPENCV_MAIN_WINDOW,  img);
+}
+
+void show_frame_color( cv::Mat gray)
+{
+    // Draw a plot.
+    cv::Mat img;
+    cv::cvtColor(gray, img, CV_GRAY2RGB);
+
+    rectangle(img, Point(bbox_[0], bbox_[1]), Point(bbox_[2], bbox_[3]), Scalar(255,255,255));
+
+    static cv::Mat plt(64, img.cols, CV_8UC3);
+
+    plt = Scalar(255, 255, 255);
+    size_t x, yShock, yRoi;
+
+
+    for (size_t i = 1; i < roi_.size()-1; i++)
+    {
+       x = (size_t)(i*img.cols/roi_.size());
+       yRoi = (size_t)(roi_[i]/4.0)+1;
+
+       yShock = (size_t)(shock_[i]/4.0)+1;
+
+       x = x % plt.cols;
+       yRoi = yRoi % plt.rows;
+       yShock = yShock % plt.rows;
+
+       plt.at<Vec3b>(yRoi, x) = Vec3b(255, 0, 0);  // Blue
+       plt.at<Vec3b>(yShock, x)= Vec3b(0, 0, 255); // Red
+    }
+
     vconcat(img, plt, img);
     imshow(OPENCV_MAIN_WINDOW,  img);
 }
@@ -216,7 +252,6 @@ void ReadLine(string& res)
     // If the line starts with '<' or '>' characters; then dump them to console.
     if(res[0] == '<' || res[1] == '>')
     {
-        cout << res << endl;
         res = "";
         return;
     }
@@ -367,7 +402,7 @@ int ProcessFrame(void* data, size_t width, size_t height)
     // Show every 10th frame. While displaying the frame, I add shock and roi
     // value at the bottom as line plot. See function show_frame.
     if( total_frames_ % 10 == 0)
-        show_frame(img);
+        show_frame_color(img);
 
     // This frame and arduino data are clubbed together before saving.
     AddToStoreHouse(img, arduinoData);
