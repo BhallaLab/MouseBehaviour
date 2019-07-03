@@ -22,7 +22,7 @@ set( CMAKE_MODULE_PATH  ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake )
 set(CMAKE_CXX_COMPILER g++)
 
 find_package(OpenCV REQUIRED)
-find_package(Boost REQUIRED COMPONENTS chrono iostreams program_options system filesystem)
+find_package(Boost REQUIRED COMPONENTS chrono thread iostreams program_options system filesystem)
 find_package(PkgConfig REQUIRED)
 pkg_search_module(LIBSERIAL REQUIRED libserial libserialport)
 pkg_check_modules(LIBTIFF4 REQUIRED libtiff-4)
