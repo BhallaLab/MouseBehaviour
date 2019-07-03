@@ -23,7 +23,6 @@ from libtiff import TIFF
 import datetime
 
 fmt_ = "%Y-%m-%dT%H:%M:%S.%f"
-cmPerPixel_ = 1/37.8
 
 def toTime( string ):
     return datetime.datetime.strptime( string, fmt_)
@@ -36,7 +35,7 @@ def plotFile( filename ):
     except Exception as e:
         pass
     mpl.rcParams['axes.linewidth'] = 0.1
-    plt.rc('text', usetex=True)
+    plt.rc('text', usetex=False)
     plt.rc('font', family='serif')
     
     with open( filename, 'r' ) as f:
@@ -50,17 +49,17 @@ def plotFile( filename ):
             continue
         datalines.append( fs )
 
-    x1, x2, x3, blink = [],[],[],[]
-    speed = []
+    x1, x2, blink = [],[],[]
+    count, speed = [], []
     for l in datalines:
         if len(l) < 12:
             continue
-        t1, t2, t3 = list( map( toTime, [l[0], l[1], l[12]] ) )
+        t1, t2 = list( map( toTime, [l[0], l[1]] ) )
         x1.append( t1 )
         x2.append( t2 )
-        x3.append( t3 )
         blink.append(float(l[-1]))
-        speed.append( cmPerPixel_ * float(l[-2]))
+        speed.append( float(l[-2]))
+        count.append(float(l[-3]))
 
     print( 'Plotting' )
     plt.figure()
@@ -70,8 +69,9 @@ def plotFile( filename ):
 
     # speed and direction
     ax1 = plt.subplot( 212 )
-    ax2 = ax1.twinx()
-    ax1.plot( x3, speed, color='blue', label = 'speed' )
+    ax11 = ax1.twinx()
+    ax1.plot( x2, speed, color='blue', label = 'speed' )
+    ax11.plot(x2, count, label='Count')
     ax1.set_title( 'Speed+Direction' )
 
     outfile = '%s_raw.png' % sys.argv[1]
