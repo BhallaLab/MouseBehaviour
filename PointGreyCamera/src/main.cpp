@@ -47,7 +47,7 @@ double fps_           = 0.0;                          /* Frame per second. */
 SystemPtr system_     = 0;
 CameraList cam_list_  = {};
 bool all_done_        = false;
-string validCommands_ = "stlrpt12";                   // Valid char commands.
+string validCommands_ = "stlrptc12";                   // Valid char commands.
 
 // Command line arguments.
 string portPath_;
@@ -167,13 +167,12 @@ void SaveAllFrames(vector<Mat>& frames, const size_t trial)
     // Check if file arealy exists. If yes, raise all the hell.
     using namespace boost::filesystem;
     path p(outfile);
-    if(! exists(p))
+    if(exists(p))
     {
         cout << "[ERROR] Files " << outfile << " already exists. I will not overwrite " << p << endl;
         all_done_ = true;
         return;
     }
-
 
 
     write_frames_to_tiff(outfile, frames);
@@ -253,6 +252,7 @@ void ReadLine(string& res)
     // If the line starts with '<' or '>' characters; then dump them to console.
     if(res[0] == '<' || res[1] == '>')
     {
+        cout << "[MSG] " << res << endl;
         res = "";
         return;
     }

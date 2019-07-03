@@ -45,6 +45,7 @@ bool reboot_                    = false;
 /* ----------------------------------------------------------------------------*/
 ISR(WDT_vect)
 { }
+
 void reset_watchdog( )
 {
     if( not reboot_ )
@@ -107,8 +108,10 @@ void write_data_line( )
 
     char msg[100];
     sprintf(msg, "%lu,%s,%d,%d,%d,%d,%d,%d,%s,%d,%ld"
-            , timestamp, PROTO_CODE, trial_count_, puff, tone, led
-            , camera, microscope, trial_state_, shock_pin_readout, encoder_value_
+            , timestamp, PROTO_CODE, trial_count_
+            , puff, tone, led
+            , camera, microscope, trial_state_
+            , shock_pin_readout, encoder_value_
            );
 
     // Compute angular velocity.
@@ -119,7 +122,7 @@ void write_data_line( )
 
     Serial.print(msg + String(","));
     Serial.println(angular_velocity_, 5);
-    delay( 3 );
+    // delay(3);
 }
 
 /**
@@ -183,15 +186,13 @@ void led_on( unsigned int duration )
  * @Param duration
  */
 /* ----------------------------------------------------------------------------*/
-void apply_shock( int duration )
+void deliverShock( int duration )
 {
-    stamp_ = millis();
-
+    Serial.println( ">>>Delivering shock" );
     enableInputToStimIsolator();
-
+    stamp_ = millis();
     while( (millis() - stamp_) < duration)
         write_data_line();
-
     disableInputToStimIsolator();
 }
 
@@ -202,6 +203,8 @@ void apply_shock( int duration )
 void wait_for_start( )
 {
     sprintf( trial_state_, "INVA" );
+    enableReadingShockPad();
+
     while( true )
     {
 
@@ -227,10 +230,10 @@ void wait_for_start( )
         }
         else if( is_command_read( 'c', true ) )
         {
-            Serial.println( ">>>Received c. Giving shock for 10 sec" );
+            Serial.println( ">>>Received c. Giving shock for 50 ms" );
             disableReadingShockPad();
             delay(10);
-            apply_shock( 10000 );
+            deliverShock( 200 );
             delay(10);
             enableReadingShockPad();
         }
@@ -293,14 +296,12 @@ void setup()
 
     // SHOCK.
     pinMode(SHOCK_PAD_READOUT_PIN, INPUT);
+
     pinMode(SHOCK_PWM_PIN, OUTPUT);
-    tone(SHOCK_PWM_PIN, 20000);
+    pinMode(SHOCK_STIM_ISOLATER_PIN, OUTPUT);
 
-
-    // 
     pinMode( SHOCK_RELAY_PIN_CHAN_12, OUTPUT);
     pinMode( SHOCK_RELAY_PIN_CHAN_34, OUTPUT);
-    pinMode( SHOCK_STIM_ISOLATER_PIN, OUTPUT);
 
     // CS AND US
     pinMode( TONE_PIN, OUTPUT );
@@ -324,9 +325,6 @@ void setup()
 
     // It is in Shocker.h file.
     configureShockingTimer();
-
-    // Enable reading from shock pad.
-    enableReadingShockPad();
 
     // setup watchdog. If not reset in 2 seconds, it reboots the system.
     wdt_enable( WDTO_2S );
@@ -360,6 +358,13 @@ void do_empty_trial( size_t trial_num, int duration = 10 )
     Serial.println( ">>     TRIAL OVER." );
 }
 
+void wait_and_print( size_t howlong )  // ms
+{
+    int s = millis();
+    while( millis() - s <= howlong )
+        write_data_line();
+}
+
 
 /**
  * @brief Do a single trial.
@@ -387,7 +392,7 @@ void do_trial( size_t trial_num, bool isprobe = false )
     // apprently shutter delay for the camera and only required for trial number
     // 1.
     if (trial_num > 0)
-        delay(60); // Shutter delay; Only for the first trial
+        delay(60); // Shutter delay.
 
     stamp_ = millis( );
 
@@ -468,6 +473,7 @@ void do_trial( size_t trial_num, bool isprobe = false )
 
     if(String(PROTO_USValue) == String("SHOCK"))
     {
+        Serial.println( ">>>Disabled SHOCKPAD." );
         disableReadingShockPad();
         delay(10);
     }
@@ -489,9 +495,9 @@ void do_trial( size_t trial_num, bool isprobe = false )
             play_puff( duration );
         else if(String(PROTO_USValue) == String("SHOCK"))
         {
-            // See above where SHOCK_RELAY_PIN_CHAN_12 and
-            // SHOCK_RELAY_PIN_CHAN_34 are configured.
-            apply_shock(duration);
+            // Must isolate ADC of arduino.
+            Serial.println( ">>> DELIVER shock");
+            deliverShock(duration);
         }
         else
         {
@@ -506,6 +512,7 @@ void do_trial( size_t trial_num, bool isprobe = false )
     if(String(PROTO_USValue) == String("SHOCK"))
     {
         delay(10);
+        Serial.println( ">>>Enabled SHOCKPAD." );
         enableReadingShockPad();
     }
 

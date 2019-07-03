@@ -15,7 +15,7 @@ void enableReadingShockPad();
 void disableReadingShockPad();
 
 int NUM_SAMPLES        = 100;
-unsigned idx           = 0;
+volatile size_t idx           = 0;
 
 // Do analog sampling only 1 in 10 times, for a freq of of 100 Hz.
 int SAMPLING_DIVIDER   = 10;
@@ -26,6 +26,10 @@ int NUM_LOOP_RESET     = 50;
 int TOUCH_THRESHOLD    = 50;
 int numLoops           = 0;
 volatile int shock_pin_readout  = 0;
+
+
+// To save the adc status.
+byte adc_;
 
 // Enable disable STIM isolator.
 void enableInputToStimIsolator()
@@ -41,22 +45,45 @@ void disableInputToStimIsolator()
 // Voltage across shock pad should be 5v.
 void disableReadingShockPad()
 {
+    // First switch off each pin.
     digitalWrite( SHOCK_RELAY_PIN_CHAN_12, HIGH );
     digitalWrite( SHOCK_RELAY_PIN_CHAN_34, LOW );
+    shock_pin_readout = 0;
 }
 
 void enableReadingShockPad()
 {
-    // For safety.
-    digitalWrite( SHOCK_RELAY_PIN_CHAN_12, LOW );
+    // The order is very important here. Don't switch them ON at the same time.
+    // First switch OFF the high voltage input and wait for some time. then
+    // switch ON the low voltage input
     digitalWrite( SHOCK_RELAY_PIN_CHAN_34, HIGH );
+    digitalWrite( SHOCK_RELAY_PIN_CHAN_12, LOW );
 }
 
+/* --------------------------------------------------------------------------*/
+/**
+ * @Synopsis  Shock monitor is being a called every 100us (0.1ms or 10k). Use
+ * this to generate a tone on SHOCK_PWM_PIN.
+ */
+/* ----------------------------------------------------------------------------*/
 void shockMonitor() 
 {
-    noInterrupts();
-    shock_pin_readout = analogRead( SHOCK_PAD_READOUT_PIN );
-    interrupts();  // enable interrupts again. We are done reading values.
+    // Generate 5K tone.
+    if( HIGH == digitalRead( SHOCK_PWM_PIN ))
+        digitalWrite(SHOCK_PWM_PIN, LOW);
+    else
+        digitalWrite(SHOCK_PWM_PIN, HIGH);
+
+    idx++;
+
+    // Read very 10 ms.
+    if( idx == 10)
+    {
+        noInterrupts();
+        shock_pin_readout = analogRead( SHOCK_PAD_READOUT_PIN );
+        interrupts();  // enable interrupts again. We are done reading values.
+        idx = 0;
+    }
 }
 
 
@@ -83,7 +110,7 @@ void configureShockingTimer()
     // Timer1.initialize(microseconds);
     // Begin using the timer. This function must be called first. "microseconds" 
     // is the period of time the timer takes.
-    Timer1.initialize(1000); 
+    Timer1.initialize(100); 
     Timer1.attachInterrupt( shockMonitor );
 }
 
