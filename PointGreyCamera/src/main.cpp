@@ -13,6 +13,7 @@
 #include <boost/chrono.hpp>
 #include <boost/asio.hpp>
 #include <boost/format.hpp>
+#include <boost/lexical_cast.hpp>
 #include <boost/program_options.hpp>
 #include <boost/algorithm/string.hpp>
 #include <boost/filesystem.hpp>
@@ -55,7 +56,9 @@ string dataDir_ = "/tmp";
 // ROI for the eye.
 string bbox_str_;
 array<int,4> bbox_={0,0,0,0};
-vector<double> gnuplotVec_(1000, 0.0);
+
+deque<double> roi_(1000, 0.0);
+deque<double> shock_(1000, 0.0);
 
 // Storage for images.
 vector<Mat> frames_;
@@ -91,16 +94,22 @@ void show_frame( cv::Mat img)
     rectangle(img, Point(bbox_[0], bbox_[1]), Point(bbox_[2], bbox_[3]), 1, 1, 128);
     static cv::Mat plt(40, img.cols, CV_8UC1);
     plt = Scalar(0);
-    size_t x, y;
+    size_t x, yShock, yRoi;
 
     // Maximum mean value could be 128.
-    for (size_t i = 1; i < gnuplotVec_.size()-1; i++)
+    for (size_t i = 1; i < roi_.size()-1; i++)
     {
-        x = (size_t)(i*img.cols/gnuplotVec_.size());
-        y = (size_t)(gnuplotVec_[i]/5.0)+1;
+        x = (size_t)(i*img.cols/roi_.size());
+        yRoi = (size_t)(roi_[i]/5.0)+1;
+        yShock = (size_t)(shock_[i]/5.0)+1;
+
         x = x % plt.cols;
-        y = y % plt.rows;
-        plt.at<uchar>(y, x) = 255;
+        yRoi = yRoi % plt.rows;
+        yShock = yShock % plt.rows;
+
+        plt.at<uchar>(yRoi, x) = 255;
+        plt.at<uchar>(yShock, x) = 128;
+
     }
     vconcat(img, plt, img);
     imshow(OPENCV_MAIN_WINDOW,  img);
@@ -122,11 +131,13 @@ void SaveAllFrames(vector<Mat>& frames, const size_t trial)
     // Check if file arealy exists. If yes, raise all the hell.
     using namespace boost::filesystem;
     path p(outfile);
-    if(exists(p))
+    if(! exists(p))
     {
         cout << "[ERROR] Files " << outfile << " already exists. I will not overwrite " << p << endl;
         throw runtime_error( "WILL NOT OVERWRITE EXISTING DATA.");
     }
+
+
 
     write_frames_to_tiff(outfile, frames);
     cout << "[INFO] Saved data to " << outfile << endl;
@@ -170,7 +181,7 @@ void AddToStoreHouse(Mat& mat, const vector<string>& arduinoData)
     {
         if(saveFrames)
         {
-            // Save everything.
+            // Save everything. Copy current data to another variable.
             vector<Mat> data = frames_;
             auto t = boost::thread(SaveAllFrames, data, currentTrial);
             t.detach();
@@ -205,10 +216,11 @@ void ReadLine(string& res)
     // If the line starts with '<' or '>' characters; then dump them to console.
     if(res[0] == '<' || res[1] == '>')
     {
-        cout << "[ARDUINO] " << res << endl;
+        cout << res << endl;
         res = "";
         return;
     }
+
 
     // Append timestamp to the line.
     res = get_timestamp() + ',' + res;
@@ -253,11 +265,6 @@ void ArduinoClient()
         arduinoQ_.push(line);
         arduinoQ_.pop();
     }
-
-    // Send 'r' to arduino to reboot it.
-    cout << "[INFO] All done or Ctrl+C. Writing r to arduino. Reboot it." << endl;
-    serial_ << 'r' << endl;
-    return;
 }
 
 // This function returns the camera to its default state by re-enabling automatic
@@ -307,27 +314,36 @@ int ProcessFrame(void* data, size_t width, size_t height)
 {
     Mat img(height, width, CV_8UC1, data );
 
-    // Write frame number on the frame.
+    // CSV data from arduino. Split the csv into a vector.
     string aLine = arduinoQ_.back();
+    string arduino = get_timestamp() + ',' + aLine; 
+    vector<string> arduinoData;
+    boost::split(arduinoData, arduino, boost::is_any_of(","));
+    cout << arduino << endl;
 
     // Compute mean in ROI. This is the signal value.
     double eyeValue = 0.0;
     try 
     {
-        // Get the ROI.
+        // Average pixel value in ROI. This is our signal.
         auto roi = img(cv::Range(bbox_[1], bbox_[3]), cv::Range(bbox_[0], bbox_[2]));
         eyeValue = cv::mean(roi)[0];
-        gnuplotVec_.push_back(eyeValue);
-        gnuplotVec_.erase(gnuplotVec_.begin());
+
+        roi_.push_back(eyeValue);
+        roi_.erase(roi_.begin());
+
+        double shockVal = -1;
+        if(arduinoData.size() > 10 )
+            shockVal = boost::lexical_cast<double>(arduinoData[11]);  // c++11
+        shock_.push_back(shockVal);
+        shock_.erase(shock_.begin());
     } 
     catch(std::exception& e)
     {
         cout << "[WARN] " << e.what() << endl;
     }
 
-    string arduino = get_timestamp() + ',' + aLine + ',' + boost::str(boost::format("%.2f")%eyeValue);
-    vector<string> arduinoData;
-    boost::split(arduinoData, arduino, boost::is_any_of(","));
+    arduinoData.push_back(boost::str(boost::format("%.2f")%eyeValue));
 
     // Draw a back rectangle on the top.
     rectangle(img, Point(1,2), Point(width, 16), 0, -1);
@@ -339,33 +355,33 @@ int ProcessFrame(void* data, size_t width, size_t height)
         cameraStatus = "(ON)";
     putText(img, cameraStatus, Point(img.cols-40, 10), FONT_HERSHEY_SIMPLEX, 0.3, 200);
 
-    // Convert msg to array of uint8 and append to first frame.
+    // Convert msg to array of uint8 and add at the top of the frame. The first
+    // row contains CSV data read from arduino.
     string toWrite = arduino;
     toWrite.resize(width, ' ');
     cv::Mat infoRow(1, width, CV_8UC1, (void*) toWrite.data());
     
-    // Prepent to image.
+    // Prepend to image.
     cv::vconcat(infoRow, img, img);
 
-    // Show every 25th frame.
+    // Show every 10th frame. While displaying the frame, I add shock and roi
+    // value at the bottom as line plot. See function show_frame.
     if( total_frames_ % 10 == 0)
         show_frame(img);
 
-    // This frame and arduino data are stamped together.
+    // This frame and arduino data are clubbed together before saving.
     AddToStoreHouse(img, arduinoData);
 
     char k = waitKey(2);
     if( k < ' ')
         return 0;
 
-    cout << "[INFO] Key pressed " << k;
+    cout << "[INFO] Key pressed " << k << endl;
     if(validCommands_.find(k) != std::string::npos)
     {
+        cout << "[INFO] Got valid command. Writing to serial." << k << endl;
         serial_ << k << endl;
-        cout << ". Valid command. Sending to Arduino: " << endl;
     }
-    else 
-        cout << ". Invalid. Ignoring ... " << endl;
     return 0;
 }
 
@@ -751,8 +767,8 @@ int main(int argc, char** argv)
 
     // Release system_
     system_->ReleaseInstance();
-    destroyAllWindows();
 
+    destroyAllWindows();
     if(t.joinable())
         t.join();
 

@@ -106,7 +106,7 @@ void write_data_line( )
     unsigned long timestamp = millis() - trial_start_time_;
 
     char msg[100];
-    sprintf(msg, "%lu,%s,%d,%d,%d,%d,%d,%d,%s,%4d,%ld"
+    sprintf(msg, "%lu,%s,%d,%d,%d,%d,%d,%d,%s,%d,%ld"
             , timestamp, PROTO_CODE, trial_count_, puff, tone, led
             , camera, microscope, trial_state_, shock_pin_readout, encoder_value_
            );

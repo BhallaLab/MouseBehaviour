@@ -30,6 +30,8 @@ else (NOT PORT)
     message(STATUS "Default serial port ${PORT}" )
 endif (NOT PORT)
 
+set(CMAKE_CXX_STANDARD 11)
+
 find_package(PythonInterp REQUIRED)
 
 # Options related to Arduino board.
@@ -64,7 +66,7 @@ if((NOT ANIMAL_NAME) OR (NOT SESSION_NUM) OR (NOT PROTO_CODE))
     message(FATAL_ERROR 
         "Set ANIMAL_NAME, SESSION_NUM, and PROTO_CODE to cmake; e.g. \n"
         "\tcmake -DANIMAL_NAME=k3 -DSESSION_NUM=1 -DPROTO_CODE=All1 ..\n"
-        "For info on protocols, see file 'Protocols/BehaviourProtocols.xlsx'"
+        "For info on protocols, see file 'Protocols/BehaviourProtocols.csv'"
         " in the top directory."
         )
 endif()
