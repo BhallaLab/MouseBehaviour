@@ -97,6 +97,10 @@ configure_file( ${CMAKE_SOURCE_DIR}/Makefile.arduino.in
 set(ARDUINO_TARGET_NAME protocol_${PROTO_CODE})
 set(ARDUINO_SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/Arduino)
 
+# Now add the client and server 
+set(CAMERA_SERVER_DIR ${CMAKE_CURRENT_SOURCE_DIR}/PointGreyCamera)
+add_subdirectory(${CAMERA_SERVER_DIR})
+
 # Write variables to config.h file.
 configure_file(${ARDUINO_SRC_DIR}/config.h.in ${ARDUINO_SRC_DIR}/config.h)
 set(ARDDUINO_OUT_HEX_FILE 
@@ -134,15 +138,15 @@ add_custom_target(reset_boards
     VERBATIM
     )
 
+
 # pass these arguments to camera server.
 SET(RUN_ARGS --port ${PORT} --datadir ${DATADIR})
 add_custom_target(run  
     DEPENDS cam_server upload
-    COMMAND ${CMAKE_BINARY_DIR}/cam_server ${RUN_ARGS}
+    COMMAND LD_LIBRARY_PATH=${CAMERA_SERVER_DIR}/external/lib 
+        ${CMAKE_BINARY_DIR}/cam_server ${RUN_ARGS}
     COMMENT "Run arduino client and camera client"
     WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
     VERBATIM
     )
 
-# Now add the client and server 
-add_subdirectory(${CMAKE_SOURCE_DIR}/PointGreyCamera)
