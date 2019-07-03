@@ -170,7 +170,8 @@ void SaveAllFrames(vector<Mat>& frames, const size_t trial)
     if(! exists(p))
     {
         cout << "[ERROR] Files " << outfile << " already exists. I will not overwrite " << p << endl;
-        throw runtime_error( "WILL NOT OVERWRITE EXISTING DATA.");
+        all_done_ = true;
+        return;
     }
 
 
@@ -354,7 +355,6 @@ int ProcessFrame(void* data, size_t width, size_t height)
     string arduino = get_timestamp() + ',' + aLine; 
     vector<string> arduinoData;
     boost::split(arduinoData, arduino, boost::is_any_of(","));
-    cout << arduino << endl;
 
     // Compute mean in ROI. This is the signal value.
     double eyeValue = 0.0;
