@@ -294,7 +294,7 @@ void setup()
     // SHOCK.
     pinMode(SHOCK_PAD_READOUT_PIN, INPUT);
     pinMode(SHOCK_PWM_PIN, OUTPUT);
-    tone(SHOCK_PWM_PIN, 30000);
+    tone(SHOCK_PWM_PIN, 20000);
 
 
     // 

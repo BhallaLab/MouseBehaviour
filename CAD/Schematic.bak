@@ -277,8 +277,8 @@ Wire Wire Line
 Wire Wire Line
 	5850 3250 5600 3250
 Connection ~ 5600 3250
-Text Notes 3700 4250 2    50   ~ 0
-PWM
+Text Notes 3700 4250 0    50   ~ 0
+D5, PWM, 20 kHz 
 Wire Wire Line
 	3000 5050 3400 5050
 $Sheet
