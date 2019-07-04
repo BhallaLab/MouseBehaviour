@@ -24,7 +24,7 @@
 #define         CAMERA_TTL_PIN              10
 #define         PUFF_PIN                    11
 #define         IMAGING_TRIGGER_PIN         13
-#define         SHOCK_PAD_READOUT_PIN       A3
+#define         SHOCK_PAD_READOUT_PIN       A0
 #define         SENSOR_PIN                  A5
 
 

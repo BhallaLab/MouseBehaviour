@@ -1,9 +1,8 @@
 /***
- *    Protocol for EyeBlinkConditioning.
- *
- *    The protocols are read from the file '../Protocols/BehaviourProtocols.csv'
- *    by a python script. The cmake build system generates appropriate header
- *    file protocol.h.
+ *    The protocols are stored in '../Protocols/BehaviourProtocols.csv'. A
+ *    protocol is chosen at build time by passing -DPROTO_CODE option to cmake.
+ *    A python script '../Protocols/protocol_to_config.py" converts a given
+ *    protocol to protocol.h file.
  *
  *         Author:  Dilawar Singh <dilawars@ncbs.res.in>
  *   Organization:  NCBS Bangalore
@@ -31,9 +30,12 @@ unsigned dt_                    = 2;
 unsigned write_dt_              = 2;
 unsigned trial_count_           = 0;
 unsigned long trial_start_time_ = 0;
-char trial_state_[5]            = "PRE_";
 int incoming_byte_              = 0;
 bool reboot_                    = false;
+
+// NOTE: Should be big enough to hold the state. 10 char long is ok.
+// NOTE: ProtoUSValue should be more than 10 character long.
+char trial_state_[11]            = "PRE_";
 
 
 /* --------------------------------------------------------------------------*/
@@ -122,7 +124,6 @@ void write_data_line( )
 
     Serial.print(msg + String(","));
     Serial.println(angular_velocity_, 5);
-    // delay(3);
 }
 
 /**
@@ -230,10 +231,10 @@ void wait_for_start( )
         }
         else if( is_command_read( 'c', true ) )
         {
-            Serial.println( ">>>Received c. Giving shock for 50 ms" );
+            Serial.println( ">>>Received c. Giving shock for 500 ms" );
             disableReadingShockPad();
             delay(10);
-            deliverShock( 200 );
+            deliverShock( 500 );
             delay(10);
             enableReadingShockPad();
         }
@@ -293,9 +294,6 @@ void setup()
 
     //esetup watchdog. If not reset in 2 seconds, it reboots the system.
     stamp_ = millis( );
-
-    // SHOCK.
-    pinMode(SHOCK_PAD_READOUT_PIN, INPUT);
 
     pinMode(SHOCK_PWM_PIN, OUTPUT);
     pinMode(SHOCK_STIM_ISOLATER_PIN, OUTPUT);
@@ -473,7 +471,7 @@ void do_trial( size_t trial_num, bool isprobe = false )
 
     if(String(PROTO_USValue) == String("SHOCK"))
     {
-        Serial.println( ">>>Disabled SHOCKPAD." );
+        //Serial.println( ">>>Disabled SHOCKPAD." );
         disableReadingShockPad();
         delay(10);
     }
@@ -491,14 +489,13 @@ void do_trial( size_t trial_num, bool isprobe = false )
     else
     {
         sprintf( trial_state_, PROTO_USValue );
-        if(String(PROTO_USValue) == String("PUFF"))
-            play_puff( duration );
-        else if(String(PROTO_USValue) == String("SHOCK"))
+        if(String(PROTO_USValue) == String("SHOCK"))
         {
-            // Must isolate ADC of arduino.
-            Serial.println( ">>> DELIVER shock");
+            //Serial.println( ">>> DELIVER shock");
             deliverShock(duration);
         }
+        else if(String(PROTO_USValue) == String("PUFF"))
+            play_puff( duration );
         else
         {
             while( (millis( ) - stamp_) <= duration )
@@ -512,7 +509,7 @@ void do_trial( size_t trial_num, bool isprobe = false )
     if(String(PROTO_USValue) == String("SHOCK"))
     {
         delay(10);
-        Serial.println( ">>>Enabled SHOCKPAD." );
+        //Serial.println( ">>>Enabled SHOCKPAD." );
         enableReadingShockPad();
     }
 
@@ -526,8 +523,10 @@ void do_trial( size_t trial_num, bool isprobe = false )
         write_data_line( );
         // Switch camera OFF after 500 ms into POST.
         if( (millis() - stamp_) >= 500 )
-            digitalWrite( CAMERA_TTL_PIN, LOW );
-        delay(50);
+        {
+            if( HIGH == digitalRead(CAMERA_TTL_PIN))
+                digitalWrite( CAMERA_TTL_PIN, LOW );
+        }
     }
 
     digitalWrite( IMAGING_TRIGGER_PIN, LOW ); /* Shut down the imaging. */

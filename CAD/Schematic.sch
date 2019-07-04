@@ -51,51 +51,14 @@ Wire Wire Line
 $Comp
 L Device:Speaker LS1
 U 1 1 5D18ABCB
-P 6925 2150
-F 0 "LS1" H 7095 2146 50  0000 L CNN
-F 1 "Speaker" H 7095 2055 50  0000 L CNN
-F 2 "" H 6925 1950 50  0001 C CNN
-F 3 "~" H 6915 2100 50  0001 C CNN
-	1    6925 2150
+P 7825 2150
+F 0 "LS1" H 7995 2146 50  0000 L CNN
+F 1 "Speaker" H 7995 2055 50  0000 L CNN
+F 2 "" H 7825 1950 50  0001 C CNN
+F 3 "~" H 7815 2100 50  0001 C CNN
+	1    7825 2150
 	1    0    0    -1  
 $EndComp
-$Comp
-L Device:LED D1
-U 1 1 5D18B2CE
-P 6875 2700
-F 0 "D1" H 6868 2445 50  0000 C CNN
-F 1 "LED" H 6868 2536 50  0000 C CNN
-F 2 "" H 6875 2700 50  0001 C CNN
-F 3 "~" H 6875 2700 50  0001 C CNN
-	1    6875 2700
-	-1   0    0    1   
-$EndComp
-$Comp
-L Isolator:4N35 U1
-U 1 1 5D188B23
-P 7025 3175
-F 0 "U1" H 7025 3500 50  0000 C CNN
-F 1 "4N35" H 7025 3409 50  0000 C CNN
-F 2 "Package_DIP:DIP-6_W7.62mm" H 6825 2975 50  0001 L CIN
-F 3 "https://www.vishay.com/docs/81181/4n35.pdf" H 7025 3175 50  0001 L CNN
-	1    7025 3175
-	1    0    0    -1  
-$EndComp
-$Comp
-L power:GND #PWR0101
-U 1 1 5D189E2E
-P 6600 3050
-F 0 "#PWR0101" H 6600 2800 50  0001 C CNN
-F 1 "GND" H 6605 2877 50  0000 C CNN
-F 2 "" H 6600 3050 50  0001 C CNN
-F 3 "" H 6600 3050 50  0001 C CNN
-	1    6600 3050
-	-1   0    0    1   
-$EndComp
-Wire Wire Line
-	6725 3075 6600 3075
-Wire Wire Line
-	6600 3075 6600 3050
 Text GLabel 4075 3150 0    50   Input ~ 0
 TONE
 Wire Wire Line
@@ -116,50 +79,25 @@ Text GLabel 4075 3650 0    50   Input ~ 0
 IMAGING_TRIG
 Wire Wire Line
 	4075 3650 4400 3650
-Text GLabel 6575 2150 0    50   Input ~ 0
+Text GLabel 7475 2150 0    50   Input ~ 0
 TONE
 Wire Wire Line
-	6575 2150 6725 2150
-Text GLabel 6575 2700 0    50   Input ~ 0
-LED
-Wire Wire Line
-	6575 2700 6725 2700
-Text GLabel 6575 3275 0    50   Input ~ 0
-PUFF
-Wire Wire Line
-	6575 3275 6725 3275
-$Comp
-L power:GND #PWR0102
-U 1 1 5D18C223
-P 7425 2775
-F 0 "#PWR0102" H 7425 2525 50  0001 C CNN
-F 1 "GND" H 7430 2602 50  0000 C CNN
-F 2 "" H 7425 2775 50  0001 C CNN
-F 3 "" H 7425 2775 50  0001 C CNN
-	1    7425 2775
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	7025 2700 7425 2700
-Wire Wire Line
-	7425 2700 7425 2775
+	7475 2150 7625 2150
 $Comp
 L power:GND #PWR0103
 U 1 1 5D18CB7D
-P 6650 2400
-F 0 "#PWR0103" H 6650 2150 50  0001 C CNN
-F 1 "GND" H 6655 2227 50  0000 C CNN
-F 2 "" H 6650 2400 50  0001 C CNN
-F 3 "" H 6650 2400 50  0001 C CNN
-	1    6650 2400
+P 7550 2400
+F 0 "#PWR0103" H 7550 2150 50  0001 C CNN
+F 1 "GND" H 7555 2227 50  0000 C CNN
+F 2 "" H 7550 2400 50  0001 C CNN
+F 3 "" H 7550 2400 50  0001 C CNN
+	1    7550 2400
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	6725 2250 6650 2250
+	7625 2250 7550 2250
 Wire Wire Line
-	6650 2250 6650 2400
-Text Notes 7900 3150 2    50   ~ 0
-To solenoid.
+	7550 2250 7550 2400
 Text Notes 2350 2175 0    50   ~ 0
 1200 counts per cycle.
 $Comp
@@ -225,53 +163,21 @@ Wire Wire Line
 	4175 3050 4175 4175
 Wire Wire Line
 	5600 3250 5400 3250
-$Comp
-L Schematic-rescue:ShockPad-BhallaLabComponents-Schematic-rescue ShockPad1
-U 1 1 5D197A8E
-P 7525 3775
-F 0 "ShockPad1" H 7875 3625 50  0001 C CNN
-F 1 "ShockPad" H 6757 3555 50  0000 C TNN
-F 2 "" H 7875 3625 50  0001 C CNN
-F 3 "" H 7875 3625 50  0001 C CNN
-	1    7525 3775
-	1    0    0    -1  
-$EndComp
-Text GLabel 6575 3625 0    50   Input ~ 0
-PAD+
-Text GLabel 6575 3975 0    50   Input ~ 0
-PAD-
-Wire Wire Line
-	6575 3625 7075 3625
-Wire Wire Line
-	6575 3975 7075 3975
 Wire Wire Line
 	4175 4175 5100 4175
 Wire Wire Line
 	5600 4350 5600 3250
 $Comp
-L Device:R RA3
-U 1 1 5D1B22CC
-P 5850 3425
-F 0 "RA3" V 5920 3471 50  0000 L CNN
-F 1 "1.2 M" H 5920 3380 50  0000 R TNN
-F 2 "" V 5780 3425 50  0001 C CNN
-F 3 "~" H 5850 3425 50  0001 C CNN
-	1    5850 3425
-	-1   0    0    1   
-$EndComp
-$Comp
 L power:GND #PWR0106
 U 1 1 5D1B2935
-P 5850 3650
-F 0 "#PWR0106" H 5850 3400 50  0001 C CNN
-F 1 "GND" H 5855 3477 50  0000 C CNN
-F 2 "" H 5850 3650 50  0001 C CNN
-F 3 "" H 5850 3650 50  0001 C CNN
-	1    5850 3650
+P 5850 3750
+F 0 "#PWR0106" H 5850 3500 50  0001 C CNN
+F 1 "GND" H 5855 3577 50  0000 C CNN
+F 2 "" H 5850 3750 50  0001 C CNN
+F 3 "" H 5850 3750 50  0001 C CNN
+	1    5850 3750
 	1    0    0    -1  
 $EndComp
-Wire Wire Line
-	5850 3575 5850 3600
 Wire Wire Line
 	5850 3275 5850 3250
 Wire Wire Line
@@ -345,7 +251,7 @@ Wire Wire Line
 	4925 5275 4525 5275
 Text Notes 6275 5200 2    50   ~ 0
 Not implemented.\nUsing as black-box.
-Text Notes 8300 4275 2    50   ~ 0
+Text Notes 9200 4275 2    50   ~ 0
 Resistance of mouse's paw is of the order of 1M.\nThe value of R2 must be the same.
 $Comp
 L power:VCC #PWR0107
@@ -377,27 +283,7 @@ Wire Wire Line
 	3400 4700 3200 4700
 Wire Wire Line
 	3200 4700 3200 4650
-$Comp
-L Device:C CA3
-U 1 1 5D1B6EF2
-P 6100 3450
-F 0 "CA3" H 6215 3496 50  0000 L CNN
-F 1 "47nF" H 6215 3405 50  0000 L CNN
-F 2 "" H 6138 3300 50  0001 C CNN
-F 3 "~" H 6100 3450 50  0001 C CNN
-	1    6100 3450
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	6100 3300 6100 3250
-Wire Wire Line
-	6100 3250 5850 3250
 Connection ~ 5850 3250
-Wire Wire Line
-	6100 3600 5850 3600
-Connection ~ 5850 3600
-Wire Wire Line
-	5850 3600 5850 3650
 $Sheet
 S 3400 4500 1125 950 
 U 5D1ADABF
@@ -420,4 +306,120 @@ F15 "B4" O R 4525 5350 50
 $EndSheet
 Text Notes 3600 5000 0    50   ~ 0
 Low Level Trigger.\nVendor: NA \nAsk hrishi@ncbs.res.in
+$Comp
+L Device:R_Variable RA3
+U 1 1 5D1DDD1C
+P 5850 3400
+F 0 "RA3" H 5978 3446 50  0000 L CNN
+F 1 "10K-1M" H 5978 3355 50  0000 L CNN
+F 2 "" V 5780 3400 50  0001 C CNN
+F 3 "~" H 5850 3400 50  0001 C CNN
+	1    5850 3400
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:C CA3
+U 1 1 5D1B6EF2
+P 6250 3450
+F 0 "CA3" H 6365 3496 50  0000 L CNN
+F 1 "47nF" H 6365 3405 50  0000 L CNN
+F 2 "" H 6288 3300 50  0001 C CNN
+F 3 "~" H 6250 3450 50  0001 C CNN
+	1    6250 3450
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	5850 3600 5850 3750
+Wire Wire Line
+	5850 3550 5850 3600
+Connection ~ 5850 3600
+Wire Wire Line
+	5850 3600 6250 3600
+Wire Wire Line
+	6250 3300 6250 3250
+Wire Wire Line
+	5850 3250 6250 3250
+Wire Wire Line
+	7475 3975 7975 3975
+Wire Wire Line
+	7475 3625 7975 3625
+Text GLabel 7475 3975 0    50   Input ~ 0
+PAD-
+Text GLabel 7475 3625 0    50   Input ~ 0
+PAD+
+$Comp
+L Schematic-rescue:ShockPad-BhallaLabComponents-Schematic-rescue ShockPad1
+U 1 1 5D197A8E
+P 8425 3775
+F 0 "ShockPad1" H 8775 3625 50  0001 C CNN
+F 1 "ShockPad" H 7657 3555 50  0000 C TNN
+F 2 "" H 8775 3625 50  0001 C CNN
+F 3 "" H 8775 3625 50  0001 C CNN
+	1    8425 3775
+	1    0    0    -1  
+$EndComp
+Text Notes 8800 3150 2    50   ~ 0
+To solenoid.
+Wire Wire Line
+	8325 2700 8325 2775
+Wire Wire Line
+	7925 2700 8325 2700
+$Comp
+L power:GND #PWR0102
+U 1 1 5D18C223
+P 8325 2775
+F 0 "#PWR0102" H 8325 2525 50  0001 C CNN
+F 1 "GND" H 8330 2602 50  0000 C CNN
+F 2 "" H 8325 2775 50  0001 C CNN
+F 3 "" H 8325 2775 50  0001 C CNN
+	1    8325 2775
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	7475 3275 7625 3275
+Text GLabel 7475 3275 0    50   Input ~ 0
+PUFF
+Wire Wire Line
+	7475 2700 7625 2700
+Text GLabel 7475 2700 0    50   Input ~ 0
+LED
+Wire Wire Line
+	7500 3075 7500 3050
+Wire Wire Line
+	7625 3075 7500 3075
+$Comp
+L power:GND #PWR0101
+U 1 1 5D189E2E
+P 7500 3050
+F 0 "#PWR0101" H 7500 2800 50  0001 C CNN
+F 1 "GND" H 7505 2877 50  0000 C CNN
+F 2 "" H 7500 3050 50  0001 C CNN
+F 3 "" H 7500 3050 50  0001 C CNN
+	1    7500 3050
+	-1   0    0    1   
+$EndComp
+$Comp
+L Isolator:4N35 U1
+U 1 1 5D188B23
+P 7925 3175
+F 0 "U1" H 7925 3500 50  0000 C CNN
+F 1 "4N35" H 7925 3409 50  0000 C CNN
+F 2 "Package_DIP:DIP-6_W7.62mm" H 7725 2975 50  0001 L CIN
+F 3 "https://www.vishay.com/docs/81181/4n35.pdf" H 7925 3175 50  0001 L CNN
+	1    7925 3175
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:LED D1
+U 1 1 5D18B2CE
+P 7775 2700
+F 0 "D1" H 7768 2445 50  0000 C CNN
+F 1 "LED" H 7768 2536 50  0000 C CNN
+F 2 "" H 7775 2700 50  0001 C CNN
+F 3 "~" H 7775 2700 50  0001 C CNN
+	1    7775 2700
+	-1   0    0    1   
+$EndComp
+Text Notes 5800 3100 0    50   ~ 0
+When paw is on shockpad\ntau should be approx 1ms.
 $EndSCHEMATC

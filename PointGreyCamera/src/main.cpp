@@ -94,7 +94,7 @@ void show_frame( cv::Mat img)
     rectangle(img, Point(bbox_[0], bbox_[1]), Point(bbox_[2], bbox_[3]), 1, 1, 128);
 
     // Create plot plt and assign 0.
-    static cv::Mat plt(40, img.cols, CV_8UC1);
+    static cv::Mat plt(128, img.cols, CV_8UC1);
     plt = Scalar(0);
 
     size_t x, yShock, yRoi;
@@ -104,7 +104,8 @@ void show_frame( cv::Mat img)
     {
         x = (size_t)(i*img.cols/roi_.size());
         yRoi = (size_t)(roi_[i]/5.0)+1;
-        yShock = (size_t)(shock_[i]/5.0)+1;
+
+        yShock = (size_t)(shock_[i]/5.0)+1; // max 206.
 
         x = x % plt.cols;
         yRoi = yRoi % plt.rows;
