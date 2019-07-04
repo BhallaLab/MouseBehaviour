@@ -28,7 +28,6 @@ DrawSegmentWidth=0.200000000000
 BoardOutlineThickness=0.100000000000
 ModuleOutlineThickness=0.150000000000
 [pcbnew/libraries]
-LibDir=C:/Program Files (x86)/KiCad/share/modules/EagleMod;C:/Program Files (x86)/KiCad/share/library/Arduino_Shield_Modules_for_KiCad_V3
 LibName1=sockets
 LibName2=connect
 LibName3=discret
@@ -47,7 +46,6 @@ LibName15=pga_sockets
 LibName16=valves
 LibName17=EagleMod/pinhead
 LibName18=EagleMod/pinhead-1
-LibName19=C:/Program Files (x86)/KiCad/share/library/Arduino_Shield_Modules_for_KiCad_V3/arduino_shields
 [eeschema]
 version=1
 LibDir=

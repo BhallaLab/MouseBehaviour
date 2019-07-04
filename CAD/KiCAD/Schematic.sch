@@ -1,5 +1,4 @@
 EESchema Schematic File Version 4
-LIBS:ArduinoEncoderShield_old-cache
 EELAYER 29 0
 EELAYER END
 $Descr A4 11693 8268
@@ -26,7 +25,7 @@ F 3 "" H 7175 800 60  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L ArduinoEncoderShield_old-rescue:ULN2003A U1
+L Dorababu:ULN2003A U1
 U 1 1 5C3EFA71
 P 9300 1225
 F 0 "U1" H 9300 1325 70  0000 C CNN
@@ -37,7 +36,7 @@ F 3 "" H 9300 1225 60  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L ArduinoEncoderShield_old-rescue:DIODE D1
+L Dorababu:DIODE D1
 U 1 1 5C3EFA72
 P 10300 1625
 F 0 "D1" H 10300 1725 40  0000 C CNN
@@ -59,7 +58,7 @@ F 3 "" H 7175 1800 60  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L ArduinoEncoderShield_old-rescue:R R8
+L Dorababu:R R8
 U 1 1 5C3EFA76
 P 7575 2200
 F 0 "R8" V 7655 2200 40  0000 C CNN
@@ -70,7 +69,7 @@ F 3 "~" H 7575 2200 30  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L ArduinoEncoderShield_old-rescue:R R6
+L Dorababu:R R6
 U 1 1 5C3EFA82
 P 6575 1700
 F 0 "R6" V 6655 1700 40  0000 C CNN
@@ -81,7 +80,7 @@ F 3 "~" H 6575 1700 30  0000 C CNN
 	0    -1   -1   0   
 $EndComp
 $Comp
-L ArduinoEncoderShield_old-rescue:R R5
+L Dorababu:R R5
 U 1 1 5C3EFA83
 P 6575 700
 F 0 "R5" V 6475 700 40  0000 C CNN
@@ -92,7 +91,7 @@ F 3 "~" H 6575 700 30  0000 C CNN
 	0    -1   -1   0   
 $EndComp
 $Comp
-L ArduinoEncoderShield_old-rescue:R R10
+L Dorababu:R R10
 U 1 1 5C3EFA84
 P 7925 5425
 F 0 "R10" V 8005 5425 40  0000 C CNN
@@ -121,7 +120,7 @@ EX 5 V
 Text GLabel 10750 1625 2    60   Input ~ 0
 12 V
 $Comp
-L ArduinoEncoderShield_old-rescue:CONN_8 P8
+L Dorababu:CONN_8 P8
 U 1 1 5C3EFA87
 P 3475 5100
 F 0 "P8" V 3425 5100 60  0000 C CNN
@@ -132,7 +131,7 @@ F 3 "" H 3475 5100 60  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L ArduinoEncoderShield_old-rescue:CONN_6 P2
+L Dorababu:CONN_6 P2
 U 1 1 5C3EFA88
 P 950 1800
 F 0 "P2" V 900 1800 60  0000 C CNN
@@ -151,7 +150,7 @@ Solenoid2_1
 Text GLabel 10200 825  2    60   Input ~ 0
 Solenoid2_2
 $Comp
-L ArduinoEncoderShield_old-rescue:HDR-1X15-15-91-? CN1
+L Dorababu:HDR-1X15-15-91-? CN1
 U 1 1 5C3EFA8D
 P 1650 5500
 F 0 "CN1" H 1575 6300 50  0000 L BNN
@@ -162,7 +161,7 @@ F 3 "" H 1650 5500 60  0001 C CNN
 	-1   0    0    1   
 $EndComp
 $Comp
-L ArduinoEncoderShield_old-rescue:R R12
+L Dorababu:R R12
 U 1 1 5C3EFA8E
 P 9825 5425
 F 0 "R12" V 9905 5425 40  0000 C CNN
@@ -199,7 +198,7 @@ Tone1
 Text GLabel 10875 5675 2    60   Input ~ 0
 Tone2
 $Comp
-L ArduinoEncoderShield_old-rescue:R R4
+L Dorababu:R R4
 U 1 1 5C3EFA94
 P 5975 5425
 F 0 "R4" V 6055 5425 40  0000 C CNN
@@ -214,7 +213,7 @@ Tone3
 Text GLabel 6925 5525 2    60   Input ~ 0
 EX 5 V
 $Comp
-L ArduinoEncoderShield_old-rescue:R R7
+L Dorababu:R R7
 U 1 1 5C3EFA96
 P 6975 5925
 F 0 "R7" V 7075 6075 40  0000 C CNN
@@ -241,7 +240,7 @@ Wire Wire Line
 Connection ~ 10050 1625
 Connection ~ 10050 1875
 $Comp
-L ArduinoEncoderShield_old-rescue:R R1
+L Dorababu:R R1
 U 1 1 5C3EFA99
 P 2550 4100
 F 0 "R1" V 2630 4100 40  0000 C CNN
@@ -252,7 +251,7 @@ F 3 "~" H 2550 4100 30  0001 C CNN
 	0    -1   -1   0   
 $EndComp
 $Comp
-L ArduinoEncoderShield_old-rescue:R R2
+L Dorababu:R R2
 U 1 1 5C3EFA9A
 P 2550 4300
 F 0 "R2" V 2630 4300 40  0000 C CNN
@@ -263,7 +262,7 @@ F 3 "~" H 2550 4300 30  0001 C CNN
 	0    -1   -1   0   
 $EndComp
 $Comp
-L ArduinoEncoderShield_old-rescue:CONN_2 P7
+L Dorababu:CONN_2 P7
 U 1 1 5C3EFA9B
 P 3200 4200
 F 0 "P7" V 3150 4200 40  0000 C CNN
@@ -342,7 +341,7 @@ D12
 Text GLabel 6325 700  0    60   Input ~ 0
 D11
 $Comp
-L ArduinoEncoderShield_old-rescue:CONN_8 P9
+L Dorababu:CONN_8 P9
 U 1 1 5C3EFD0C
 P 3475 6100
 F 0 "P9" V 3425 6100 60  0000 C CNN
@@ -374,7 +373,7 @@ Wire Wire Line
 	6975 5625 6975 5675
 Connection ~ 6975 5625
 $Comp
-L ArduinoEncoderShield_old-rescue:CONN_6 P1
+L Dorababu:CONN_6 P1
 U 1 1 5C3F096C
 P 950 1100
 F 0 "P1" V 900 1100 60  0000 C CNN
@@ -425,7 +424,7 @@ EX 5 V
 Text GLabel 10775 5525 2    60   Input ~ 0
 EX 5 V
 $Comp
-L ArduinoEncoderShield_old-rescue:R R11
+L Dorababu:R R11
 U 1 1 5C3F0A84
 P 8875 5975
 F 0 "R11" V 8955 5975 40  0000 C CNN
@@ -438,7 +437,7 @@ $EndComp
 Wire Wire Line
 	8875 5725 8875 5675
 $Comp
-L ArduinoEncoderShield_old-rescue:AGND #PWR05
+L Dorababu:AGND #PWR05
 U 1 1 5C3F0AE2
 P 8875 6325
 F 0 "#PWR05" H 8875 6325 40  0001 C CNN
@@ -456,7 +455,7 @@ Connection ~ 8875 5675
 Text GLabel 8175 5625 0    60   Input ~ 0
 DGND
 $Comp
-L ArduinoEncoderShield_old-rescue:R R13
+L Dorababu:R R13
 U 1 1 5C3F0BA2
 P 10775 5975
 F 0 "R13" V 10855 5975 40  0000 C CNN
@@ -467,7 +466,7 @@ F 3 "~" H 10775 5975 30  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L ArduinoEncoderShield_old-rescue:AGND #PWR07
+L Dorababu:AGND #PWR07
 U 1 1 5C3F0BA8
 P 10775 6325
 F 0 "#PWR07" H 10775 6325 40  0001 C CNN
@@ -493,7 +492,7 @@ Tone2
 Text GLabel 1850 5100 2    60   Input ~ 0
 AGND
 $Comp
-L ArduinoEncoderShield_old-rescue:AGND #PWR02
+L Dorababu:AGND #PWR02
 U 1 1 5C3F0CE1
 P 6975 6225
 F 0 "#PWR02" H 6975 6225 40  0001 C CNN
@@ -510,7 +509,7 @@ Tone3
 Text GLabel 1850 6200 2    60   Input ~ 0
 AGND
 $Comp
-L ArduinoEncoderShield_old-rescue:CONN_2 P4
+L Dorababu:CONN_2 P4
 U 1 1 5C3F0D30
 P 2300 6700
 F 0 "P4" V 2250 6700 40  0000 C CNN
@@ -529,7 +528,7 @@ Spare1
 Text GLabel 1850 6000 2    60   Input ~ 0
 Spare2
 $Comp
-L ArduinoEncoderShield_old-rescue:R R9
+L Dorababu:R R9
 U 1 1 5C3EFA73
 P 7625 1200
 F 0 "R9" V 7705 1200 40  0000 C CNN
@@ -555,7 +554,7 @@ Wire Wire Line
 Wire Wire Line
 	7575 1900 7575 1950
 $Comp
-L ArduinoEncoderShield_old-rescue:AGND #PWR04
+L Dorababu:AGND #PWR04
 U 1 1 5C3F0E1A
 P 7625 1450
 F 0 "#PWR04" H 7625 1450 40  0001 C CNN
@@ -566,7 +565,7 @@ F 3 "" H 7625 1450 60  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L ArduinoEncoderShield_old-rescue:AGND #PWR03
+L Dorababu:AGND #PWR03
 U 1 1 5C3F0E20
 P 7575 2450
 F 0 "#PWR03" H 7575 2450 40  0001 C CNN
@@ -778,7 +777,7 @@ Wire Wire Line
 Wire Wire Line
 	6850 3200 7025 3200
 $Comp
-L ArduinoEncoderShield_old-rescue:AGND #PWR06
+L Dorababu:AGND #PWR06
 U 1 1 5C3EFA74
 P 8600 1725
 F 0 "#PWR06" H 8600 1725 40  0001 C CNN
@@ -792,7 +791,7 @@ Wire Wire Line
 	8950 1725 8600 1725
 NoConn ~ 1800 2500
 $Comp
-L ArduinoEncoderShield_old-rescue:ARDUINO_SHIELD SHIELD1
+L DoraBabu:ARDUINO_SHIELD SHIELD1
 U 1 1 5C3EFA63
 P 2750 2800
 F 0 "SHIELD1" H 2400 3750 60  0000 C CNN
@@ -855,7 +854,7 @@ Wire Wire Line
 Wire Wire Line
 	6825 1900 6875 1900
 $Comp
-L ArduinoEncoderShield_old-rescue:AGND #PWR0101
+L Dorababu:AGND #PWR0101
 U 1 1 5D23393F
 P 5050 2725
 F 0 "#PWR0101" H 5050 2725 40  0001 C CNN
@@ -866,7 +865,7 @@ F 3 "" H 5050 2725 60  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L ArduinoEncoderShield_old-rescue:AGND #PWR0102
+L Dorababu:AGND #PWR0102
 U 1 1 5D239D97
 P 1450 2750
 F 0 "#PWR0102" H 1450 2750 40  0001 C CNN
