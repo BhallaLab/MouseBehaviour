@@ -1,6 +1,29 @@
 EESchema-LIBRARY Version 2.4
 #encoding utf-8
 #
+# Connector_Generic_Conn_01x04
+#
+DEF Connector_Generic_Conn_01x04 J 0 40 Y N 1 F N
+F0 "J" 0 200 50 H V C CNN
+F1 "Connector_Generic_Conn_01x04" 0 -300 50 H V C CNN
+F2 "" 0 0 50 H I C CNN
+F3 "" 0 0 50 H I C CNN
+$FPLIST
+ Connector*:*_1x??_*
+$ENDFPLIST
+DRAW
+S -50 -195 0 -205 1 1 6 N
+S -50 -95 0 -105 1 1 6 N
+S -50 5 0 -5 1 1 6 N
+S -50 105 0 95 1 1 6 N
+S -50 150 50 -250 1 1 10 f
+X Pin_1 1 -200 100 150 R 50 50 1 1 P
+X Pin_2 2 -200 0 150 R 50 50 1 1 P
+X Pin_3 3 -200 -100 150 R 50 50 1 1 P
+X Pin_4 4 -200 -200 150 R 50 50 1 1 P
+ENDDRAW
+ENDDEF
+#
 # Connector_Generic_Conn_01x06
 #
 DEF Connector_Generic_Conn_01x06 J 0 40 Y N 1 F N
@@ -175,11 +198,11 @@ X ~ 6 300 100 100 L 50 50 1 1 P
 ENDDRAW
 ENDDEF
 #
-# Schematic-rescue_AGND-DoraBabu
+# Schematic-rescue_AGND-DoraBabu-Schematic-rescue
 #
-DEF Schematic-rescue_AGND-DoraBabu #PWR 0 10 Y Y 1 F P
+DEF Schematic-rescue_AGND-DoraBabu-Schematic-rescue #PWR 0 10 Y Y 1 F P
 F0 "#PWR" 0 0 40 H I C CNN
-F1 "Schematic-rescue_AGND-DoraBabu" 0 -70 50 H V C CNN
+F1 "Schematic-rescue_AGND-DoraBabu-Schematic-rescue" 0 -70 50 H V C CNN
 F2 "" 0 0 60 H V C CNN
 F3 "" 0 0 60 H V C CNN
 DRAW
@@ -188,11 +211,11 @@ X AGND 1 0 0 0 U 40 40 1 1 W N
 ENDDRAW
 ENDDEF
 #
-# Schematic-rescue_ARDUINO_SHIELD-DoraBabu
+# Schematic-rescue_ARDUINO_SHIELD-DoraBabu-Schematic-rescue
 #
-DEF Schematic-rescue_ARDUINO_SHIELD-DoraBabu SHIELD 0 40 Y Y 1 F N
+DEF Schematic-rescue_ARDUINO_SHIELD-DoraBabu-Schematic-rescue SHIELD 0 40 Y Y 1 F N
 F0 "SHIELD" -350 950 60 H V C CNN
-F1 "Schematic-rescue_ARDUINO_SHIELD-DoraBabu" 50 -950 60 H V C CNN
+F1 "Schematic-rescue_ARDUINO_SHIELD-DoraBabu-Schematic-rescue" 50 -950 60 H V C CNN
 F2 "" 0 0 60 H V C CNN
 F3 "" 0 0 60 H V C CNN
 DRAW
@@ -228,63 +251,11 @@ X V_IN V_IN -950 -100 300 R 50 50 1 1 W
 ENDDRAW
 ENDDEF
 #
-# Schematic-rescue_CONN_2-DoraBabu
+# Schematic-rescue_DIODE-DoraBabu-Schematic-rescue
 #
-DEF Schematic-rescue_CONN_2-DoraBabu P 0 40 Y N 1 F N
-F0 "P" -50 0 40 V V C CNN
-F1 "Schematic-rescue_CONN_2-DoraBabu" 50 0 40 V V C CNN
-F2 "" 0 0 60 H V C CNN
-F3 "" 0 0 60 H V C CNN
-DRAW
-S -100 150 100 -150 0 1 0 N
-X P1 1 -350 100 250 R 60 60 1 1 P I
-X PM 2 -350 -100 250 R 60 60 1 1 P I
-ENDDRAW
-ENDDEF
-#
-# Schematic-rescue_CONN_6-DoraBabu
-#
-DEF Schematic-rescue_CONN_6-DoraBabu P 0 30 Y N 1 F N
-F0 "P" -50 0 60 V V C CNN
-F1 "Schematic-rescue_CONN_6-DoraBabu" 50 0 60 V V C CNN
-F2 "" 0 0 60 H V C CNN
-F3 "" 0 0 60 H V C CNN
-DRAW
-S -100 300 100 -300 0 1 0 N
-X 1 1 -350 250 250 R 60 60 1 1 P I
-X 2 2 -350 150 250 R 60 60 1 1 P I
-X 3 3 -350 50 250 R 60 60 1 1 P I
-X 4 4 -350 -50 250 R 60 60 1 1 P I
-X 5 5 -350 -150 250 R 60 60 1 1 P I
-X 6 6 -350 -250 250 R 60 60 1 1 P I
-ENDDRAW
-ENDDEF
-#
-# Schematic-rescue_CONN_8-DoraBabu
-#
-DEF Schematic-rescue_CONN_8-DoraBabu P 0 40 Y N 1 F N
-F0 "P" -50 0 60 V V C CNN
-F1 "Schematic-rescue_CONN_8-DoraBabu" 50 0 60 V V C CNN
-F2 "" 0 0 60 H V C CNN
-F3 "" 0 0 60 H V C CNN
-DRAW
-S -100 400 100 -400 0 1 0 N
-X P1 1 -350 350 250 R 50 50 1 1 P I
-X P2 2 -350 250 250 R 50 50 1 1 P I
-X P3 3 -350 150 250 R 50 50 1 1 P I
-X P4 4 -350 50 250 R 50 50 1 1 P I
-X P5 5 -350 -50 250 R 50 50 1 1 P I
-X P6 6 -350 -150 250 R 50 50 1 1 P I
-X P7 7 -350 -250 250 R 50 50 1 1 P I
-X P8 8 -350 -350 250 R 50 50 1 1 P I
-ENDDRAW
-ENDDEF
-#
-# Schematic-rescue_DIODE-DoraBabu
-#
-DEF Schematic-rescue_DIODE-DoraBabu D 0 40 N N 1 F N
+DEF Schematic-rescue_DIODE-DoraBabu-Schematic-rescue D 0 40 N N 1 F N
 F0 "D" 0 100 40 H V C CNN
-F1 "Schematic-rescue_DIODE-DoraBabu" 0 -100 40 H V C CNN
+F1 "Schematic-rescue_DIODE-DoraBabu-Schematic-rescue" 0 -100 40 H V C CNN
 F2 "" 0 0 60 H V C CNN
 F3 "" 0 0 60 H V C CNN
 $FPLIST
@@ -299,11 +270,11 @@ X K 2 200 0 150 L 40 40 1 1 P
 ENDDRAW
 ENDDEF
 #
-# Schematic-rescue_HDR-1X15-15-91-?-DoraBabu
+# Schematic-rescue_HDR-1X15-15-91-?-DoraBabu-Schematic-rescue
 #
-DEF Schematic-rescue_HDR-1X15-15-91-?-DoraBabu CN 0 40 Y Y 1 L N
+DEF Schematic-rescue_HDR-1X15-15-91-?-DoraBabu-Schematic-rescue CN 0 40 Y Y 1 L N
 F0 "CN" -75 800 50 H V L BNN
-F1 "Schematic-rescue_HDR-1X15-15-91-?-DoraBabu" -75 -862 50 H V L BNN
+F1 "Schematic-rescue_HDR-1X15-15-91-?-DoraBabu-Schematic-rescue" -75 -862 50 H V L BNN
 F2 "con-hdrs40-15-91-15" 0 150 50 H I C CNN
 F3 "" 0 0 60 H V C CNN
 DRAW
@@ -359,11 +330,11 @@ X 9 9 -200 -100 100 R 40 40 1 1 P
 ENDDRAW
 ENDDEF
 #
-# Schematic-rescue_R-DoraBabu
+# Schematic-rescue_R-DoraBabu-Schematic-rescue
 #
-DEF Schematic-rescue_R-DoraBabu R 0 0 N Y 1 F N
+DEF Schematic-rescue_R-DoraBabu-Schematic-rescue R 0 0 N Y 1 F N
 F0 "R" 80 0 40 V V C CNN
-F1 "Schematic-rescue_R-DoraBabu" 7 1 40 V V C CNN
+F1 "Schematic-rescue_R-DoraBabu-Schematic-rescue" 7 1 40 V V C CNN
 F2 "" -70 0 30 V V C CNN
 F3 "" 0 0 30 H V C CNN
 $FPLIST
@@ -380,11 +351,11 @@ X ~ 2 0 -250 100 U 60 60 1 1 P
 ENDDRAW
 ENDDEF
 #
-# Schematic-rescue_ULN2003A-DoraBabu
+# Schematic-rescue_ULN2003A-DoraBabu-Schematic-rescue
 #
-DEF Schematic-rescue_ULN2003A-DoraBabu U 0 40 Y Y 1 F N
+DEF Schematic-rescue_ULN2003A-DoraBabu-Schematic-rescue U 0 40 Y Y 1 F N
 F0 "U" 0 100 70 H V C CNN
-F1 "Schematic-rescue_ULN2003A-DoraBabu" 0 -100 70 H V C CNN
+F1 "Schematic-rescue_ULN2003A-DoraBabu-Schematic-rescue" 0 -100 70 H V C CNN
 F2 "" 0 0 60 H V C CNN
 F3 "" 0 0 60 H V C CNN
 DRAW
