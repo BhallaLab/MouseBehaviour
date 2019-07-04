@@ -1,157 +1,105 @@
-EESchema Schematic File Version 2
-LIBS:power
-LIBS:device
-LIBS:transistors
-LIBS:conn
-LIBS:linear
-LIBS:regul
-LIBS:74xx
-LIBS:cmos4000
-LIBS:adc-dac
-LIBS:memory
-LIBS:xilinx
-LIBS:special
-LIBS:microcontrollers
-LIBS:dsp
-LIBS:microchip
-LIBS:analog_switches
-LIBS:motorola
-LIBS:texas
-LIBS:intel
-LIBS:audio
-LIBS:interface
-LIBS:digital-audio
-LIBS:philips
-LIBS:display
-LIBS:cypress
-LIBS:siliconi
-LIBS:opto
-LIBS:atmel
-LIBS:contrib
-LIBS:valves
-LIBS:ArduinoEncoderShield_anzal-cache
-EELAYER 27 0
+EESchema Schematic File Version 4
+LIBS:ArduinoEncoderShield_old-cache
+EELAYER 29 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
 Sheet 1 1
-Title ""
-Date "16 jan 2019"
-Rev ""
-Comp ""
-Comment1 ""
+Title "MouseBehaviour"
+Date "2019-07-04"
+Rev "2.0.0"
+Comp "BhallaLab, NCBS Bangalore"
+Comment1 "Dorababu and Dilawar Singh"
 Comment2 ""
 Comment3 ""
 Comment4 ""
 $EndDescr
 $Comp
-L ARDUINO_SHIELD SHIELD1
-U 1 1 5C3EFA63
-P 2750 2800
-F 0 "SHIELD1" H 2400 3750 60  0000 C CNN
-F 1 "ARDUINO_SHIELD" H 2800 1850 60  0000 C CNN
-F 2 "" H 2750 2800 60  0000 C CNN
-F 3 "" H 2750 2800 60  0000 C CNN
-	1    2750 2800
-	1    0    0    -1  
-$EndComp
-$Comp
-L 4N25 IC1
+L Isolator:4N35 IC2
 U 1 1 5C3EFA70
-P 5750 1500
-F 0 "IC1" H 5536 1679 40  0000 C CNN
-F 1 "4N25" H 5930 1315 40  0000 C CNN
-F 2 "DIP6" H 5551 1320 29  0000 C CNN
-F 3 "" H 5750 1500 60  0000 C CNN
-	1    5750 1500
+P 7175 800
+F 0 "IC2" H 6961 979 40  0000 C CNN
+F 1 "4N35" H 7355 615 40  0000 C CNN
+F 2 "Package_DIP:DIP-6_W7.62mm_Socket" H 6976 620 29  0001 C CNN
+F 3 "" H 7175 800 60  0001 C CNN
+	1    7175 800 
 	1    0    0    -1  
 $EndComp
 $Comp
-L ULN2003A U1
+L ArduinoEncoderShield_old-rescue:ULN2003A U1
 U 1 1 5C3EFA71
-P 8800 1900
-F 0 "U1" H 8800 2000 70  0000 C CNN
-F 1 "ULN2003A" H 8800 1800 70  0000 C CNN
-F 2 "" H 8800 1900 60  0000 C CNN
-F 3 "" H 8800 1900 60  0000 C CNN
-	1    8800 1900
+P 9300 1225
+F 0 "U1" H 9300 1325 70  0000 C CNN
+F 1 "ULN2003A" H 9300 1125 70  0000 C CNN
+F 2 "Package_DIP:DIP-16_W7.62mm_Socket" H 9300 1225 60  0001 C CNN
+F 3 "" H 9300 1225 60  0001 C CNN
+	1    9300 1225
 	1    0    0    -1  
 $EndComp
 $Comp
-L DIODE D1
+L ArduinoEncoderShield_old-rescue:DIODE D1
 U 1 1 5C3EFA72
-P 9800 2300
-F 0 "D1" H 9800 2400 40  0000 C CNN
-F 1 "DIODE" H 9800 2200 40  0000 C CNN
-F 2 "~" H 9800 2300 60  0000 C CNN
-F 3 "~" H 9800 2300 60  0000 C CNN
-	1    9800 2300
+P 10300 1625
+F 0 "D1" H 10300 1725 40  0000 C CNN
+F 1 "DIODE" H 10300 1525 40  0000 C CNN
+F 2 "Diode_THT:D_5KP_P12.70mm_Horizontal" H 10300 1625 60  0001 C CNN
+F 3 "~" H 10300 1625 60  0000 C CNN
+	1    10300 1625
 	-1   0    0    1   
 $EndComp
 $Comp
-L AGND #PWR01
-U 1 1 5C3EFA74
-P 8450 2550
-F 0 "#PWR01" H 8450 2550 40  0001 C CNN
-F 1 "AGND" H 8450 2480 50  0000 C CNN
-F 2 "" H 8450 2550 60  0000 C CNN
-F 3 "" H 8450 2550 60  0000 C CNN
-	1    8450 2550
-	1    0    0    -1  
-$EndComp
-$Comp
-L 4N25 IC2
+L Isolator:4N35 IC3
 U 1 1 5C3EFA75
-P 5850 2750
-F 0 "IC2" H 5636 2929 40  0000 C CNN
-F 1 "4N25" H 6030 2565 40  0000 C CNN
-F 2 "DIP6" H 5651 2570 29  0000 C CNN
-F 3 "" H 5850 2750 60  0000 C CNN
-	1    5850 2750
+P 7175 1800
+F 0 "IC3" H 6961 1979 40  0000 C CNN
+F 1 "4N35" H 7355 1615 40  0000 C CNN
+F 2 "Package_DIP:DIP-6_W7.62mm_Socket" H 6976 1620 29  0001 C CNN
+F 3 "" H 7175 1800 60  0001 C CNN
+	1    7175 1800
 	1    0    0    -1  
 $EndComp
 $Comp
-L R R4
+L ArduinoEncoderShield_old-rescue:R R8
 U 1 1 5C3EFA76
-P 6250 3150
-F 0 "R4" V 6330 3150 40  0000 C CNN
-F 1 "15k" V 6257 3151 40  0000 C CNN
-F 2 "~" V 6180 3150 30  0000 C CNN
-F 3 "~" H 6250 3150 30  0000 C CNN
-	1    6250 3150
+P 7575 2200
+F 0 "R8" V 7655 2200 40  0000 C CNN
+F 1 "15k" V 7582 2201 40  0000 C CNN
+F 2 "Resistor_SMD:R_0805_2012Metric_Pad1.15x1.40mm_HandSolder" V 7505 2200 30  0001 C CNN
+F 3 "~" H 7575 2200 30  0001 C CNN
+	1    7575 2200
 	1    0    0    -1  
 $EndComp
 $Comp
-L R R3
+L ArduinoEncoderShield_old-rescue:R R6
 U 1 1 5C3EFA82
-P 5250 2650
-F 0 "R3" V 5330 2650 40  0000 C CNN
-F 1 "470E" V 5257 2651 40  0000 C CNN
-F 2 "~" V 5180 2650 30  0000 C CNN
-F 3 "~" H 5250 2650 30  0000 C CNN
-	1    5250 2650
+P 6575 1700
+F 0 "R6" V 6655 1700 40  0000 C CNN
+F 1 "470E" V 6582 1701 40  0000 C CNN
+F 2 "Resistor_SMD:R_0805_2012Metric_Pad1.15x1.40mm_HandSolder" V 6505 1700 30  0000 C CNN
+F 3 "~" H 6575 1700 30  0000 C CNN
+	1    6575 1700
 	0    -1   -1   0   
 $EndComp
 $Comp
-L R R1
+L ArduinoEncoderShield_old-rescue:R R5
 U 1 1 5C3EFA83
-P 5150 1400
-F 0 "R1" V 5050 1400 40  0000 C CNN
-F 1 "470E" V 5157 1401 40  0000 C CNN
-F 2 "~" V 5080 1400 30  0000 C CNN
-F 3 "~" H 5150 1400 30  0000 C CNN
-	1    5150 1400
+P 6575 700
+F 0 "R5" V 6475 700 40  0000 C CNN
+F 1 "470E" V 6582 701 40  0000 C CNN
+F 2 "Resistor_SMD:R_0805_2012Metric_Pad1.15x1.40mm_HandSolder" V 6505 700 30  0000 C CNN
+F 3 "~" H 6575 700 30  0000 C CNN
+	1    6575 700 
 	0    -1   -1   0   
 $EndComp
 $Comp
-L R R8
+L ArduinoEncoderShield_old-rescue:R R10
 U 1 1 5C3EFA84
-P 7200 4950
-F 0 "R8" V 7280 4950 40  0000 C CNN
-F 1 "560E" V 7207 4951 40  0000 C CNN
-F 2 "~" V 7130 4950 30  0000 C CNN
-F 3 "~" H 7200 4950 30  0000 C CNN
-	1    7200 4950
+P 7925 5425
+F 0 "R10" V 8005 5425 40  0000 C CNN
+F 1 "560E" V 7932 5426 40  0000 C CNN
+F 2 "Resistor_SMD:R_0805_2012Metric_Pad1.15x1.40mm_HandSolder" V 7855 5425 30  0001 C CNN
+F 3 "~" H 7925 5425 30  0001 C CNN
+	1    7925 5425
 	0    -1   -1   0   
 $EndComp
 Text GLabel 1850 5200 2    60   Input ~ 0
@@ -168,183 +116,159 @@ Text GLabel 1850 5700 2    60   Input ~ 0
 Solenoid2_1
 Text GLabel 1850 5800 2    60   Input ~ 0
 Solenoid2_2
-Text GLabel 6100 1500 2    60   Input ~ 0
+Text GLabel 7525 800  2    60   Input ~ 0
 EX 5 V
-Text GLabel 10250 2300 2    60   Input ~ 0
+Text GLabel 10750 1625 2    60   Input ~ 0
 12 V
 $Comp
-L CONN_8 P10
+L ArduinoEncoderShield_old-rescue:CONN_8 P8
 U 1 1 5C3EFA87
-P 4050 4800
-F 0 "P10" V 4000 4800 60  0000 C CNN
-F 1 "CONN_8" V 4100 4800 60  0000 C CNN
-F 2 "" H 4050 4800 60  0000 C CNN
-F 3 "" H 4050 4800 60  0000 C CNN
-	1    4050 4800
+P 3475 5100
+F 0 "P8" V 3425 5100 60  0000 C CNN
+F 1 "CONN_8" V 3525 5100 60  0000 C CNN
+F 2 "Connector_PinHeader_1.27mm:PinHeader_1x08_P1.27mm_Horizontal" H 3475 5100 60  0001 C CNN
+F 3 "" H 3475 5100 60  0000 C CNN
+	1    3475 5100
 	1    0    0    -1  
 $EndComp
 $Comp
-L CONN_6 P6
+L ArduinoEncoderShield_old-rescue:CONN_6 P2
 U 1 1 5C3EFA88
 P 950 1800
-F 0 "P6" V 900 1800 60  0000 C CNN
+F 0 "P2" V 900 1800 60  0000 C CNN
 F 1 "CONN_6" V 1000 1800 60  0000 C CNN
-F 2 "" H 950 1800 60  0000 C CNN
+F 2 "Connector_PinHeader_1.27mm:PinHeader_1x06_P1.27mm_Horizontal" H 950 1800 60  0001 C CNN
 F 3 "" H 950 1800 60  0000 C CNN
 	1    950  1800
 	-1   0    0    1   
 $EndComp
-$Comp
-L CONN_2 P3
-U 1 1 5C3EFA8A
-P 2850 1500
-F 0 "P3" V 2800 1500 40  0000 C CNN
-F 1 "CONN_2" V 2900 1500 40  0000 C CNN
-F 2 "" H 2850 1500 60  0000 C CNN
-F 3 "" H 2850 1500 60  0000 C CNN
-	1    2850 1500
-	1    0    0    -1  
-$EndComp
-Text GLabel 9950 2550 2    60   Input ~ 0
+Text GLabel 10450 1875 2    60   Input ~ 0
 Solenoid1_1
-Text GLabel 9700 1600 2    60   Input ~ 0
+Text GLabel 10200 925  2    60   Input ~ 0
 Solenoid1_2
-Text GLabel 9950 2700 2    60   Input ~ 0
+Text GLabel 10450 2025 2    60   Input ~ 0
 Solenoid2_1
-Text GLabel 9700 1500 2    60   Input ~ 0
+Text GLabel 10200 825  2    60   Input ~ 0
 Solenoid2_2
 $Comp
-L HDR-1X15-15-91-? CN1
+L ArduinoEncoderShield_old-rescue:HDR-1X15-15-91-? CN1
 U 1 1 5C3EFA8D
 P 1650 5500
 F 0 "CN1" H 1575 6300 50  0000 L BNN
-F 1 "HDR-1X15-15-91-?" H 1575 4638 50  0000 L BNN
-F 2 "con-hdrs40-15-91-15" H 1650 5650 50  0001 C CNN
-F 3 "" H 1650 5500 60  0000 C CNN
+F 1 "OutputPad" H 1575 4638 50  0000 L BNN
+F 2 "Connector_PinHeader_2.54mm:PinHeader_1x15_P2.54mm_Horizontal" H 1650 5650 50  0001 C CNN
+F 3 "" H 1650 5500 60  0001 C CNN
 	1    1650 5500
 	-1   0    0    1   
 $EndComp
 $Comp
-L R R9
+L ArduinoEncoderShield_old-rescue:R R12
 U 1 1 5C3EFA8E
-P 9100 4950
-F 0 "R9" V 9180 4950 40  0000 C CNN
-F 1 "560E" V 9107 4951 40  0000 C CNN
-F 2 "~" V 9030 4950 30  0000 C CNN
-F 3 "~" H 9100 4950 30  0000 C CNN
-	1    9100 4950
+P 9825 5425
+F 0 "R12" V 9905 5425 40  0000 C CNN
+F 1 "560E" V 9832 5426 40  0000 C CNN
+F 2 "Resistor_SMD:R_0805_2012Metric_Pad1.15x1.40mm_HandSolder" V 9755 5425 30  0001 C CNN
+F 3 "~" H 9825 5425 30  0001 C CNN
+	1    9825 5425
 	0    -1   -1   0   
 $EndComp
 $Comp
-L 4N25 IC4
+L Isolator:4N35 IC4
 U 1 1 5C3EFA8F
-P 7800 5050
-F 0 "IC4" H 7586 5229 40  0000 C CNN
-F 1 "4N25" H 7980 4865 40  0000 C CNN
-F 2 "DIP6" H 7601 4870 29  0000 C CNN
-F 3 "" H 7800 5050 60  0000 C CNN
-	1    7800 5050
+P 8525 5525
+F 0 "IC4" H 8525 5885 40  0000 C CNN
+F 1 "4N35" H 8525 5809 40  0000 C CNN
+F 2 "Package_DIP:DIP-6_W7.62mm_Socket" H 8525 5742 29  0001 C CNN
+F 3 "" H 8525 5525 60  0001 C CNN
+	1    8525 5525
 	1    0    0    -1  
 $EndComp
 $Comp
-L 4N25 IC5
+L Isolator:4N35 IC5
 U 1 1 5C3EFA90
-P 9700 5050
-F 0 "IC5" H 9486 5229 40  0000 C CNN
-F 1 "4N25" H 9880 4865 40  0000 C CNN
-F 2 "DIP6" H 9501 4870 29  0000 C CNN
-F 3 "" H 9700 5050 60  0000 C CNN
-	1    9700 5050
+P 10425 5525
+F 0 "IC5" H 10211 5704 40  0000 C CNN
+F 1 "4N35" H 10605 5340 40  0000 C CNN
+F 2 "Package_DIP:DIP-6_W7.62mm_Socket" H 10226 5345 29  0001 C CNN
+F 3 "" H 10425 5525 60  0001 C CNN
+	1    10425 5525
 	1    0    0    -1  
 $EndComp
-Text GLabel 8200 5200 2    60   Input ~ 0
+Text GLabel 8925 5675 2    60   Input ~ 0
 Tone1
-Text GLabel 10150 5200 2    60   Input ~ 0
+Text GLabel 10875 5675 2    60   Input ~ 0
 Tone2
 $Comp
-L R R7
+L ArduinoEncoderShield_old-rescue:R R4
 U 1 1 5C3EFA94
-P 5250 4950
-F 0 "R7" V 5330 4950 40  0000 C CNN
-F 1 "560E" V 5257 4951 40  0000 C CNN
-F 2 "~" V 5180 4950 30  0000 C CNN
-F 3 "~" H 5250 4950 30  0000 C CNN
-	1    5250 4950
+P 5975 5425
+F 0 "R4" V 6055 5425 40  0000 C CNN
+F 1 "560E" V 5982 5426 40  0000 C CNN
+F 2 "Resistor_SMD:R_0805_2012Metric_Pad1.15x1.40mm_HandSolder" V 5905 5425 30  0001 C CNN
+F 3 "~" H 5975 5425 30  0001 C CNN
+	1    5975 5425
 	0    -1   -1   0   
 $EndComp
-$Comp
-L 4N25 IC3
-U 1 1 5C3EFA95
-P 5850 5050
-F 0 "IC3" H 5636 5229 40  0000 C CNN
-F 1 "4N25" H 6030 4865 40  0000 C CNN
-F 2 "DIP6" H 5651 4870 29  0000 C CNN
-F 3 "" H 5850 5050 60  0000 C CNN
-	1    5850 5050
-	1    0    0    -1  
-$EndComp
-Text GLabel 6300 5150 2    60   Input ~ 0
+Text GLabel 7025 5625 2    60   Input ~ 0
 Tone3
-Text GLabel 6200 5050 2    60   Input ~ 0
+Text GLabel 6925 5525 2    60   Input ~ 0
 EX 5 V
 $Comp
-L R R10
+L ArduinoEncoderShield_old-rescue:R R7
 U 1 1 5C3EFA96
-P 6250 5450
-F 0 "R10" V 6350 5600 40  0000 C CNN
-F 1 "15k" V 6257 5451 40  0000 C CNN
-F 2 "~" V 6180 5450 30  0000 C CNN
-F 3 "~" H 6250 5450 30  0000 C CNN
-	1    6250 5450
+P 6975 5925
+F 0 "R7" V 7075 6075 40  0000 C CNN
+F 1 "15k" V 6982 5926 40  0000 C CNN
+F 2 "Resistor_SMD:R_0805_2012Metric_Pad1.15x1.40mm_HandSolder" V 6905 5925 30  0001 C CNN
+F 3 "~" H 6975 5925 30  0001 C CNN
+	1    6975 5925
 	-1   0    0    1   
 $EndComp
 Wire Wire Line
-	10000 2300 10250 2300
+	10500 1625 10750 1625
 Wire Wire Line
-	9550 2550 9950 2550
+	10050 1875 10450 1875
 Wire Wire Line
-	9550 2700 9950 2700
+	10050 2025 10450 2025
 Wire Wire Line
-	9450 1600 9700 1600
+	9950 925  10200 925 
 Wire Wire Line
-	9450 1500 9700 1500
+	9950 825  10200 825 
 Wire Wire Line
-	9450 2300 9600 2300
+	9950 1625 10050 1625
 Wire Wire Line
-	9550 2300 9550 2700
-Connection ~ 9550 2300
-Connection ~ 9550 2550
-Wire Wire Line
-	8450 2550 8450 2400
+	10050 1625 10050 1875
+Connection ~ 10050 1625
+Connection ~ 10050 1875
 $Comp
-L R R5
+L ArduinoEncoderShield_old-rescue:R R1
 U 1 1 5C3EFA99
 P 2550 4100
-F 0 "R5" V 2630 4100 40  0000 C CNN
+F 0 "R1" V 2630 4100 40  0000 C CNN
 F 1 "560E" V 2557 4101 40  0000 C CNN
-F 2 "~" V 2480 4100 30  0000 C CNN
-F 3 "~" H 2550 4100 30  0000 C CNN
+F 2 "Resistor_SMD:R_0603_1608Metric_Pad1.05x0.95mm_HandSolder" V 2480 4100 30  0001 C CNN
+F 3 "~" H 2550 4100 30  0001 C CNN
 	1    2550 4100
 	0    -1   -1   0   
 $EndComp
 $Comp
-L R R6
+L ArduinoEncoderShield_old-rescue:R R2
 U 1 1 5C3EFA9A
 P 2550 4300
-F 0 "R6" V 2630 4300 40  0000 C CNN
+F 0 "R2" V 2630 4300 40  0000 C CNN
 F 1 "560E" V 2557 4301 40  0000 C CNN
-F 2 "~" V 2480 4300 30  0000 C CNN
-F 3 "~" H 2550 4300 30  0000 C CNN
+F 2 "Resistor_SMD:R_0603_1608Metric_Pad1.05x0.95mm_HandSolder" V 2480 4300 30  0001 C CNN
+F 3 "~" H 2550 4300 30  0001 C CNN
 	1    2550 4300
 	0    -1   -1   0   
 $EndComp
 $Comp
-L CONN_2 P9
+L ArduinoEncoderShield_old-rescue:CONN_2 P7
 U 1 1 5C3EFA9B
 P 3200 4200
-F 0 "P9" V 3150 4200 40  0000 C CNN
+F 0 "P7" V 3150 4200 40  0000 C CNN
 F 1 "CONN_2" V 3250 4200 40  0000 C CNN
-F 2 "" H 3200 4200 60  0000 C CNN
+F 2 "" H 3200 4200 60  0001 C CNN
 F 3 "" H 3200 4200 60  0000 C CNN
 	1    3200 4200
 	1    0    0    -1  
@@ -361,21 +285,21 @@ Text GLabel 2250 4300 0    60   Input ~ 0
 D3
 Wire Wire Line
 	2300 4300 2250 4300
-Text GLabel 3700 5150 0    60   Input ~ 0
+Text GLabel 3125 5450 0    60   Input ~ 0
 D0
-Text GLabel 3700 5050 0    60   Input ~ 0
+Text GLabel 3125 5350 0    60   Input ~ 0
 D1
-Text GLabel 3700 4950 0    60   Input ~ 0
+Text GLabel 3125 5250 0    60   Input ~ 0
 D2
-Text GLabel 3700 4850 0    60   Input ~ 0
+Text GLabel 3125 5150 0    60   Input ~ 0
 D3
-Text GLabel 3700 4750 0    60   Input ~ 0
+Text GLabel 3125 5050 0    60   Input ~ 0
 D4
-Text GLabel 3700 4650 0    60   Input ~ 0
+Text GLabel 3125 4950 0    60   Input ~ 0
 D5
-Text GLabel 3700 4550 0    60   Input ~ 0
+Text GLabel 3125 4850 0    60   Input ~ 0
 D6
-Text GLabel 3700 4450 0    60   Input ~ 0
+Text GLabel 3125 4750 0    60   Input ~ 0
 D7
 Text GLabel 3700 3600 2    60   Input ~ 0
 D0
@@ -393,41 +317,39 @@ Text GLabel 3700 3000 2    60   Input ~ 0
 D6
 Text GLabel 3700 2900 2    60   Input ~ 0
 D7
-Text GLabel 6950 4950 0    60   Input ~ 0
+Text GLabel 7675 5425 0    60   Input ~ 0
 D9
-Text GLabel 8850 4950 0    60   Input ~ 0
+Text GLabel 9575 5425 0    60   Input ~ 0
 D8
-Text GLabel 3700 6150 0    60   Input ~ 0
+Text GLabel 3125 6450 0    60   Input ~ 0
 D8
-Text GLabel 3700 6050 0    60   Input ~ 0
+Text GLabel 3125 6350 0    60   Input ~ 0
 D9
-Text GLabel 3700 5950 0    60   Input ~ 0
+Text GLabel 3125 6250 0    60   Input ~ 0
 D10
-Text GLabel 3700 5850 0    60   Input ~ 0
+Text GLabel 3125 6150 0    60   Input ~ 0
 D11
-Text GLabel 3700 5750 0    60   Input ~ 0
+Text GLabel 3125 6050 0    60   Input ~ 0
 D12
-Text GLabel 3700 5650 0    60   Input ~ 0
+Text GLabel 3125 5950 0    60   Input ~ 0
 D13
-Text GLabel 3700 5550 0    60   Input ~ 0
+Text GLabel 3125 5850 0    60   Input ~ 0
 DGND
-Text GLabel 3700 5450 0    60   Input ~ 0
-AREF
-Text GLabel 5000 4950 0    60   Input ~ 0
+Text GLabel 5725 5425 0    60   Input ~ 0
 D13
-Text GLabel 5000 2650 0    60   Input ~ 0
+Text GLabel 6325 1700 0    60   Input ~ 0
 D12
-Text GLabel 4900 1400 0    60   Input ~ 0
+Text GLabel 6325 700  0    60   Input ~ 0
 D11
 $Comp
-L CONN_8 P11
+L ArduinoEncoderShield_old-rescue:CONN_8 P9
 U 1 1 5C3EFD0C
-P 4050 5800
-F 0 "P11" V 4000 5800 60  0000 C CNN
-F 1 "CONN_8" V 4100 5800 60  0000 C CNN
-F 2 "" H 4050 5800 60  0000 C CNN
-F 3 "" H 4050 5800 60  0000 C CNN
-	1    4050 5800
+P 3475 6100
+F 0 "P9" V 3425 6100 60  0000 C CNN
+F 1 "CONN_8" V 3525 6100 60  0000 C CNN
+F 2 "Connector_PinHeader_1.27mm:PinHeader_1x08_P1.27mm_Horizontal" H 3475 6100 60  0001 C CNN
+F 3 "" H 3475 6100 60  0000 C CNN
+	1    3475 6100
 	1    0    0    -1  
 $EndComp
 Text GLabel 3700 2700 2    60   Input ~ 0
@@ -442,91 +364,38 @@ Text GLabel 3700 2300 2    60   Input ~ 0
 D12
 Text GLabel 3700 2200 2    60   Input ~ 0
 D13
-Text GLabel 3700 2100 2    60   Input ~ 0
+Text GLabel 6825 1900 0    60   Input ~ 0
 DGND
-Text GLabel 3700 2000 2    60   Input ~ 0
-AREF
-Text GLabel 5500 2850 0    60   Input ~ 0
+Text GLabel 6825 900  0    60   Input ~ 0
 DGND
-Text GLabel 5400 1600 0    60   Input ~ 0
-DGND
-$Comp
-L CONN_2 P5
-U 1 1 5C3F0699
-P 3850 1500
-F 0 "P5" V 3800 1500 40  0000 C CNN
-F 1 "CONN_2" V 3900 1500 40  0000 C CNN
-F 2 "" H 3850 1500 60  0000 C CNN
-F 3 "" H 3850 1500 60  0000 C CNN
-	1    3850 1500
-	1    0    0    -1  
-$EndComp
-$Comp
-L CONN_2 P4
-U 1 1 5C3F069F
-P 3150 1500
-F 0 "P4" V 3100 1500 40  0000 C CNN
-F 1 "CONN_2" V 3200 1500 40  0000 C CNN
-F 2 "" H 3150 1500 60  0000 C CNN
-F 3 "" H 3150 1500 60  0000 C CNN
-	1    3150 1500
-	-1   0    0    -1  
-$EndComp
-Text GLabel 5500 5150 0    60   Input ~ 0
+Text GLabel 6225 5625 0    60   Input ~ 0
 DGND
 Wire Wire Line
-	6250 5150 6250 5200
-Connection ~ 6250 5150
+	6975 5625 6975 5675
+Connection ~ 6975 5625
 $Comp
-L CONN_6 P1
+L ArduinoEncoderShield_old-rescue:CONN_6 P1
 U 1 1 5C3F096C
 P 950 1100
 F 0 "P1" V 900 1100 60  0000 C CNN
 F 1 "CONN_6" V 1000 1100 60  0000 C CNN
-F 2 "" H 950 1100 60  0000 C CNN
+F 2 "Connector_PinHeader_1.27mm:PinHeader_1x06_P1.27mm_Horizontal" H 950 1100 60  0001 C CNN
 F 3 "" H 950 1100 60  0000 C CNN
 	1    950  1100
 	-1   0    0    1   
 $EndComp
-$Comp
-L CONN_2 P2
-U 1 1 5C3F0972
-P 2100 1500
-F 0 "P2" V 2050 1500 40  0000 C CNN
-F 1 "CONN_2" V 2150 1500 40  0000 C CNN
-F 2 "" H 2100 1500 60  0000 C CNN
-F 3 "" H 2100 1500 60  0000 C CNN
-	1    2100 1500
-	-1   0    0    -1  
-$EndComp
-Wire Wire Line
-	2450 1400 2500 1400
-Wire Wire Line
-	2500 1600 2450 1600
 Text GLabel 1300 850  2    60   Input ~ 0
 RST
-Text GLabel 1300 950  2    60   Input ~ 0
-3V3
 Text GLabel 1300 1050 2    60   Input ~ 0
 5V
 Text GLabel 1300 1150 2    60   Input ~ 0
 DGND
 Text GLabel 1300 1250 2    60   Input ~ 0
 DGND
-Text GLabel 1300 1350 2    60   Input ~ 0
-V_IN
 Text GLabel 1800 2400 0    60   Input ~ 0
 RST
-Text GLabel 1800 2500 0    60   Input ~ 0
-3V3
 Text GLabel 1800 2600 0    60   Input ~ 0
 5V
-Text GLabel 1800 2700 0    60   Input ~ 0
-DGND
-Text GLabel 1800 2800 0    60   Input ~ 0
-DGND
-Text GLabel 1800 2900 0    60   Input ~ 0
-V_IN
 Text GLabel 1300 1550 2    60   Input ~ 0
 A0
 Text GLabel 1300 1650 2    60   Input ~ 0
@@ -551,70 +420,70 @@ Text GLabel 1800 3500 0    60   Input ~ 0
 A4
 Text GLabel 1800 3600 0    60   Input ~ 0
 A5
-Text GLabel 8150 5050 2    60   Input ~ 0
+Text GLabel 8875 5525 2    60   Input ~ 0
 EX 5 V
-Text GLabel 10050 5050 2    60   Input ~ 0
+Text GLabel 10775 5525 2    60   Input ~ 0
 EX 5 V
 $Comp
-L R R11
+L ArduinoEncoderShield_old-rescue:R R11
 U 1 1 5C3F0A84
-P 8150 5500
-F 0 "R11" V 8230 5500 40  0000 C CNN
-F 1 "15k" V 8157 5501 40  0000 C CNN
-F 2 "~" V 8080 5500 30  0000 C CNN
-F 3 "~" H 8150 5500 30  0000 C CNN
-	1    8150 5500
+P 8875 5975
+F 0 "R11" V 8955 5975 40  0000 C CNN
+F 1 "15k" V 8882 5976 40  0000 C CNN
+F 2 "Resistor_SMD:R_0805_2012Metric_Pad1.15x1.40mm_HandSolder" V 8805 5975 30  0001 C CNN
+F 3 "~" H 8875 5975 30  0001 C CNN
+	1    8875 5975
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	8150 5250 8150 5150
+	8875 5725 8875 5675
 $Comp
-L AGND #PWR02
+L ArduinoEncoderShield_old-rescue:AGND #PWR05
 U 1 1 5C3F0AE2
-P 8150 5850
-F 0 "#PWR02" H 8150 5850 40  0001 C CNN
-F 1 "AGND" H 8150 5780 50  0000 C CNN
-F 2 "" H 8150 5850 60  0000 C CNN
-F 3 "" H 8150 5850 60  0000 C CNN
-	1    8150 5850
+P 8875 6325
+F 0 "#PWR05" H 8875 6325 40  0001 C CNN
+F 1 "AGND" H 8875 6255 50  0000 C CNN
+F 2 "" H 8875 6325 60  0000 C CNN
+F 3 "" H 8875 6325 60  0000 C CNN
+	1    8875 6325
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	8150 5850 8150 5750
+	8875 6325 8875 6225
 Wire Wire Line
-	8200 5200 8150 5200
-Connection ~ 8150 5200
-Text GLabel 7450 5150 0    60   Input ~ 0
+	8925 5675 8875 5675
+Connection ~ 8875 5675
+Text GLabel 8175 5625 0    60   Input ~ 0
 DGND
 $Comp
-L R R12
+L ArduinoEncoderShield_old-rescue:R R13
 U 1 1 5C3F0BA2
-P 10050 5500
-F 0 "R12" V 10130 5500 40  0000 C CNN
-F 1 "15k" V 10057 5501 40  0000 C CNN
-F 2 "~" V 9980 5500 30  0000 C CNN
-F 3 "~" H 10050 5500 30  0000 C CNN
-	1    10050 5500
+P 10775 5975
+F 0 "R13" V 10855 5975 40  0000 C CNN
+F 1 "15k" V 10782 5976 40  0000 C CNN
+F 2 "Resistor_SMD:R_0805_2012Metric_Pad1.15x1.40mm_HandSolder" V 10705 5975 30  0001 C CNN
+F 3 "~" H 10775 5975 30  0001 C CNN
+	1    10775 5975
 	1    0    0    -1  
 $EndComp
 $Comp
-L AGND #PWR03
+L ArduinoEncoderShield_old-rescue:AGND #PWR07
 U 1 1 5C3F0BA8
-P 10050 5850
-F 0 "#PWR03" H 10050 5850 40  0001 C CNN
-F 1 "AGND" H 10050 5780 50  0000 C CNN
-F 2 "" H 10050 5850 60  0000 C CNN
-F 3 "" H 10050 5850 60  0000 C CNN
-	1    10050 5850
+P 10775 6325
+F 0 "#PWR07" H 10775 6325 40  0001 C CNN
+F 1 "AGND" H 10775 6255 50  0000 C CNN
+F 2 "" H 10775 6325 60  0000 C CNN
+F 3 "" H 10775 6325 60  0000 C CNN
+	1    10775 6325
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	10050 5850 10050 5750
+	10775 6325 10775 6225
 Wire Wire Line
-	10050 5250 10050 5150
+	10775 5725 10775 5675
 Wire Wire Line
-	10050 5200 10150 5200
-Connection ~ 10050 5200
+	10775 5675 10875 5675
+Connection ~ 10775 5675
 Text GLabel 1850 4800 2    60   Input ~ 0
 Tone1
 Text GLabel 1850 4900 2    60   Input ~ 0
@@ -623,32 +492,30 @@ Text GLabel 1850 5000 2    60   Input ~ 0
 Tone2
 Text GLabel 1850 5100 2    60   Input ~ 0
 AGND
-Wire Wire Line
-	6200 5150 6300 5150
 $Comp
-L AGND #PWR04
+L ArduinoEncoderShield_old-rescue:AGND #PWR02
 U 1 1 5C3F0CE1
-P 6250 5750
-F 0 "#PWR04" H 6250 5750 40  0001 C CNN
-F 1 "AGND" H 6250 5680 50  0000 C CNN
-F 2 "" H 6250 5750 60  0000 C CNN
-F 3 "" H 6250 5750 60  0000 C CNN
-	1    6250 5750
+P 6975 6225
+F 0 "#PWR02" H 6975 6225 40  0001 C CNN
+F 1 "AGND" H 6975 6155 50  0000 C CNN
+F 2 "" H 6975 6225 60  0000 C CNN
+F 3 "" H 6975 6225 60  0000 C CNN
+	1    6975 6225
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	6250 5750 6250 5700
+	6975 6225 6975 6175
 Text GLabel 1850 6100 2    60   Input ~ 0
 Tone3
 Text GLabel 1850 6200 2    60   Input ~ 0
 AGND
 $Comp
-L CONN_2 P12
+L ArduinoEncoderShield_old-rescue:CONN_2 P4
 U 1 1 5C3F0D30
 P 2300 6700
-F 0 "P12" V 2250 6700 40  0000 C CNN
+F 0 "P4" V 2250 6700 40  0000 C CNN
 F 1 "CONN_2" V 2350 6700 40  0000 C CNN
-F 2 "" H 2300 6700 60  0000 C CNN
+F 2 "Connector_PinHeader_1.27mm:PinHeader_1x02_P1.27mm_Vertical" H 2300 6700 60  0001 C CNN
 F 3 "" H 2300 6700 60  0000 C CNN
 	1    2300 6700
 	1    0    0    -1  
@@ -662,62 +529,378 @@ Spare1
 Text GLabel 1850 6000 2    60   Input ~ 0
 Spare2
 $Comp
-L R R2
+L ArduinoEncoderShield_old-rescue:R R9
 U 1 1 5C3EFA73
-P 6200 1900
-F 0 "R2" V 6280 1900 40  0000 C CNN
-F 1 "15k" V 6207 1901 40  0000 C CNN
-F 2 "~" V 6130 1900 30  0000 C CNN
-F 3 "~" H 6200 1900 30  0000 C CNN
-	1    6200 1900
+P 7625 1200
+F 0 "R9" V 7705 1200 40  0000 C CNN
+F 1 "15k" V 7632 1201 40  0000 C CNN
+F 2 "Resistor_SMD:R_0805_2012Metric_Pad1.15x1.40mm_HandSolder" V 7555 1200 30  0001 C CNN
+F 3 "~" H 7625 1200 30  0001 C CNN
+	1    7625 1200
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	6100 1600 6250 1600
-Wire Wire Line
-	6200 1600 6200 1650
-Text GLabel 6250 1600 2    60   Input ~ 0
+	7625 900  7625 950 
+Text GLabel 7675 900  2    60   Input ~ 0
 ULN_IN1
-Connection ~ 6200 1600
-Text GLabel 8150 1500 0    60   Input ~ 0
+Connection ~ 7625 900 
+Text GLabel 8650 825  0    60   Input ~ 0
 ULN_IN1
-Text GLabel 6200 2750 2    60   Input ~ 0
+Text GLabel 7525 1800 2    60   Input ~ 0
 EX 5 V
-Text GLabel 6300 2850 2    60   Input ~ 0
+Text GLabel 7625 1900 2    60   Input ~ 0
 ULN_IN2
 Wire Wire Line
-	6300 2850 6200 2850
+	7625 1900 7575 1900
 Wire Wire Line
-	6250 2850 6250 2900
-Connection ~ 6250 2850
+	7575 1900 7575 1950
 $Comp
-L AGND #PWR05
+L ArduinoEncoderShield_old-rescue:AGND #PWR04
 U 1 1 5C3F0E1A
-P 6200 2150
-F 0 "#PWR05" H 6200 2150 40  0001 C CNN
-F 1 "AGND" H 6200 2080 50  0000 C CNN
-F 2 "" H 6200 2150 60  0000 C CNN
-F 3 "" H 6200 2150 60  0000 C CNN
-	1    6200 2150
+P 7625 1450
+F 0 "#PWR04" H 7625 1450 40  0001 C CNN
+F 1 "AGND" H 7625 1380 50  0000 C CNN
+F 2 "" H 7625 1450 60  0000 C CNN
+F 3 "" H 7625 1450 60  0000 C CNN
+	1    7625 1450
 	1    0    0    -1  
 $EndComp
 $Comp
-L AGND #PWR06
+L ArduinoEncoderShield_old-rescue:AGND #PWR03
 U 1 1 5C3F0E20
-P 6250 3400
-F 0 "#PWR06" H 6250 3400 40  0001 C CNN
-F 1 "AGND" H 6250 3330 50  0000 C CNN
-F 2 "" H 6250 3400 60  0000 C CNN
-F 3 "" H 6250 3400 60  0000 C CNN
-	1    6250 3400
+P 7575 2450
+F 0 "#PWR03" H 7575 2450 40  0001 C CNN
+F 1 "AGND" H 7575 2380 50  0000 C CNN
+F 2 "" H 7575 2450 60  0000 C CNN
+F 3 "" H 7575 2450 60  0000 C CNN
+	1    7575 2450
 	1    0    0    -1  
 $EndComp
-Text GLabel 8150 1600 0    60   Input ~ 0
+Text GLabel 8650 925  0    60   Input ~ 0
 ULN_IN2
-Text Notes 7350 4600 0    60   ~ 0
+Text Notes 8075 5075 0    60   ~ 0
 ToneDrivers\n
-Text Notes 7200 1150 0    60   ~ 0
+Text Notes 8250 650  0    60   ~ 0
 SolenoidDrivers\n
-Text GLabel 9350 5150 0    60   Input ~ 0
+Text GLabel 10075 5625 0    60   Input ~ 0
 DGND
+Wire Wire Line
+	10050 1625 10100 1625
+Wire Wire Line
+	10050 1875 10050 2025
+Wire Wire Line
+	6975 5625 7025 5625
+Wire Wire Line
+	8875 5675 8875 5625
+Wire Wire Line
+	10775 5675 10775 5625
+Wire Wire Line
+	7625 900  7675 900 
+$Comp
+L Device:C C1
+U 1 1 5D1EA995
+P 5225 2300
+F 0 "C1" H 5340 2346 50  0000 L CNN
+F 1 "47 uF" H 5340 2255 50  0000 L CNN
+F 2 "Capacitor_THT:CP_Axial_L11.0mm_D6.0mm_P18.00mm_Horizontal" H 5263 2150 50  0001 C CNN
+F 3 "~" H 5225 2300 50  0001 C CNN
+	1    5225 2300
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	5225 2025 5225 2150
+Wire Wire Line
+	5225 2600 5225 2450
+Text GLabel 5050 1875 1    50   Input ~ 0
+A0
+Wire Wire Line
+	5050 1875 5050 2025
+Connection ~ 5050 2025
+Wire Wire Line
+	5050 2025 5225 2025
+Wire Wire Line
+	5050 2725 5050 2600
+Connection ~ 5050 2600
+Wire Wire Line
+	5050 2600 5225 2600
+Wire Wire Line
+	5975 3375 6125 3375
+Wire Wire Line
+	6100 3575 5975 3575
+Text GLabel 4925 3450 0    60   Input ~ 0
+5V
+Text GLabel 4925 3550 0    60   Input ~ 0
+DGND
+Text GLabel 4925 3650 0    60   Input ~ 0
+D4
+Text GLabel 4925 3850 0    60   Input ~ 0
+D6
+$Comp
+L Connector:Jack-DC J-InStimInput1
+U 1 1 5D253190
+P 7325 3900
+F 0 "J-InStimInput1" H 7095 3858 50  0000 R CNN
+F 1 "90V" H 7095 3949 50  0000 R CNN
+F 2 "Connector_BarrelJack:BarrelJack_CUI_PJ-036AH-SMT_Horizontal" H 7375 3860 50  0001 C CNN
+F 3 "~" H 7375 3860 50  0001 C CNN
+	1    7325 3900
+	-1   0    0    1   
+$EndComp
+Wire Wire Line
+	7025 3775 5975 3775
+Wire Wire Line
+	7025 3800 7025 3775
+Wire Wire Line
+	5975 3975 7025 3975
+Wire Wire Line
+	7025 3975 7025 4000
+Wire Wire Line
+	5975 3675 6750 3675
+Wire Wire Line
+	6575 3875 6575 3475
+Wire Wire Line
+	5975 3875 6575 3875
+Wire Wire Line
+	6575 3475 6775 3475
+Wire Wire Line
+	6750 4075 6750 3675
+Wire Wire Line
+	5975 4075 6750 4075
+Connection ~ 6750 3675
+Wire Wire Line
+	6750 3675 6925 3675
+$Comp
+L Connector_Generic:Conn_01x06 J1
+U 1 1 5D26CD0F
+P 5300 3650
+F 0 "J1" H 5380 3642 50  0000 L CNN
+F 1 "SSR-ToInput" H 5380 3551 50  0000 L CNN
+F 2 "Connector_PinSocket_2.54mm:PinSocket_1x06_P2.54mm_Vertical" H 5300 3650 50  0001 C CNN
+F 3 "~" H 5300 3650 50  0001 C CNN
+	1    5300 3650
+	1    0    0    -1  
+$EndComp
+Text GLabel 6100 3575 2    60   Input ~ 0
+A0
+Connection ~ 6575 3475
+Wire Wire Line
+	5975 3475 6575 3475
+Text GLabel 6100 3375 2    60   Input ~ 0
+D5
+$Comp
+L Connector_Generic:Conn_01x08 J2
+U 1 1 5D27E79B
+P 5775 3775
+F 0 "J2" H 5693 3150 50  0000 C CNN
+F 1 "SSR-ToOutput" H 5693 3241 50  0000 C CNN
+F 2 "" H 5775 3775 50  0001 C CNN
+F 3 "~" H 5775 3775 50  0001 C CNN
+	1    5775 3775
+	-1   0    0    1   
+$EndComp
+Wire Wire Line
+	4925 3450 5100 3450
+Wire Wire Line
+	4925 3550 5100 3550
+Wire Wire Line
+	4925 3650 5000 3650
+Wire Wire Line
+	5100 3750 5000 3750
+Wire Wire Line
+	5000 3750 5000 3650
+Connection ~ 5000 3650
+Wire Wire Line
+	5000 3650 5100 3650
+Wire Wire Line
+	4925 3850 5000 3850
+Wire Wire Line
+	5100 3950 5000 3950
+Wire Wire Line
+	5000 3950 5000 3850
+Connection ~ 5000 3850
+Wire Wire Line
+	5000 3850 5100 3850
+$Comp
+L Connector:Screw_Terminal_01x02 JPad1
+U 1 1 5D29FD5E
+P 7225 3400
+F 0 "JPad1" H 7305 3392 50  0000 L CNN
+F 1 "ShockPad" H 7305 3301 50  0000 L CNN
+F 2 "TerminalBlock:TerminalBlock_Altech_AK300-2_P5.00mm" H 7225 3400 50  0001 C CNN
+F 3 "~" H 7225 3400 50  0001 C CNN
+	1    7225 3400
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	6775 3475 6775 3400
+Wire Wire Line
+	6775 3400 7025 3400
+Wire Wire Line
+	6925 3500 7025 3500
+Wire Wire Line
+	6925 3500 6925 3675
+Wire Wire Line
+	4675 2150 4675 2025
+Wire Wire Line
+	4675 2025 5050 2025
+Wire Wire Line
+	4675 2450 4675 2600
+Wire Wire Line
+	4675 2600 5050 2600
+$Comp
+L Device:R_Variable R3
+U 1 1 5D1EA22E
+P 4675 2300
+F 0 "R3" H 4803 2346 50  0000 L CNN
+F 1 "10k-1M" H 4803 2255 50  0000 L CNN
+F 2 "Potentiometer_THT:Potentiometer_Alps_RK09K_Single_Vertical" V 4605 2300 50  0001 C CNN
+F 3 "~" H 4675 2300 50  0001 C CNN
+	1    4675 2300
+	1    0    0    -1  
+$EndComp
+$Comp
+L Connector:Screw_Terminal_01x02 JPad2
+U 1 1 5D2D0992
+P 7225 3100
+F 0 "JPad2" H 7305 3092 50  0000 L CNN
+F 1 "StimInput" H 7305 3001 50  0000 L CNN
+F 2 "TerminalBlock:TerminalBlock_Altech_AK300-2_P5.00mm" H 7225 3100 50  0001 C CNN
+F 3 "~" H 7225 3100 50  0001 C CNN
+	1    7225 3100
+	1    0    0    -1  
+$EndComp
+Text GLabel 6850 3100 0    60   Input ~ 0
+D7
+Text GLabel 6850 3200 0    60   Input ~ 0
+DGND
+Wire Wire Line
+	6850 3100 7025 3100
+Wire Wire Line
+	6850 3200 7025 3200
+$Comp
+L ArduinoEncoderShield_old-rescue:AGND #PWR06
+U 1 1 5C3EFA74
+P 8600 1725
+F 0 "#PWR06" H 8600 1725 40  0001 C CNN
+F 1 "AGND" H 8600 1655 50  0000 C CNN
+F 2 "" H 8600 1725 60  0000 C CNN
+F 3 "" H 8600 1725 60  0000 C CNN
+	1    8600 1725
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	8950 1725 8600 1725
+NoConn ~ 1800 2500
+$Comp
+L ArduinoEncoderShield_old-rescue:ARDUINO_SHIELD SHIELD1
+U 1 1 5C3EFA63
+P 2750 2800
+F 0 "SHIELD1" H 2400 3750 60  0000 C CNN
+F 1 "ARDUINO_SHIELD" H 2800 1850 60  0000 C CNN
+F 2 "" H 2750 2800 60  0001 C CNN
+F 3 "" H 2750 2800 60  0001 C CNN
+	1    2750 2800
+	1    0    0    -1  
+$EndComp
+NoConn ~ 3700 2100
+$Comp
+L Isolator:4N35 IC1
+U 1 1 5D2001DC
+P 6525 5525
+F 0 "IC1" H 6525 5885 40  0000 C CNN
+F 1 "4N35" H 6525 5809 40  0000 C CNN
+F 2 "Package_DIP:DIP-6_W7.62mm_Socket" H 6525 5742 29  0001 C CNN
+F 3 "" H 6525 5525 60  0001 C CNN
+	1    6525 5525
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	6825 5525 6925 5525
+Wire Wire Line
+	6825 5625 6975 5625
+Wire Wire Line
+	8175 5425 8225 5425
+Wire Wire Line
+	8175 5625 8225 5625
+Wire Wire Line
+	8825 5525 8875 5525
+Wire Wire Line
+	8800 5625 8825 5625
+Connection ~ 8825 5625
+Wire Wire Line
+	8825 5625 8875 5625
+Wire Wire Line
+	10075 5425 10125 5425
+Wire Wire Line
+	10075 5625 10125 5625
+Wire Wire Line
+	10725 5525 10775 5525
+Wire Wire Line
+	10725 5625 10775 5625
+Wire Wire Line
+	6825 700  6875 700 
+Wire Wire Line
+	6825 900  6875 900 
+Wire Wire Line
+	7475 800  7525 800 
+Wire Wire Line
+	7475 900  7625 900 
+Wire Wire Line
+	7475 1800 7525 1800
+Wire Wire Line
+	7475 1900 7575 1900
+Connection ~ 7575 1900
+Wire Wire Line
+	6825 1700 6875 1700
+Wire Wire Line
+	6825 1900 6875 1900
+$Comp
+L ArduinoEncoderShield_old-rescue:AGND #PWR0101
+U 1 1 5D23393F
+P 5050 2725
+F 0 "#PWR0101" H 5050 2725 40  0001 C CNN
+F 1 "AGND" H 5050 2655 50  0000 C CNN
+F 2 "" H 5050 2725 60  0000 C CNN
+F 3 "" H 5050 2725 60  0000 C CNN
+	1    5050 2725
+	1    0    0    -1  
+$EndComp
+$Comp
+L ArduinoEncoderShield_old-rescue:AGND #PWR0102
+U 1 1 5D239D97
+P 1450 2750
+F 0 "#PWR0102" H 1450 2750 40  0001 C CNN
+F 1 "AGND" H 1450 2680 50  0000 C CNN
+F 2 "" H 1450 2750 60  0000 C CNN
+F 3 "" H 1450 2750 60  0000 C CNN
+	1    1450 2750
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	1800 2700 1625 2700
+Wire Wire Line
+	1625 2700 1625 2750
+Wire Wire Line
+	1625 2750 1450 2750
+NoConn ~ 1800 2800
+NoConn ~ 8825 5425
+NoConn ~ 10725 5425
+NoConn ~ 7475 1700
+NoConn ~ 7475 700 
+NoConn ~ 6825 5425
+NoConn ~ 8650 1025
+NoConn ~ 8650 1125
+NoConn ~ 8650 1225
+NoConn ~ 8650 1325
+NoConn ~ 8650 1425
+NoConn ~ 9950 1025
+NoConn ~ 9950 1125
+NoConn ~ 9950 1225
+NoConn ~ 9950 1325
+NoConn ~ 9950 1425
+NoConn ~ 3700 2000
+NoConn ~ 1800 2900
+NoConn ~ 1300 950 
+NoConn ~ 1300 1350
+NoConn ~ 3125 5750
 $EndSCHEMATC

@@ -15,9 +15,11 @@ Comment3 ""
 Comment4 ""
 $EndDescr
 $Comp
-L Schematic-rescue:G3MB202PDC12-BhallaLabComponents-Schematic-rescue K2
+L Schematic-rescue:G3MB202PDC12-BhallaLabComponents-Schematic-rescue-Schematic-rescue K2
 U 1 1 5D18AD83
 P 5225 3975
+AR Path="/5D18AD83" Ref="K2"  Part="1" 
+AR Path="/5D1ADABF/5D18AD83" Ref="K2"  Part="1" 
 F 0 "K2" V 4460 4045 50  0000 C CNN
 F 1 "G3MB202PDC12" V 4551 4045 50  0000 C CNN
 F 2 "RELAY_G3MB202PDC12" H 5225 3975 50  0001 L BNN
@@ -49,9 +51,11 @@ B2
 Wire Wire Line
 	5725 4125 5740 4125
 $Comp
-L Schematic-rescue:G3MB202PDC12-BhallaLabComponents-Schematic-rescue K1
+L Schematic-rescue:G3MB202PDC12-BhallaLabComponents-Schematic-rescue-Schematic-rescue K1
 U 1 1 5D18ADB3
 P 4575 3975
+AR Path="/5D18ADB3" Ref="K1"  Part="1" 
+AR Path="/5D1ADABF/5D18ADB3" Ref="K1"  Part="1" 
 F 0 "K1" V 3810 4045 50  0000 C CNN
 F 1 "G3MB202PDC12" V 3901 4045 50  0000 C CNN
 F 2 "RELAY_G3MB202PDC12" H 4575 3975 50  0001 L BNN
@@ -126,9 +130,11 @@ Wire Wire Line
 	4750 3225 4900 3225
 Connection ~ 4900 3225
 $Comp
-L Schematic-rescue:G3MB202PDC12-BhallaLabComponents-Schematic-rescue K3
+L Schematic-rescue:G3MB202PDC12-BhallaLabComponents-Schematic-rescue-Schematic-rescue K3
 U 1 1 5D1D4113
 P 5950 3975
+AR Path="/5D1D4113" Ref="K3"  Part="1" 
+AR Path="/5D1ADABF/5D1D4113" Ref="K3"  Part="1" 
 F 0 "K3" V 5185 4045 50  0000 C CNN
 F 1 "G3MB202PDC12" V 5276 4045 50  0000 C CNN
 F 2 "RELAY_G3MB202PDC12" H 5950 3975 50  0001 L BNN
@@ -142,9 +148,11 @@ F 8 "Unavailable" H 5950 3975 50  0001 L BNN "Field8"
 	0    1    1    0   
 $EndComp
 $Comp
-L Schematic-rescue:G3MB202PDC12-BhallaLabComponents-Schematic-rescue K4
+L Schematic-rescue:G3MB202PDC12-BhallaLabComponents-Schematic-rescue-Schematic-rescue K4
 U 1 1 5D1D5B7E
 P 6800 3975
+AR Path="/5D1D5B7E" Ref="K4"  Part="1" 
+AR Path="/5D1ADABF/5D1D5B7E" Ref="K4"  Part="1" 
 F 0 "K4" V 6035 4045 50  0000 C CNN
 F 1 "G3MB202PDC12" V 6126 4045 50  0000 C CNN
 F 2 "RELAY_G3MB202PDC12" H 6800 3975 50  0001 L BNN
