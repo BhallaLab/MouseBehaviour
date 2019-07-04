@@ -26,23 +26,23 @@ F 3 "" H 7175 800 60  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L DoraBabu:ULN2003A U1
+L Schematic-rescue:ULN2003A-DoraBabu U1
 U 1 1 5C3EFA71
 P 9300 1225
 F 0 "U1" H 9300 1325 70  0000 C CNN
 F 1 "ULN2003A" H 9300 1125 70  0000 C CNN
-F 2 "Package_DIP:DIP-16_W7.62mm_Socket" H 9300 1225 60  0001 C CNN
+F 2 "DIP-16__300_ELL" H 9300 1225 60  0001 C CNN
 F 3 "" H 9300 1225 60  0001 C CNN
 	1    9300 1225
 	1    0    0    -1  
 $EndComp
 $Comp
-L DoraBabu:DIODE D1
+L Schematic-rescue:DIODE-DoraBabu D1
 U 1 1 5C3EFA72
 P 10300 1625
 F 0 "D1" H 10300 1725 40  0000 C CNN
 F 1 "DIODE" H 10300 1525 40  0000 C CNN
-F 2 "Diode_THT:D_5KP_P12.70mm_Horizontal" H 10300 1625 60  0001 C CNN
+F 2 "Diode_THT:D_5KPW_P12.70mm_Horizontal" H 10300 1625 60  0001 C CNN
 F 3 "~" H 10300 1625 60  0000 C CNN
 	1    10300 1625
 	-1   0    0    1   
@@ -59,45 +59,45 @@ F 3 "" H 7175 1800 60  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L DoraBabu:R R8
+L Schematic-rescue:R-DoraBabu R8
 U 1 1 5C3EFA76
 P 7575 2200
 F 0 "R8" V 7655 2200 40  0000 C CNN
 F 1 "15k" V 7582 2201 40  0000 C CNN
-F 2 "Resistor_SMD:R_0805_2012Metric_Pad1.15x1.40mm_HandSolder" V 7505 2200 30  0001 C CNN
+F 2 "Resistor_SMD:R_0603_1608Metric" V 7505 2200 30  0001 C CNN
 F 3 "~" H 7575 2200 30  0001 C CNN
 	1    7575 2200
 	1    0    0    -1  
 $EndComp
 $Comp
-L DoraBabu:R R6
+L Schematic-rescue:R-DoraBabu R6
 U 1 1 5C3EFA82
 P 6575 1700
 F 0 "R6" V 6655 1700 40  0000 C CNN
 F 1 "470E" V 6582 1701 40  0000 C CNN
-F 2 "Resistor_SMD:R_0805_2012Metric_Pad1.15x1.40mm_HandSolder" V 6505 1700 30  0001 C CNN
+F 2 "Resistor_SMD:R_0603_1608Metric" V 6505 1700 30  0001 C CNN
 F 3 "~" H 6575 1700 30  0000 C CNN
 	1    6575 1700
 	0    -1   -1   0   
 $EndComp
 $Comp
-L DoraBabu:R R5
+L Schematic-rescue:R-DoraBabu R5
 U 1 1 5C3EFA83
 P 6575 700
 F 0 "R5" V 6475 700 40  0000 C CNN
 F 1 "470E" V 6582 701 40  0000 C CNN
-F 2 "Resistor_SMD:R_0805_2012Metric_Pad1.15x1.40mm_HandSolder" V 6505 700 30  0001 C CNN
+F 2 "Resistor_SMD:R_0603_1608Metric" V 6505 700 30  0001 C CNN
 F 3 "~" H 6575 700 30  0000 C CNN
 	1    6575 700 
 	0    -1   -1   0   
 $EndComp
 $Comp
-L DoraBabu:R R10
+L Schematic-rescue:R-DoraBabu R10
 U 1 1 5C3EFA84
 P 7925 5425
 F 0 "R10" V 8005 5425 40  0000 C CNN
 F 1 "560E" V 7932 5426 40  0000 C CNN
-F 2 "Resistor_SMD:R_0805_2012Metric_Pad1.15x1.40mm_HandSolder" V 7855 5425 30  0001 C CNN
+F 2 "Resistor_SMD:R_0603_1608Metric" V 7855 5425 30  0001 C CNN
 F 3 "~" H 7925 5425 30  0001 C CNN
 	1    7925 5425
 	0    -1   -1   0   
@@ -121,23 +121,23 @@ EX 5 V
 Text GLabel 10750 1625 2    60   Input ~ 0
 12 V
 $Comp
-L DoraBabu:CONN_8 P8
+L Schematic-rescue:CONN_8-DoraBabu P8
 U 1 1 5C3EFA87
 P 3475 5100
 F 0 "P8" V 3425 5100 60  0000 C CNN
 F 1 "CONN_8" V 3525 5100 60  0000 C CNN
-F 2 "Connector_PinHeader_1.27mm:PinHeader_1x08_P1.27mm_Horizontal" H 3475 5100 60  0001 C CNN
+F 2 "Connector_PinHeader_2.54mm:PinHeader_1x08_P2.54mm_Horizontal" H 3475 5100 60  0001 C CNN
 F 3 "" H 3475 5100 60  0000 C CNN
 	1    3475 5100
 	1    0    0    -1  
 $EndComp
 $Comp
-L DoraBabu:CONN_6 P2
+L Schematic-rescue:CONN_6-DoraBabu P2
 U 1 1 5C3EFA88
 P 950 1800
 F 0 "P2" V 900 1800 60  0000 C CNN
 F 1 "CONN_6" V 1000 1800 60  0000 C CNN
-F 2 "Connector_PinHeader_1.27mm:PinHeader_1x06_P1.27mm_Horizontal" H 950 1800 60  0001 C CNN
+F 2 "Connector_PinHeader_2.54mm:PinHeader_1x07_P2.54mm_Horizontal" H 950 1800 60  0001 C CNN
 F 3 "" H 950 1800 60  0000 C CNN
 	1    950  1800
 	-1   0    0    1   
@@ -151,7 +151,7 @@ Solenoid2_1
 Text GLabel 10200 825  2    60   Input ~ 0
 Solenoid2_2
 $Comp
-L DoraBabu:HDR-1X15-15-91-? CN1
+L Schematic-rescue:HDR-1X15-15-91-?-DoraBabu CN1
 U 1 1 5C3EFA8D
 P 1650 5500
 F 0 "CN1" H 1575 6300 50  0000 L BNN
@@ -162,12 +162,12 @@ F 3 "" H 1650 5500 60  0001 C CNN
 	-1   0    0    1   
 $EndComp
 $Comp
-L DoraBabu:R R12
+L Schematic-rescue:R-DoraBabu R12
 U 1 1 5C3EFA8E
 P 9825 5425
 F 0 "R12" V 9905 5425 40  0000 C CNN
 F 1 "560E" V 9832 5426 40  0000 C CNN
-F 2 "Resistor_SMD:R_0805_2012Metric_Pad1.15x1.40mm_HandSolder" V 9755 5425 30  0001 C CNN
+F 2 "Resistor_SMD:R_0603_1608Metric" V 9755 5425 30  0001 C CNN
 F 3 "~" H 9825 5425 30  0001 C CNN
 	1    9825 5425
 	0    -1   -1   0   
@@ -198,32 +198,10 @@ Text GLabel 8925 5675 2    60   Input ~ 0
 Tone1
 Text GLabel 10875 5675 2    60   Input ~ 0
 Tone2
-$Comp
-L DoraBabu:R R4
-U 1 1 5C3EFA94
-P 5975 5425
-F 0 "R4" V 6055 5425 40  0000 C CNN
-F 1 "560E" V 5982 5426 40  0000 C CNN
-F 2 "Resistor_SMD:R_0805_2012Metric_Pad1.15x1.40mm_HandSolder" V 5905 5425 30  0001 C CNN
-F 3 "~" H 5975 5425 30  0001 C CNN
-	1    5975 5425
-	0    -1   -1   0   
-$EndComp
 Text GLabel 7025 5625 2    60   Input ~ 0
 Tone3
 Text GLabel 6925 5525 2    60   Input ~ 0
 EX 5 V
-$Comp
-L DoraBabu:R R7
-U 1 1 5C3EFA96
-P 6975 5925
-F 0 "R7" V 7075 6075 40  0000 C CNN
-F 1 "15k" V 6982 5926 40  0000 C CNN
-F 2 "Resistor_SMD:R_0805_2012Metric_Pad1.15x1.40mm_HandSolder" V 6905 5925 30  0001 C CNN
-F 3 "~" H 6975 5925 30  0001 C CNN
-	1    6975 5925
-	-1   0    0    1   
-$EndComp
 Wire Wire Line
 	10500 1625 10750 1625
 Wire Wire Line
@@ -241,12 +219,12 @@ Wire Wire Line
 Connection ~ 10050 1625
 Connection ~ 10050 1875
 $Comp
-L DoraBabu:CONN_2 P7
+L Schematic-rescue:CONN_2-DoraBabu P7
 U 1 1 5C3EFA9B
 P 3200 4200
 F 0 "P7" V 3150 4200 40  0000 C CNN
 F 1 "CONN_2" V 3250 4200 40  0000 C CNN
-F 2 "Connector_PinHeader_1.27mm:PinHeader_1x02_P1.27mm_Vertical" H 3200 4200 60  0001 C CNN
+F 2 "Connector_PinHeader_2.54mm:PinHeader_1x01_P2.54mm_Vertical" H 3200 4200 60  0001 C CNN
 F 3 "" H 3200 4200 60  0000 C CNN
 	1    3200 4200
 	1    0    0    -1  
@@ -320,12 +298,12 @@ D12
 Text GLabel 6325 700  0    60   Input ~ 0
 D11
 $Comp
-L DoraBabu:CONN_8 P9
+L Schematic-rescue:CONN_8-DoraBabu P9
 U 1 1 5C3EFD0C
 P 3475 6100
 F 0 "P9" V 3425 6100 60  0000 C CNN
 F 1 "CONN_8" V 3525 6100 60  0000 C CNN
-F 2 "Connector_PinHeader_1.27mm:PinHeader_1x08_P1.27mm_Horizontal" H 3475 6100 60  0001 C CNN
+F 2 "Connector_PinHeader_2.54mm:PinHeader_1x08_P2.54mm_Horizontal" H 3475 6100 60  0001 C CNN
 F 3 "" H 3475 6100 60  0000 C CNN
 	1    3475 6100
 	1    0    0    -1  
@@ -352,12 +330,12 @@ Wire Wire Line
 	6975 5625 6975 5675
 Connection ~ 6975 5625
 $Comp
-L DoraBabu:CONN_6 P1
+L Schematic-rescue:CONN_6-DoraBabu P1
 U 1 1 5C3F096C
 P 950 1100
 F 0 "P1" V 900 1100 60  0000 C CNN
 F 1 "CONN_6" V 1000 1100 60  0000 C CNN
-F 2 "Connector_PinHeader_1.27mm:PinHeader_1x06_P1.27mm_Horizontal" H 950 1100 60  0001 C CNN
+F 2 "Connector_PinHeader_2.54mm:PinHeader_1x07_P2.54mm_Horizontal" H 950 1100 60  0001 C CNN
 F 3 "" H 950 1100 60  0000 C CNN
 	1    950  1100
 	-1   0    0    1   
@@ -403,12 +381,12 @@ EX 5 V
 Text GLabel 10775 5525 2    60   Input ~ 0
 EX 5 V
 $Comp
-L DoraBabu:R R11
+L Schematic-rescue:R-DoraBabu R11
 U 1 1 5C3F0A84
 P 8875 5975
 F 0 "R11" V 8955 5975 40  0000 C CNN
 F 1 "15k" V 8882 5976 40  0000 C CNN
-F 2 "Resistor_SMD:R_0805_2012Metric_Pad1.15x1.40mm_HandSolder" V 8805 5975 30  0001 C CNN
+F 2 "Resistor_SMD:R_0603_1608Metric" V 8805 5975 30  0001 C CNN
 F 3 "~" H 8875 5975 30  0001 C CNN
 	1    8875 5975
 	1    0    0    -1  
@@ -416,7 +394,7 @@ $EndComp
 Wire Wire Line
 	8875 5725 8875 5675
 $Comp
-L DoraBabu:AGND #PWR05
+L Schematic-rescue:AGND-DoraBabu #PWR05
 U 1 1 5C3F0AE2
 P 8875 6325
 F 0 "#PWR05" H 8875 6325 40  0001 C CNN
@@ -434,18 +412,18 @@ Connection ~ 8875 5675
 Text GLabel 8175 5625 0    60   Input ~ 0
 DGND
 $Comp
-L DoraBabu:R R13
+L Schematic-rescue:R-DoraBabu R13
 U 1 1 5C3F0BA2
 P 10775 5975
 F 0 "R13" V 10855 5975 40  0000 C CNN
 F 1 "15k" V 10782 5976 40  0000 C CNN
-F 2 "Resistor_SMD:R_0805_2012Metric_Pad1.15x1.40mm_HandSolder" V 10705 5975 30  0001 C CNN
+F 2 "Resistor_SMD:R_0603_1608Metric" V 10705 5975 30  0001 C CNN
 F 3 "~" H 10775 5975 30  0001 C CNN
 	1    10775 5975
 	1    0    0    -1  
 $EndComp
 $Comp
-L DoraBabu:AGND #PWR07
+L Schematic-rescue:AGND-DoraBabu #PWR07
 U 1 1 5C3F0BA8
 P 10775 6325
 F 0 "#PWR07" H 10775 6325 40  0001 C CNN
@@ -471,7 +449,7 @@ Tone2
 Text GLabel 1850 5100 2    60   Input ~ 0
 AGND
 $Comp
-L DoraBabu:AGND #PWR02
+L Schematic-rescue:AGND-DoraBabu #PWR02
 U 1 1 5C3F0CE1
 P 6975 6225
 F 0 "#PWR02" H 6975 6225 40  0001 C CNN
@@ -496,12 +474,12 @@ Spare1
 Text GLabel 1850 6000 2    60   Input ~ 0
 Spare2
 $Comp
-L DoraBabu:R R9
+L Schematic-rescue:R-DoraBabu R9
 U 1 1 5C3EFA73
 P 7625 1200
 F 0 "R9" V 7705 1200 40  0000 C CNN
 F 1 "15k" V 7632 1201 40  0000 C CNN
-F 2 "Resistor_SMD:R_0805_2012Metric_Pad1.15x1.40mm_HandSolder" V 7555 1200 30  0001 C CNN
+F 2 "Resistor_SMD:R_0603_1608Metric" V 7555 1200 30  0001 C CNN
 F 3 "~" H 7625 1200 30  0001 C CNN
 	1    7625 1200
 	1    0    0    -1  
@@ -522,7 +500,7 @@ Wire Wire Line
 Wire Wire Line
 	7575 1900 7575 1950
 $Comp
-L DoraBabu:AGND #PWR04
+L Schematic-rescue:AGND-DoraBabu #PWR04
 U 1 1 5C3F0E1A
 P 7625 1450
 F 0 "#PWR04" H 7625 1450 40  0001 C CNN
@@ -533,7 +511,7 @@ F 3 "" H 7625 1450 60  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L DoraBabu:AGND #PWR03
+L Schematic-rescue:AGND-DoraBabu #PWR03
 U 1 1 5C3F0E20
 P 7575 2450
 F 0 "#PWR03" H 7575 2450 40  0001 C CNN
@@ -719,8 +697,8 @@ L Device:R_Variable R3
 U 1 1 5D1EA22E
 P 4675 2300
 F 0 "R3" H 4803 2346 50  0000 L CNN
-F 1 "10k-1M" H 4803 2255 50  0000 L CNN
-F 2 "Potentiometer_THT:Potentiometer_Alps_RK09K_Single_Vertical" V 4605 2300 50  0001 C CNN
+F 1 "1M" H 4803 2255 50  0000 L CNN
+F 2 "Potentiometer_THT:Potentiometer_Alps_RK09K_Single_Horizontal" V 4605 2300 50  0001 C CNN
 F 3 "~" H 4675 2300 50  0001 C CNN
 	1    4675 2300
 	1    0    0    -1  
@@ -745,7 +723,7 @@ Wire Wire Line
 Wire Wire Line
 	6850 3200 7025 3200
 $Comp
-L DoraBabu:AGND #PWR06
+L Schematic-rescue:AGND-DoraBabu #PWR06
 U 1 1 5C3EFA74
 P 8600 1725
 F 0 "#PWR06" H 8600 1725 40  0001 C CNN
@@ -759,12 +737,12 @@ Wire Wire Line
 	8950 1725 8600 1725
 NoConn ~ 1800 2500
 $Comp
-L DoraBabu:ARDUINO_SHIELD SHIELD1
+L Schematic-rescue:ARDUINO_SHIELD-DoraBabu SHIELD1
 U 1 1 5C3EFA63
 P 2750 2800
 F 0 "SHIELD1" H 2400 3750 60  0000 C CNN
 F 1 "ARDUINO_SHIELD" H 2800 1850 60  0000 C CNN
-F 2 "Symbol:Symbol_GNU-GPL_CopperTop_Big" H 2750 2800 60  0001 C CNN
+F 2 "Module:Arduino_UNO_R3_WithMountingHoles" H 2750 2800 60  0001 C CNN
 F 3 "" H 2750 2800 60  0001 C CNN
 	1    2750 2800
 	1    0    0    -1  
@@ -822,7 +800,7 @@ Wire Wire Line
 Wire Wire Line
 	6825 1900 6875 1900
 $Comp
-L DoraBabu:AGND #PWR0101
+L Schematic-rescue:AGND-DoraBabu #PWR0101
 U 1 1 5D23393F
 P 5050 2725
 F 0 "#PWR0101" H 5050 2725 40  0001 C CNN
@@ -833,7 +811,7 @@ F 3 "" H 5050 2725 60  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L DoraBabu:AGND #PWR0102
+L Schematic-rescue:AGND-DoraBabu #PWR0102
 U 1 1 5D239D97
 P 1450 2750
 F 0 "#PWR0102" H 1450 2750 40  0001 C CNN
@@ -871,36 +849,58 @@ NoConn ~ 1300 950
 NoConn ~ 1300 1350
 NoConn ~ 3125 5750
 $Comp
-L DoraBabu:R R1
+L Schematic-rescue:R-DoraBabu R1
 U 1 1 5C3EFA99
 P 2550 4100
 F 0 "R1" V 2630 4100 40  0000 C CNN
 F 1 "560E" V 2557 4101 40  0000 C CNN
-F 2 "Resistor_SMD:R_0603_1608Metric_Pad1.05x0.95mm_HandSolder" V 2480 4100 30  0001 C CNN
+F 2 "Resistor_SMD:R_0603_1608Metric" V 2480 4100 30  0001 C CNN
 F 3 "~" H 2550 4100 30  0001 C CNN
 	1    2550 4100
 	0    -1   -1   0   
 $EndComp
 $Comp
-L DoraBabu:R R2
+L Schematic-rescue:CONN_2-DoraBabu P4
+U 1 1 5C3F0D30
+P 2300 6700
+F 0 "P4" V 2250 6700 40  0000 C CNN
+F 1 "CONN_2" V 2350 6700 40  0000 C CNN
+F 2 "Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Horizontal" H 2300 6700 60  0001 C CNN
+F 3 "" H 2300 6700 60  0000 C CNN
+	1    2300 6700
+	1    0    0    -1  
+$EndComp
+$Comp
+L Schematic-rescue:R-DoraBabu R4
+U 1 1 5C3EFA94
+P 5975 5425
+F 0 "R4" V 6055 5425 40  0000 C CNN
+F 1 "560E" V 5982 5426 40  0000 C CNN
+F 2 "Resistor_SMD:R_0603_1608Metric" V 5905 5425 30  0001 C CNN
+F 3 "~" H 5975 5425 30  0001 C CNN
+	1    5975 5425
+	0    -1   -1   0   
+$EndComp
+$Comp
+L Schematic-rescue:R-DoraBabu R2
 U 1 1 5C3EFA9A
 P 2550 4300
 F 0 "R2" V 2630 4300 40  0000 C CNN
 F 1 "560E" V 2557 4301 40  0000 C CNN
-F 2 "Resistor_SMD:R_0603_1608Metric_Pad1.05x0.95mm_HandSolder" V 2480 4300 30  0001 C CNN
+F 2 "Resistor_SMD:R_0603_1608Metric" V 2480 4300 30  0001 C CNN
 F 3 "~" H 2550 4300 30  0001 C CNN
 	1    2550 4300
 	0    -1   -1   0   
 $EndComp
 $Comp
-L DoraBabu:CONN_2 P4
-U 1 1 5C3F0D30
-P 2300 6700
-F 0 "P4" V 2250 6700 40  0000 C CNN
-F 1 "CONN_2" V 2350 6700 40  0000 C CNN
-F 2 "Connector_PinHeader_1.27mm:PinHeader_1x02_P1.27mm_Vertical" H 2300 6700 60  0001 C CNN
-F 3 "" H 2300 6700 60  0000 C CNN
-	1    2300 6700
-	1    0    0    -1  
+L Schematic-rescue:R-DoraBabu R7
+U 1 1 5C3EFA96
+P 6975 5925
+F 0 "R7" V 7075 6075 40  0000 C CNN
+F 1 "15k" V 6982 5926 40  0000 C CNN
+F 2 "Resistor_SMD:R_0603_1608Metric" V 6905 5925 30  0001 C CNN
+F 3 "~" H 6975 5925 30  0001 C CNN
+	1    6975 5925
+	-1   0    0    1   
 $EndComp
 $EndSCHEMATC

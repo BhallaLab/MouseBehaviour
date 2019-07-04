@@ -141,11 +141,45 @@ X ~ 2 0 -150 50 U 50 50 1 1 P
 ENDDRAW
 ENDDEF
 #
-# DoraBabu_AGND
+# Isolator_4N35
 #
-DEF DoraBabu_AGND #PWR 0 10 Y Y 1 F P
+DEF Isolator_4N35 U 0 40 Y Y 1 F N
+F0 "U" -200 200 50 H V L CNN
+F1 "Isolator_4N35" 0 200 50 H V L CNN
+F2 "Package_DIP:DIP-6_W7.62mm" -200 -200 50 H I L CIN
+F3 "" 0 0 50 H I L CNN
+ALIAS 4N26 TIL111 4N27 4N28 4N35 4N36 4N37
+$FPLIST
+ DIP*W7.62mm*
+$ENDFPLIST
+DRAW
+S -200 150 200 -150 0 1 10 f
+P 2 0 1 10 -150 -25 -100 -25 N
+P 2 0 1 0 105 -55 150 -100 N
+P 2 0 1 0 105 -45 150 0 N
+P 2 0 1 0 150 -100 200 -100 N
+P 2 0 1 0 150 0 200 0 N
+P 3 0 1 14 105 -10 105 -90 105 -90 N
+P 4 0 1 0 -200 -100 -125 -100 -125 100 -200 100 N
+P 4 0 1 10 -125 -25 -150 25 -100 25 -125 -25 N
+P 4 0 1 0 145 -95 135 -75 125 -85 145 -95 N
+P 4 0 1 0 200 100 75 100 75 -50 100 -50 N
+P 5 0 1 0 -25 -20 25 -20 10 -25 10 -15 25 -20 N
+P 5 0 1 0 -25 20 25 20 10 15 10 25 25 20 N
+X ~ 1 -300 100 100 R 50 50 1 1 P
+X ~ 2 -300 -100 100 R 50 50 1 1 P
+X NC 3 -200 0 100 R 50 50 1 1 N N
+X ~ 4 300 -100 100 L 50 50 1 1 P
+X ~ 5 300 0 100 L 50 50 1 1 P
+X ~ 6 300 100 100 L 50 50 1 1 P
+ENDDRAW
+ENDDEF
+#
+# Schematic-rescue_AGND-DoraBabu
+#
+DEF Schematic-rescue_AGND-DoraBabu #PWR 0 10 Y Y 1 F P
 F0 "#PWR" 0 0 40 H I C CNN
-F1 "DoraBabu_AGND" 0 -70 50 H V C CNN
+F1 "Schematic-rescue_AGND-DoraBabu" 0 -70 50 H V C CNN
 F2 "" 0 0 60 H V C CNN
 F3 "" 0 0 60 H V C CNN
 DRAW
@@ -154,11 +188,11 @@ X AGND 1 0 0 0 U 40 40 1 1 W N
 ENDDRAW
 ENDDEF
 #
-# DoraBabu_ARDUINO_SHIELD
+# Schematic-rescue_ARDUINO_SHIELD-DoraBabu
 #
-DEF DoraBabu_ARDUINO_SHIELD SHIELD 0 40 Y Y 1 F N
+DEF Schematic-rescue_ARDUINO_SHIELD-DoraBabu SHIELD 0 40 Y Y 1 F N
 F0 "SHIELD" -350 950 60 H V C CNN
-F1 "DoraBabu_ARDUINO_SHIELD" 50 -950 60 H V C CNN
+F1 "Schematic-rescue_ARDUINO_SHIELD-DoraBabu" 50 -950 60 H V C CNN
 F2 "" 0 0 60 H V C CNN
 F3 "" 0 0 60 H V C CNN
 DRAW
@@ -194,11 +228,11 @@ X V_IN V_IN -950 -100 300 R 50 50 1 1 W
 ENDDRAW
 ENDDEF
 #
-# DoraBabu_CONN_2
+# Schematic-rescue_CONN_2-DoraBabu
 #
-DEF DoraBabu_CONN_2 P 0 40 Y N 1 F N
+DEF Schematic-rescue_CONN_2-DoraBabu P 0 40 Y N 1 F N
 F0 "P" -50 0 40 V V C CNN
-F1 "DoraBabu_CONN_2" 50 0 40 V V C CNN
+F1 "Schematic-rescue_CONN_2-DoraBabu" 50 0 40 V V C CNN
 F2 "" 0 0 60 H V C CNN
 F3 "" 0 0 60 H V C CNN
 DRAW
@@ -208,11 +242,11 @@ X PM 2 -350 -100 250 R 60 60 1 1 P I
 ENDDRAW
 ENDDEF
 #
-# DoraBabu_CONN_6
+# Schematic-rescue_CONN_6-DoraBabu
 #
-DEF DoraBabu_CONN_6 P 0 30 Y N 1 F N
+DEF Schematic-rescue_CONN_6-DoraBabu P 0 30 Y N 1 F N
 F0 "P" -50 0 60 V V C CNN
-F1 "DoraBabu_CONN_6" 50 0 60 V V C CNN
+F1 "Schematic-rescue_CONN_6-DoraBabu" 50 0 60 V V C CNN
 F2 "" 0 0 60 H V C CNN
 F3 "" 0 0 60 H V C CNN
 DRAW
@@ -226,11 +260,11 @@ X 6 6 -350 -250 250 R 60 60 1 1 P I
 ENDDRAW
 ENDDEF
 #
-# DoraBabu_CONN_8
+# Schematic-rescue_CONN_8-DoraBabu
 #
-DEF DoraBabu_CONN_8 P 0 40 Y N 1 F N
+DEF Schematic-rescue_CONN_8-DoraBabu P 0 40 Y N 1 F N
 F0 "P" -50 0 60 V V C CNN
-F1 "DoraBabu_CONN_8" 50 0 60 V V C CNN
+F1 "Schematic-rescue_CONN_8-DoraBabu" 50 0 60 V V C CNN
 F2 "" 0 0 60 H V C CNN
 F3 "" 0 0 60 H V C CNN
 DRAW
@@ -246,11 +280,11 @@ X P8 8 -350 -350 250 R 50 50 1 1 P I
 ENDDRAW
 ENDDEF
 #
-# DoraBabu_DIODE
+# Schematic-rescue_DIODE-DoraBabu
 #
-DEF DoraBabu_DIODE D 0 40 N N 1 F N
+DEF Schematic-rescue_DIODE-DoraBabu D 0 40 N N 1 F N
 F0 "D" 0 100 40 H V C CNN
-F1 "DoraBabu_DIODE" 0 -100 40 H V C CNN
+F1 "Schematic-rescue_DIODE-DoraBabu" 0 -100 40 H V C CNN
 F2 "" 0 0 60 H V C CNN
 F3 "" 0 0 60 H V C CNN
 $FPLIST
@@ -265,11 +299,11 @@ X K 2 200 0 150 L 40 40 1 1 P
 ENDDRAW
 ENDDEF
 #
-# DoraBabu_HDR-1X15-15-91-?
+# Schematic-rescue_HDR-1X15-15-91-?-DoraBabu
 #
-DEF DoraBabu_HDR-1X15-15-91-? CN 0 40 Y Y 1 L N
+DEF Schematic-rescue_HDR-1X15-15-91-?-DoraBabu CN 0 40 Y Y 1 L N
 F0 "CN" -75 800 50 H V L BNN
-F1 "DoraBabu_HDR-1X15-15-91-?" -75 -862 50 H V L BNN
+F1 "Schematic-rescue_HDR-1X15-15-91-?-DoraBabu" -75 -862 50 H V L BNN
 F2 "con-hdrs40-15-91-15" 0 150 50 H I C CNN
 F3 "" 0 0 60 H V C CNN
 DRAW
@@ -325,11 +359,11 @@ X 9 9 -200 -100 100 R 40 40 1 1 P
 ENDDRAW
 ENDDEF
 #
-# DoraBabu_R
+# Schematic-rescue_R-DoraBabu
 #
-DEF DoraBabu_R R 0 0 N Y 1 F N
+DEF Schematic-rescue_R-DoraBabu R 0 0 N Y 1 F N
 F0 "R" 80 0 40 V V C CNN
-F1 "DoraBabu_R" 7 1 40 V V C CNN
+F1 "Schematic-rescue_R-DoraBabu" 7 1 40 V V C CNN
 F2 "" -70 0 30 V V C CNN
 F3 "" 0 0 30 H V C CNN
 $FPLIST
@@ -346,11 +380,11 @@ X ~ 2 0 -250 100 U 60 60 1 1 P
 ENDDRAW
 ENDDEF
 #
-# DoraBabu_ULN2003A
+# Schematic-rescue_ULN2003A-DoraBabu
 #
-DEF DoraBabu_ULN2003A U 0 40 Y Y 1 F N
+DEF Schematic-rescue_ULN2003A-DoraBabu U 0 40 Y Y 1 F N
 F0 "U" 0 100 70 H V C CNN
-F1 "DoraBabu_ULN2003A" 0 -100 70 H V C CNN
+F1 "Schematic-rescue_ULN2003A-DoraBabu" 0 -100 70 H V C CNN
 F2 "" 0 0 60 H V C CNN
 F3 "" 0 0 60 H V C CNN
 DRAW
@@ -371,40 +405,6 @@ X I6 6 -650 -100 300 R 60 60 1 1 I
 X I7 7 -650 -200 300 R 60 60 1 1 I
 X GND 8 -350 -500 0 U 60 60 1 1 W
 X COM 9 650 -400 300 L 60 60 1 1 I
-ENDDRAW
-ENDDEF
-#
-# Isolator_4N35
-#
-DEF Isolator_4N35 U 0 40 Y Y 1 F N
-F0 "U" -200 200 50 H V L CNN
-F1 "Isolator_4N35" 0 200 50 H V L CNN
-F2 "Package_DIP:DIP-6_W7.62mm" -200 -200 50 H I L CIN
-F3 "" 0 0 50 H I L CNN
-ALIAS 4N26 TIL111 4N27 4N28 4N35 4N36 4N37
-$FPLIST
- DIP*W7.62mm*
-$ENDFPLIST
-DRAW
-S -200 150 200 -150 0 1 10 f
-P 2 0 1 10 -150 -25 -100 -25 N
-P 2 0 1 0 105 -55 150 -100 N
-P 2 0 1 0 105 -45 150 0 N
-P 2 0 1 0 150 -100 200 -100 N
-P 2 0 1 0 150 0 200 0 N
-P 3 0 1 14 105 -10 105 -90 105 -90 N
-P 4 0 1 0 -200 -100 -125 -100 -125 100 -200 100 N
-P 4 0 1 10 -125 -25 -150 25 -100 25 -125 -25 N
-P 4 0 1 0 145 -95 135 -75 125 -85 145 -95 N
-P 4 0 1 0 200 100 75 100 75 -50 100 -50 N
-P 5 0 1 0 -25 -20 25 -20 10 -25 10 -15 25 -20 N
-P 5 0 1 0 -25 20 25 20 10 15 10 25 25 20 N
-X ~ 1 -300 100 100 R 50 50 1 1 P
-X ~ 2 -300 -100 100 R 50 50 1 1 P
-X NC 3 -200 0 100 R 50 50 1 1 N N
-X ~ 4 300 -100 100 L 50 50 1 1 P
-X ~ 5 300 0 100 L 50 50 1 1 P
-X ~ 6 300 100 100 L 50 50 1 1 P
 ENDDRAW
 ENDDEF
 #
