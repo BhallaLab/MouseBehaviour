@@ -1,11 +1,11 @@
 EESchema-LIBRARY Version 2.4
 #encoding utf-8
 #
-# AGND
+# ArduinoEncoderShield_old-rescue_AGND
 #
-DEF AGND #PWR 0 10 Y Y 1 F P
+DEF ArduinoEncoderShield_old-rescue_AGND #PWR 0 10 Y Y 1 F P
 F0 "#PWR" 0 0 40 H I C CNN
-F1 "AGND" 0 -70 50 H V C CNN
+F1 "ArduinoEncoderShield_old-rescue_AGND" 0 -70 50 H V C CNN
 F2 "" 0 0 60 H V C CNN
 F3 "" 0 0 60 H V C CNN
 DRAW
@@ -14,11 +14,11 @@ X AGND 1 0 0 0 U 40 40 1 1 W N
 ENDDRAW
 ENDDEF
 #
-# ARDUINO_SHIELD
+# ArduinoEncoderShield_old-rescue_ARDUINO_SHIELD
 #
-DEF ARDUINO_SHIELD SHIELD 0 40 Y Y 1 F N
+DEF ArduinoEncoderShield_old-rescue_ARDUINO_SHIELD SHIELD 0 40 Y Y 1 F N
 F0 "SHIELD" -350 950 60 H V C CNN
-F1 "ARDUINO_SHIELD" 50 -950 60 H V C CNN
+F1 "ArduinoEncoderShield_old-rescue_ARDUINO_SHIELD" 50 -950 60 H V C CNN
 F2 "" 0 0 60 H V C CNN
 F3 "" 0 0 60 H V C CNN
 DRAW
@@ -54,11 +54,11 @@ X V_IN V_IN -950 -100 300 R 50 50 1 1 W
 ENDDRAW
 ENDDEF
 #
-# CONN_2
+# ArduinoEncoderShield_old-rescue_CONN_2
 #
-DEF CONN_2 P 0 40 Y N 1 F N
+DEF ArduinoEncoderShield_old-rescue_CONN_2 P 0 40 Y N 1 F N
 F0 "P" -50 0 40 V V C CNN
-F1 "CONN_2" 50 0 40 V V C CNN
+F1 "ArduinoEncoderShield_old-rescue_CONN_2" 50 0 40 V V C CNN
 F2 "" 0 0 60 H V C CNN
 F3 "" 0 0 60 H V C CNN
 DRAW
@@ -68,11 +68,11 @@ X PM 2 -350 -100 250 R 60 60 1 1 P I
 ENDDRAW
 ENDDEF
 #
-# CONN_6
+# ArduinoEncoderShield_old-rescue_CONN_6
 #
-DEF CONN_6 P 0 30 Y N 1 F N
+DEF ArduinoEncoderShield_old-rescue_CONN_6 P 0 30 Y N 1 F N
 F0 "P" -50 0 60 V V C CNN
-F1 "CONN_6" 50 0 60 V V C CNN
+F1 "ArduinoEncoderShield_old-rescue_CONN_6" 50 0 60 V V C CNN
 F2 "" 0 0 60 H V C CNN
 F3 "" 0 0 60 H V C CNN
 DRAW
@@ -86,11 +86,11 @@ X 6 6 -350 -250 250 R 60 60 1 1 P I
 ENDDRAW
 ENDDEF
 #
-# CONN_8
+# ArduinoEncoderShield_old-rescue_CONN_8
 #
-DEF CONN_8 P 0 40 Y N 1 F N
+DEF ArduinoEncoderShield_old-rescue_CONN_8 P 0 40 Y N 1 F N
 F0 "P" -50 0 60 V V C CNN
-F1 "CONN_8" 50 0 60 V V C CNN
+F1 "ArduinoEncoderShield_old-rescue_CONN_8" 50 0 60 V V C CNN
 F2 "" 0 0 60 H V C CNN
 F3 "" 0 0 60 H V C CNN
 DRAW
@@ -106,11 +106,11 @@ X P8 8 -350 -350 250 R 50 50 1 1 P I
 ENDDRAW
 ENDDEF
 #
-# DIODE
+# ArduinoEncoderShield_old-rescue_DIODE
 #
-DEF DIODE D 0 40 N N 1 F N
+DEF ArduinoEncoderShield_old-rescue_DIODE D 0 40 N N 1 F N
 F0 "D" 0 100 40 H V C CNN
-F1 "DIODE" 0 -100 40 H V C CNN
+F1 "ArduinoEncoderShield_old-rescue_DIODE" 0 -100 40 H V C CNN
 F2 "" 0 0 60 H V C CNN
 F3 "" 0 0 60 H V C CNN
 $FPLIST
@@ -125,11 +125,11 @@ X K 2 200 0 150 L 40 40 1 1 P
 ENDDRAW
 ENDDEF
 #
-# HDR-1X15-15-91-?
+# ArduinoEncoderShield_old-rescue_HDR-1X15-15-91-?
 #
-DEF HDR-1X15-15-91-? CN 0 40 Y Y 1 L N
+DEF ArduinoEncoderShield_old-rescue_HDR-1X15-15-91-? CN 0 40 Y Y 1 L N
 F0 "CN" -75 800 50 H V L BNN
-F1 "HDR-1X15-15-91-?" -75 -862 50 H V L BNN
+F1 "ArduinoEncoderShield_old-rescue_HDR-1X15-15-91-?" -75 -862 50 H V L BNN
 F2 "con-hdrs40-15-91-15" 0 150 50 H I C CNN
 F3 "" 0 0 60 H V C CNN
 DRAW
@@ -185,11 +185,11 @@ X 9 9 -200 -100 100 R 40 40 1 1 P
 ENDDRAW
 ENDDEF
 #
-# R
+# ArduinoEncoderShield_old-rescue_R
 #
-DEF R R 0 0 N Y 1 F N
+DEF ArduinoEncoderShield_old-rescue_R R 0 0 N Y 1 F N
 F0 "R" 80 0 40 V V C CNN
-F1 "R" 7 1 40 V V C CNN
+F1 "ArduinoEncoderShield_old-rescue_R" 7 1 40 V V C CNN
 F2 "" -70 0 30 V V C CNN
 F3 "" 0 0 30 H V C CNN
 $FPLIST
@@ -206,11 +206,11 @@ X ~ 2 0 -250 100 U 60 60 1 1 P
 ENDDRAW
 ENDDEF
 #
-# ULN2003A
+# ArduinoEncoderShield_old-rescue_ULN2003A
 #
-DEF ULN2003A U 0 40 Y Y 1 F N
+DEF ArduinoEncoderShield_old-rescue_ULN2003A U 0 40 Y Y 1 F N
 F0 "U" 0 100 70 H V C CNN
-F1 "ULN2003A" 0 -100 70 H V C CNN
+F1 "ArduinoEncoderShield_old-rescue_ULN2003A" 0 -100 70 H V C CNN
 F2 "" 0 0 60 H V C CNN
 F3 "" 0 0 60 H V C CNN
 DRAW
