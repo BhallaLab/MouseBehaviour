@@ -420,4 +420,6 @@ F 3 "~" H 7775 2700 50  0001 C CNN
 	1    7775 2700
 	-1   0    0    1   
 $EndComp
+Text Notes 5800 3100 0    50   ~ 0
+When paw is on shockpad\ntau should be approx 1ms.
 $EndSCHEMATC

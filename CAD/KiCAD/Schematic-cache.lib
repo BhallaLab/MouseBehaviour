@@ -181,11 +181,11 @@ X A0 9 500 0 100 L 50 50 1 1 B
 ENDDRAW
 ENDDEF
 #
-# Schematic-rescue_G3MB202PDC12-BhallaLabComponents
+# Schematic-rescue_G3MB202PDC12-BhallaLabComponents-Schematic-rescue
 #
-DEF Schematic-rescue_G3MB202PDC12-BhallaLabComponents K 0 40 Y Y 1 L N
+DEF Schematic-rescue_G3MB202PDC12-BhallaLabComponents-Schematic-rescue K 0 40 Y Y 1 L N
 F0 "K" -176 225 50 H V L BNN
-F1 "Schematic-rescue_G3MB202PDC12-BhallaLabComponents" -176 -276 50 H V L BNN
+F1 "Schematic-rescue_G3MB202PDC12-BhallaLabComponents-Schematic-rescue" -176 -276 50 H V L BNN
 F2 "RELAY_G3MB202PDC12" 0 0 50 H I L BNN
 F3 "Omron Automation" 0 0 50 H I L BNN
 F4 "Relay • Solid-State • Phototriac • Base: PCB terminal • Amperage: 2 AMP • Coil Voltage: 24 Vdc • Configuration: SPST-..." 0 0 50 H I L BNN
@@ -246,11 +246,11 @@ X - 4 -500 325 200 D 40 40 0 0 W
 ENDDRAW
 ENDDEF
 #
-# Schematic-rescue_RotaryEncoder-OrangeRotaryEncoder-Schematic-rescue
+# Schematic-rescue_RotaryEncoder-OrangeRotaryEncoder-Schematic-rescue-Schematic-rescue
 #
-DEF Schematic-rescue_RotaryEncoder-OrangeRotaryEncoder-Schematic-rescue RotaryEncoder 0 40 N Y 1 F N
+DEF Schematic-rescue_RotaryEncoder-OrangeRotaryEncoder-Schematic-rescue-Schematic-rescue RotaryEncoder 0 40 N Y 1 F N
 F0 "RotaryEncoder" 0 0 50 H I C CNN
-F1 "Schematic-rescue_RotaryEncoder-OrangeRotaryEncoder-Schematic-rescue" 0 0 0 H I C CNN
+F1 "Schematic-rescue_RotaryEncoder-OrangeRotaryEncoder-Schematic-rescue-Schematic-rescue" 0 0 0 H I C CNN
 F2 "" -200 150 50 H I C CNN
 F3 "" -200 150 50 H I C CNN
 DRAW
@@ -265,11 +265,11 @@ X Shield 5 250 -200 100 R 50 50 1 1 N
 ENDDRAW
 ENDDEF
 #
-# Schematic-rescue_ShockPad-BhallaLabComponents-Schematic-rescue
+# Schematic-rescue_ShockPad-BhallaLabComponents-Schematic-rescue-Schematic-rescue
 #
-DEF Schematic-rescue_ShockPad-BhallaLabComponents-Schematic-rescue ShockPad 0 40 Y Y 1 F N
+DEF Schematic-rescue_ShockPad-BhallaLabComponents-Schematic-rescue-Schematic-rescue ShockPad 0 40 Y Y 1 F N
 F0 "ShockPad" 0 250 50 H I C CNN
-F1 "Schematic-rescue_ShockPad-BhallaLabComponents-Schematic-rescue" 0 394 50 H V C TNN
+F1 "Schematic-rescue_ShockPad-BhallaLabComponents-Schematic-rescue-Schematic-rescue" 0 394 50 H V C TNN
 F2 "" 350 -150 50 H I C CNN
 F3 "" 350 -150 50 H I C CNN
 DRAW
