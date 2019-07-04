@@ -1,0 +1,88 @@
+InsulateBottom__Bigger
+---------------------------------------------------------------------------------------------------
+Layer = InsulateTop, Phase = MillingTop
+Directly realized objects: Closed Shapes, Rectangles, Circles (no usage of any tool)
+No. of objects 5
+	Perimeter [mm]	= 58
+	Moves [mm]	= 316
+Tool usage:
+No.	Flashes	Paths	Segments	Length [mm]	Moves [mm]	Tool/Aperture
+1	0	263	4051	    2353		631		 "Universal Cutter 0.2 mm (8 mil)"
+10	0	155	2282	    8126		1156		 "End Mill 1.0 mm (39 mil)"
+---------------------------------------------------------------------------------------------------
+Layer = BoardOutline, Phase = MillingTop
+Directly realized objects: Closed Shapes, Rectangles, Circles (no usage of any tool)
+No. of objects 0
+	Perimeter [mm]	= 0
+	Moves [mm]	= 0
+Tool usage:
+No.	Flashes	Paths	Segments	Length [mm]	Moves [mm]	Tool/Aperture
+1	0	12	24	    294		190		 "Universal Cutter 0.2 mm (8 mil)"
+---------------------------------------------------------------------------------------------------
+Layer = InsulateBottom, Phase = MillingBottom
+Directly realized objects: Closed Shapes, Rectangles, Circles (no usage of any tool)
+No. of objects 4
+	Perimeter [mm]	= 52
+	Moves [mm]	= 64
+Tool usage:
+No.	Flashes	Paths	Segments	Length [mm]	Moves [mm]	Tool/Aperture
+1	0	221	12632	    7077		897		 "Universal Cutter 0.2 mm (8 mil)"
+10	0	128	2276	    4242		591		 "End Mill 1.0 mm (39 mil)"
+---------------------------------------------------------------------------------------------------
+Layer = BoardOutline, Phase = MillingBottom
+Directly realized objects: Closed Shapes, Rectangles, Circles (no usage of any tool)
+No. of objects 0
+	Perimeter [mm]	= 0
+	Moves [mm]	= 0
+Tool usage:
+No.	Flashes	Paths	Segments	Length [mm]	Moves [mm]	Tool/Aperture
+1	0	12	24	    294		190		 "Universal Cutter 0.2 mm (8 mil)"
+---------------------------------------------------------------------------------------------------
+Layer = DrillPlated, Phase = DrillingPlated
+Directly realized objects: Closed Shapes, Rectangles, Circles (no usage of any tool)
+No. of objects 0
+	Perimeter [mm]	= 0
+	Moves [mm]	= 0
+Tool usage:
+No.	Flashes	Paths	Segments	Length [mm]	Moves [mm]	Tool/Aperture
+7	94	0	0	    0		586		 "Spiral Drill 0.8 mm"
+9	57	0	0	    0		250		 "Spiral Drill 1.0 mm"
+24	0	4	16	    17		139		 "Contour Router 2.0 mm (79 mil)"
+---------------------------------------------------------------------------------------------------
+Layer = DrillUnplated, Phase = DrillingUnplated
+Directly realized objects: Closed Shapes, Rectangles, Circles (no usage of any tool)
+No. of objects 0
+	Perimeter [mm]	= 0
+	Moves [mm]	= 0
+Tool usage:
+No.	Flashes	Paths	Segments	Length [mm]	Moves [mm]	Tool/Aperture
+7	94	0	0	    0		586		 "Spiral Drill 0.8 mm"
+9	57	0	0	    0		250		 "Spiral Drill 1.0 mm"
+24	0	4	16	    17		139		 "Contour Router 2.0 mm (79 mil)"
+---------------------------------------------------------------------------------------------------
+Layer = CuttingOutside, Phase = CuttingOutside
+Directly realized objects: Closed Shapes, Rectangles, Circles (no usage of any tool)
+No. of objects 0
+	Perimeter [mm]	= 0
+	Moves [mm]	= 0
+Tool usage:
+No.	Flashes	Paths	Segments	Length [mm]	Moves [mm]	Tool/Aperture
+3	0	2	49	    294		268		 "Contour Router 2.0 mm (79 mil)"
+---------------------------------------------------------------------------------------------------
+Layer = DrillPlated, Phase = MarkingDrills
+Directly realized objects: Closed Shapes, Rectangles, Circles (no usage of any tool)
+No. of objects 0
+	Perimeter [mm]	= 0
+	Moves [mm]	= 0
+Tool usage:
+No.	Flashes	Paths	Segments	Length [mm]	Moves [mm]	Tool/Aperture
+1	155	0	0	    0		828		 "Universal Cutter 0.2 mm marking"
+---------------------------------------------------------------------------------------------------
+Layer = DrillUnplated, Phase = MarkingDrills
+Directly realized objects: Closed Shapes, Rectangles, Circles (no usage of any tool)
+No. of objects 0
+	Perimeter [mm]	= 0
+	Moves [mm]	= 0
+Tool usage:
+No.	Flashes	Paths	Segments	Length [mm]	Moves [mm]	Tool/Aperture
+1	155	0	0	    0		828		 "Universal Cutter 0.2 mm marking"
