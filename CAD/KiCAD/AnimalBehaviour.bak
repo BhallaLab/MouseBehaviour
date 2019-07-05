@@ -239,7 +239,7 @@ Wire Wire Line
 Wire Wire Line
 	1800 2150 2250 2150
 Text GLabel 1950 5100 2    60   Input ~ 0
-D5
+D6
 Text GLabel 1950 4900 2    60   Input ~ 0
 D4
 Text GLabel 1900 4650 2    60   Input ~ 0
@@ -549,7 +549,7 @@ F 3 "~" H 2650 4850 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 Text GLabel 2850 4550 2    60   Input ~ 0
-D7
+D5
 Text GLabel 2850 4750 2    60   Input ~ 0
 A0
 Wire Wire Line

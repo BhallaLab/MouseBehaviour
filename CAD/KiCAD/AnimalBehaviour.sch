@@ -1,5 +1,5 @@
 EESchema Schematic File Version 4
-LIBS:ArduinoEncoderShield_anzal-cache
+LIBS:AnimalBehaviour-cache
 EELAYER 29 0
 EELAYER END
 $Descr A4 11693 8268
@@ -15,7 +15,7 @@ Comment3 ""
 Comment4 ""
 $EndDescr
 $Comp
-L ArduinoEncoderShield_anzal-rescue:ARDUINO_SHIELD SHIELD1
+L AnimalBehaviour-rescue:ARDUINO_SHIELD-ArduinoEncoderShield_anzal-rescue SHIELD1
 U 1 1 5C3EFA63
 P 6450 2300
 F 0 "SHIELD1" H 6100 3250 60  0000 C CNN
@@ -26,7 +26,7 @@ F 3 "" H 6450 2300 60  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L ArduinoEncoderShield_anzal-rescue:CONN_8 P4
+L AnimalBehaviour-rescue:CONN_8-ArduinoEncoderShield_anzal-rescue P4
 U 1 1 5C3EFA87
 P 8450 2750
 F 0 "P4" V 8400 2750 60  0000 C CNN
@@ -37,7 +37,7 @@ F 3 "" H 8450 2750 60  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L ArduinoEncoderShield_anzal-rescue:CONN_6 P2
+L AnimalBehaviour-rescue:CONN_6-ArduinoEncoderShield_anzal-rescue P2
 U 1 1 5C3EFA88
 P 4400 2850
 F 0 "P2" V 4350 2850 60  0000 C CNN
@@ -48,7 +48,7 @@ F 3 "" H 4400 2850 60  0000 C CNN
 	-1   0    0    1   
 $EndComp
 $Comp
-L ArduinoEncoderShield_anzal-rescue:R R1
+L AnimalBehaviour-rescue:R-ArduinoEncoderShield_anzal-rescue R1
 U 1 1 5C3EFA9A
 P 2100 1850
 F 0 "R1" V 2050 1650 40  0000 C CNN
@@ -117,7 +117,7 @@ DGND
 Text GLabel 8100 1500 0    60   Input ~ 0
 AREF
 $Comp
-L ArduinoEncoderShield_anzal-rescue:CONN_8 P3
+L AnimalBehaviour-rescue:CONN_8-ArduinoEncoderShield_anzal-rescue P3
 U 1 1 5C3EFD0C
 P 8450 1850
 F 0 "P3" V 8400 1850 60  0000 C CNN
@@ -144,7 +144,7 @@ DGND
 Text GLabel 7400 1500 2    60   Input ~ 0
 AREF
 $Comp
-L ArduinoEncoderShield_anzal-rescue:CONN_6 P1
+L AnimalBehaviour-rescue:CONN_6-ArduinoEncoderShield_anzal-rescue P1
 U 1 1 5C3F096C
 P 4400 2150
 F 0 "P1" V 4350 2150 60  0000 C CNN
@@ -220,7 +220,7 @@ $EndComp
 Wire Wire Line
 	1850 1950 1800 1950
 $Comp
-L ArduinoEncoderShield_anzal-rescue:R R2
+L AnimalBehaviour-rescue:R-ArduinoEncoderShield_anzal-rescue R2
 U 1 1 5C3EFA99
 P 2100 1950
 F 0 "R2" V 2050 1750 40  0000 C CNN
@@ -299,7 +299,7 @@ F 3 "https://www.vishay.com/docs/81181/4n35.pdf" H 8850 4250 50  0001 L CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L ArduinoEncoderShield_anzal-rescue:R R5
+L AnimalBehaviour-rescue:R-ArduinoEncoderShield_anzal-rescue R5
 U 1 1 5D221F97
 P 8300 4150
 F 0 "R5" V 8115 4150 40  0000 C CNN
@@ -314,7 +314,7 @@ D11
 Text GLabel 8550 4350 0    60   Input ~ 0
 DGND
 $Comp
-L ArduinoEncoderShield_anzal-rescue:R R6
+L AnimalBehaviour-rescue:R-ArduinoEncoderShield_anzal-rescue R6
 U 1 1 5D222B56
 P 9200 4650
 F 0 "R6" H 9271 4688 40  0000 L CNN
@@ -371,7 +371,7 @@ Wire Wire Line
 Wire Wire Line
 	9950 4050 9950 4150
 $Comp
-L ArduinoEncoderShield_anzal-rescue:DIODE D1
+L AnimalBehaviour-rescue:DIODE-ArduinoEncoderShield_anzal-rescue D1
 U 1 1 5D22A71C
 P 9700 3950
 F 0 "D1" V 9738 3872 40  0000 R CNN
@@ -497,7 +497,7 @@ F 3 "~" H 6900 4750 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L ArduinoEncoderShield_anzal-rescue:R R4
+L AnimalBehaviour-rescue:R-ArduinoEncoderShield_anzal-rescue R4
 U 1 1 5D261F4B
 P 6900 5250
 F 0 "R4" H 6971 5288 40  0000 L CNN
@@ -643,7 +643,7 @@ D9
 Text Notes 4600 800  0    60   ~ 0
 Extra pin for new arduino version\n
 $Comp
-L ArduinoEncoderShield_anzal-rescue:R R3
+L AnimalBehaviour-rescue:R-ArduinoEncoderShield_anzal-rescue R3
 U 1 1 5D21C427
 P 5500 6700
 F 0 "R3" V 5315 6700 40  0000 C CNN
