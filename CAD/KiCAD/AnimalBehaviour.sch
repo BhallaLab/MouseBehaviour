@@ -1,5 +1,4 @@
 EESchema Schematic File Version 4
-LIBS:DoraBabu
 EELAYER 29 0
 EELAYER END
 $Descr A4 11693 8268
@@ -26,7 +25,7 @@ F 3 "" H 7175 800 60  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L DoraBabu:ULN2003A U1
+L DoraBabu:ArduinoEncoderShield_old-rescue_ULN2003A U1
 U 1 1 5C3EFA71
 P 9300 1225
 F 0 "U1" H 9300 1325 70  0000 C CNN
@@ -37,7 +36,7 @@ F 3 "" H 9300 1225 60  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L DoraBabu:DIODE D1
+L DoraBabu:ArduinoEncoderShield_old-rescue_DIODE D1
 U 1 1 5C3EFA72
 P 10300 1625
 F 0 "D1" H 10300 1725 40  0000 C CNN
@@ -59,7 +58,7 @@ F 3 "" H 7175 1800 60  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L DoraBabu:R R8
+L DoraBabu:ArduinoEncoderShield_old-rescue_R R8
 U 1 1 5C3EFA76
 P 7575 2200
 F 0 "R8" V 7655 2200 40  0000 C CNN
@@ -70,7 +69,7 @@ F 3 "~" H 7575 2200 30  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L DoraBabu:R R6
+L DoraBabu:ArduinoEncoderShield_old-rescue_R R6
 U 1 1 5C3EFA82
 P 6575 1700
 F 0 "R6" V 6655 1700 40  0000 C CNN
@@ -81,7 +80,7 @@ F 3 "~" H 6575 1700 30  0000 C CNN
 	0    -1   -1   0   
 $EndComp
 $Comp
-L DoraBabu:R R5
+L DoraBabu:ArduinoEncoderShield_old-rescue_R R5
 U 1 1 5C3EFA83
 P 6575 700
 F 0 "R5" V 6475 700 40  0000 C CNN
@@ -92,7 +91,7 @@ F 3 "~" H 6575 700 30  0000 C CNN
 	0    -1   -1   0   
 $EndComp
 $Comp
-L DoraBabu:R R10
+L DoraBabu:ArduinoEncoderShield_old-rescue_R R10
 U 1 1 5C3EFA84
 P 7925 5425
 F 0 "R10" V 8005 5425 40  0000 C CNN
@@ -129,7 +128,7 @@ Solenoid2_1
 Text GLabel 10200 825  2    60   Input ~ 0
 Solenoid2_2
 $Comp
-L DoraBabu:HDR-1X15-15-91-? CN1
+L DoraBabu:ArduinoEncoderShield_old-rescue_HDR-1X15-15-91-? CN1
 U 1 1 5C3EFA8D
 P 1650 5500
 F 0 "CN1" H 1575 6300 50  0000 L BNN
@@ -140,7 +139,7 @@ F 3 "" H 1650 5500 60  0001 C CNN
 	-1   0    0    1   
 $EndComp
 $Comp
-L DoraBabu:R R12
+L DoraBabu:ArduinoEncoderShield_old-rescue_R R12
 U 1 1 5C3EFA8E
 P 9825 5425
 F 0 "R12" V 9905 5425 40  0000 C CNN
@@ -254,7 +253,7 @@ EX 5 V
 Text GLabel 10775 5525 2    60   Input ~ 0
 EX 5 V
 $Comp
-L DoraBabu:R R11
+L DoraBabu:ArduinoEncoderShield_old-rescue_R R11
 U 1 1 5C3F0A84
 P 8875 5975
 F 0 "R11" V 8955 5975 40  0000 C CNN
@@ -267,7 +266,7 @@ $EndComp
 Wire Wire Line
 	8875 5725 8875 5675
 $Comp
-L DoraBabu:AGND #PWR05
+L power:GNDA #PWR05
 U 1 1 5C3F0AE2
 P 8875 6325
 F 0 "#PWR05" H 8875 6325 40  0001 C CNN
@@ -285,7 +284,7 @@ Connection ~ 8875 5675
 Text GLabel 8175 5625 0    60   Input ~ 0
 DGND
 $Comp
-L DoraBabu:R R13
+L DoraBabu:ArduinoEncoderShield_old-rescue_R R13
 U 1 1 5C3F0BA2
 P 10775 5975
 F 0 "R13" V 10855 5975 40  0000 C CNN
@@ -296,7 +295,7 @@ F 3 "~" H 10775 5975 30  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L DoraBabu:AGND #PWR07
+L power:GNDA #PWR07
 U 1 1 5C3F0BA8
 P 10775 6325
 F 0 "#PWR07" H 10775 6325 40  0001 C CNN
@@ -322,7 +321,7 @@ Tone2
 Text GLabel 1850 5100 2    60   Input ~ 0
 AGND
 $Comp
-L DoraBabu:AGND #PWR02
+L power:GNDA #PWR02
 U 1 1 5C3F0CE1
 P 6975 6225
 F 0 "#PWR02" H 6975 6225 40  0001 C CNN
@@ -339,7 +338,7 @@ Tone3
 Text GLabel 1850 6200 2    60   Input ~ 0
 AGND
 $Comp
-L DoraBabu:R R9
+L DoraBabu:ArduinoEncoderShield_old-rescue_R R9
 U 1 1 5C3EFA73
 P 7625 1200
 F 0 "R9" V 7705 1200 40  0000 C CNN
@@ -365,7 +364,7 @@ Wire Wire Line
 Wire Wire Line
 	7575 1900 7575 1950
 $Comp
-L DoraBabu:AGND #PWR04
+L power:GNDA #PWR04
 U 1 1 5C3F0E1A
 P 7625 1450
 F 0 "#PWR04" H 7625 1450 40  0001 C CNN
@@ -376,7 +375,7 @@ F 3 "" H 7625 1450 60  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L DoraBabu:AGND #PWR03
+L power:GNDA #PWR03
 U 1 1 5C3F0E20
 P 7575 2450
 F 0 "#PWR03" H 7575 2450 40  0001 C CNN
@@ -588,7 +587,7 @@ Wire Wire Line
 Wire Wire Line
 	6750 3650 6925 3650
 $Comp
-L DoraBabu:AGND #PWR06
+L power:GNDA #PWR06
 U 1 1 5C3EFA74
 P 8600 1725
 F 0 "#PWR06" H 8600 1725 40  0001 C CNN
@@ -653,7 +652,7 @@ Wire Wire Line
 Wire Wire Line
 	6825 1900 6875 1900
 $Comp
-L DoraBabu:AGND #PWR0101
+L power:GNDA #PWR0101
 U 1 1 5D23393F
 P 5050 2725
 F 0 "#PWR0101" H 5050 2725 40  0001 C CNN
@@ -681,7 +680,7 @@ NoConn ~ 9950 1425
 NoConn ~ 3700 2000
 NoConn ~ 1800 2900
 $Comp
-L DoraBabu:R R4
+L DoraBabu:ArduinoEncoderShield_old-rescue_R R4
 U 1 1 5C3EFA94
 P 5975 5425
 F 0 "R4" V 6055 5425 40  0000 C CNN
@@ -692,7 +691,7 @@ F 3 "~" H 5975 5425 30  0001 C CNN
 	0    -1   -1   0   
 $EndComp
 $Comp
-L DoraBabu:R R7
+L DoraBabu:ArduinoEncoderShield_old-rescue_R R7
 U 1 1 5C3EFA96
 P 6975 5925
 F 0 "R7" V 7075 6075 40  0000 C CNN
@@ -710,7 +709,7 @@ Wire Wire Line
 Wire Wire Line
 	1800 2700 1625 2700
 $Comp
-L DoraBabu:AGND #PWR0102
+L power:GNDA #PWR0102
 U 1 1 5D239D97
 P 1450 2750
 F 0 "#PWR0102" H 1450 2750 40  0001 C CNN
@@ -721,7 +720,7 @@ F 3 "" H 1450 2750 60  0000 C CNN
 	0    1    1    0   
 $EndComp
 $Comp
-L DoraBabu:ARDUINO_SHIELD SHIELD1
+L DoraBabu:ArduinoEncoderShield_old-rescue_ARDUINO_SHIELD SHIELD1
 U 1 1 5C3EFA63
 P 2750 2800
 F 0 "SHIELD1" H 2400 3750 60  0000 C CNN
@@ -746,7 +745,7 @@ F 3 "~" H 7100 3100 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L DoraBabu:AGND #PWR01
+L power:GNDA #PWR01
 U 1 1 5D23D211
 P 6650 3300
 F 0 "#PWR01" H 6650 3300 40  0001 C CNN
