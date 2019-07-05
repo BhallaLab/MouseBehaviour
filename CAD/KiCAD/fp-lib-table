@@ -1,0 +1,5 @@
+(fp_lib_table
+  (lib (name arduino_shields)(type Legacy)(uri "C:/Program Files (x86)/KiCad/share/library/Arduino_Shield_Modules_for_KiCad_V3/arduino_shields.mod")(options "")(descr ""))
+  (lib (name G5LA-1-DC5)(type Eagle)(uri "C:/Program Files (x86)/KiCad/share/library/EagleLib/LIB_G5LA-1-DC5/G5LA-1-DC5/EAGLE/G5LA-1-DC5.lbr")(options "")(descr ""))
+  (lib (name w_conn_rf)(type Legacy)(uri "C:/Program Files (x86)/KiCad/share/modules/mod_conn_rf/w_conn_rf.mod")(options "")(descr ""))
+)
