@@ -1,89 +1,11 @@
 EESchema-LIBRARY Version 2.4
 #encoding utf-8
 #
-# AnimalBehaviour-rescue_ARDUINO_SHIELD-ArduinoEncoderShield_anzal-rescue
+# AnimalBehaviour-rescue_DIODE-ArduinoEncoderShield_anzal-rescue-AnimalBehaviour-rescue
 #
-DEF AnimalBehaviour-rescue_ARDUINO_SHIELD-ArduinoEncoderShield_anzal-rescue SHIELD 0 40 Y Y 1 F N
-F0 "SHIELD" -350 950 60 H V C CNN
-F1 "AnimalBehaviour-rescue_ARDUINO_SHIELD-ArduinoEncoderShield_anzal-rescue" 50 -950 60 H V C CNN
-F2 "" 0 0 60 H V C CNN
-F3 "" 0 0 60 H V C CNN
-DRAW
-S -650 -900 650 900 0 1 0 N
-X 0 0 950 -800 300 L 50 50 1 1 B
-X 1 1 950 -700 300 L 50 50 1 1 B
-X 10 10 950 300 300 L 50 50 1 1 B
-X 11 11 950 400 300 L 50 50 1 1 B
-X 12 12 950 500 300 L 50 50 1 1 B
-X 13 13 950 600 300 L 50 50 1 1 B
-X 2 2 950 -600 300 L 50 50 1 1 B
-X 3 3 950 -500 300 L 50 50 1 1 B
-X 3V3 3V3 -950 300 300 R 50 50 1 1 W
-X 4 4 950 -400 300 L 50 50 1 1 B
-X 5 5 950 -300 300 L 50 50 1 1 B
-X 5V 5V -950 200 300 R 50 50 1 1 W
-X 6 6 950 -200 300 L 50 50 1 1 B
-X 7 7 950 -100 300 L 50 50 1 1 B
-X 8 8 950 100 300 L 50 50 1 1 B
-X 9 9 950 200 300 L 50 50 1 1 B
-X AD0 AD0 -950 -300 300 R 50 50 1 1 B
-X AD1 AD1 -950 -400 300 R 50 50 1 1 B
-X AD2 AD2 -950 -500 300 R 50 50 1 1 B
-X AD3 AD3 -950 -600 300 R 50 50 1 1 B
-X AD4 AD4 -950 -700 300 R 50 50 1 1 B
-X AD5 AD5 -950 -800 300 R 50 50 1 1 B
-X AREF AREF 950 800 300 L 50 50 1 1 W
-X GND1 GND1 -950 100 300 R 50 50 1 1 W
-X GND2 GND2 -950 0 300 R 50 50 1 1 W
-X GND3 GND3 950 700 300 L 50 50 1 1 W
-X RST RST -950 400 300 R 50 50 1 1 I
-X V_IN V_IN -950 -100 300 R 50 50 1 1 W
-ENDDRAW
-ENDDEF
-#
-# AnimalBehaviour-rescue_CONN_6-ArduinoEncoderShield_anzal-rescue
-#
-DEF AnimalBehaviour-rescue_CONN_6-ArduinoEncoderShield_anzal-rescue P 0 30 Y N 1 F N
-F0 "P" -50 0 60 V V C CNN
-F1 "AnimalBehaviour-rescue_CONN_6-ArduinoEncoderShield_anzal-rescue" 50 0 60 V V C CNN
-F2 "" 0 0 60 H V C CNN
-F3 "" 0 0 60 H V C CNN
-DRAW
-S -100 300 100 -300 0 1 0 N
-X 1 1 -350 250 250 R 60 60 1 1 P I
-X 2 2 -350 150 250 R 60 60 1 1 P I
-X 3 3 -350 50 250 R 60 60 1 1 P I
-X 4 4 -350 -50 250 R 60 60 1 1 P I
-X 5 5 -350 -150 250 R 60 60 1 1 P I
-X 6 6 -350 -250 250 R 60 60 1 1 P I
-ENDDRAW
-ENDDEF
-#
-# AnimalBehaviour-rescue_CONN_8-ArduinoEncoderShield_anzal-rescue
-#
-DEF AnimalBehaviour-rescue_CONN_8-ArduinoEncoderShield_anzal-rescue P 0 40 Y N 1 F N
-F0 "P" -50 0 60 V V C CNN
-F1 "AnimalBehaviour-rescue_CONN_8-ArduinoEncoderShield_anzal-rescue" 50 0 60 V V C CNN
-F2 "" 0 0 60 H V C CNN
-F3 "" 0 0 60 H V C CNN
-DRAW
-S -100 400 100 -400 0 1 0 N
-X P1 1 -350 350 250 R 50 50 1 1 P I
-X P2 2 -350 250 250 R 50 50 1 1 P I
-X P3 3 -350 150 250 R 50 50 1 1 P I
-X P4 4 -350 50 250 R 50 50 1 1 P I
-X P5 5 -350 -50 250 R 50 50 1 1 P I
-X P6 6 -350 -150 250 R 50 50 1 1 P I
-X P7 7 -350 -250 250 R 50 50 1 1 P I
-X P8 8 -350 -350 250 R 50 50 1 1 P I
-ENDDRAW
-ENDDEF
-#
-# AnimalBehaviour-rescue_DIODE-ArduinoEncoderShield_anzal-rescue
-#
-DEF AnimalBehaviour-rescue_DIODE-ArduinoEncoderShield_anzal-rescue D 0 40 N N 1 F N
+DEF AnimalBehaviour-rescue_DIODE-ArduinoEncoderShield_anzal-rescue-AnimalBehaviour-rescue D 0 40 N N 1 F N
 F0 "D" 0 100 40 H V C CNN
-F1 "AnimalBehaviour-rescue_DIODE-ArduinoEncoderShield_anzal-rescue" 0 -100 40 H V C CNN
+F1 "AnimalBehaviour-rescue_DIODE-ArduinoEncoderShield_anzal-rescue-AnimalBehaviour-rescue" 0 -100 40 H V C CNN
 F2 "" 0 0 60 H V C CNN
 F3 "" 0 0 60 H V C CNN
 $FPLIST
@@ -98,11 +20,11 @@ X K 2 200 0 150 L 40 40 1 1 P
 ENDDRAW
 ENDDEF
 #
-# AnimalBehaviour-rescue_R-ArduinoEncoderShield_anzal-rescue
+# AnimalBehaviour-rescue_R-ArduinoEncoderShield_anzal-rescue-AnimalBehaviour-rescue
 #
-DEF AnimalBehaviour-rescue_R-ArduinoEncoderShield_anzal-rescue R 0 0 N Y 1 F N
+DEF AnimalBehaviour-rescue_R-ArduinoEncoderShield_anzal-rescue-AnimalBehaviour-rescue R 0 0 N Y 1 F N
 F0 "R" 80 0 40 V V C CNN
-F1 "AnimalBehaviour-rescue_R-ArduinoEncoderShield_anzal-rescue" 7 1 40 V V C CNN
+F1 "AnimalBehaviour-rescue_R-ArduinoEncoderShield_anzal-rescue-AnimalBehaviour-rescue" 7 1 40 V V C CNN
 F2 "" -70 0 30 V V C CNN
 F3 "" 0 0 30 H V C CNN
 $FPLIST
@@ -283,6 +205,64 @@ X Ext 2 0 -200 100 U 50 50 1 1 P
 ENDDRAW
 ENDDEF
 #
+# Connector_Generic_Conn_01x06
+#
+DEF Connector_Generic_Conn_01x06 J 0 40 Y N 1 F N
+F0 "J" 0 300 50 H V C CNN
+F1 "Connector_Generic_Conn_01x06" 0 -400 50 H V C CNN
+F2 "" 0 0 50 H I C CNN
+F3 "" 0 0 50 H I C CNN
+$FPLIST
+ Connector*:*_1x??_*
+$ENDFPLIST
+DRAW
+S -50 -295 0 -305 1 1 6 N
+S -50 -195 0 -205 1 1 6 N
+S -50 -95 0 -105 1 1 6 N
+S -50 5 0 -5 1 1 6 N
+S -50 105 0 95 1 1 6 N
+S -50 205 0 195 1 1 6 N
+S -50 250 50 -350 1 1 10 f
+X Pin_1 1 -200 200 150 R 50 50 1 1 P
+X Pin_2 2 -200 100 150 R 50 50 1 1 P
+X Pin_3 3 -200 0 150 R 50 50 1 1 P
+X Pin_4 4 -200 -100 150 R 50 50 1 1 P
+X Pin_5 5 -200 -200 150 R 50 50 1 1 P
+X Pin_6 6 -200 -300 150 R 50 50 1 1 P
+ENDDRAW
+ENDDEF
+#
+# Connector_Generic_Conn_01x08
+#
+DEF Connector_Generic_Conn_01x08 J 0 40 Y N 1 F N
+F0 "J" 0 400 50 H V C CNN
+F1 "Connector_Generic_Conn_01x08" 0 -500 50 H V C CNN
+F2 "" 0 0 50 H I C CNN
+F3 "" 0 0 50 H I C CNN
+$FPLIST
+ Connector*:*_1x??_*
+$ENDFPLIST
+DRAW
+S -50 -395 0 -405 1 1 6 N
+S -50 -295 0 -305 1 1 6 N
+S -50 -195 0 -205 1 1 6 N
+S -50 -95 0 -105 1 1 6 N
+S -50 5 0 -5 1 1 6 N
+S -50 105 0 95 1 1 6 N
+S -50 205 0 195 1 1 6 N
+S -50 305 0 295 1 1 6 N
+S -50 350 50 -450 1 1 10 f
+X Pin_1 1 -200 300 150 R 50 50 1 1 P
+X Pin_2 2 -200 200 150 R 50 50 1 1 P
+X Pin_3 3 -200 100 150 R 50 50 1 1 P
+X Pin_4 4 -200 0 150 R 50 50 1 1 P
+X Pin_5 5 -200 -100 150 R 50 50 1 1 P
+X Pin_6 6 -200 -200 150 R 50 50 1 1 P
+X Pin_7 7 -200 -300 150 R 50 50 1 1 P
+X Pin_8 8 -200 -400 150 R 50 50 1 1 P
+ENDDRAW
+ENDDEF
+#
 # Connector_Jack-DC
 #
 DEF Connector_Jack-DC J 0 40 Y Y 1 F N
@@ -414,16 +394,97 @@ X S 3 100 -200 100 U 50 50 1 1 P
 ENDDRAW
 ENDDEF
 #
-# power_GND
+# arduino_Arduino_Uno_Shield
 #
-DEF power_GND #PWR 0 0 Y Y 1 F P
+DEF arduino_Arduino_Uno_Shield XA 0 40 Y Y 1 F N
+F0 "XA" 100 0 60 V V C CNN
+F1 "arduino_Arduino_Uno_Shield" -100 0 60 V V C CNN
+F2 "" 1800 3750 60 H I C CNN
+F3 "" 1800 3750 60 H I C CNN
+$FPLIST
+ Arduino_Uno_Shield
+$ENDFPLIST
+DRAW
+T 900 -500 50 60 0 0 0 Analogue Normal 0 C C
+T 900 -500 700 60 0 0 0 I²C Normal 0 C C
+T 900 500 -1000 60 0 0 0 Misc. Normal 0 C C
+T 900 -500 -800 60 0 0 0 Power Normal 0 C C
+T 900 -500 1000 60 0 0 0 Serial Normal 0 C C
+T 900 500 -500 60 0 0 0 SPI Normal 0 C C
+T 900 500 500 60 0 1 0 GPIO Normal 0 C C
+S -1000 1200 1000 -1200 0 0 0 f
+S -800 -1050 -500 -1050 0 0 0 N
+S -750 -550 -500 -550 0 0 0 N
+S 500 -750 500 -600 0 0 0 N
+S 500 -400 500 -250 0 0 0 N
+S 550 -750 500 -750 0 0 0 N
+S 600 -250 500 -250 0 0 0 N
+S 650 -1000 550 -1000 0 0 0 N
+S 650 -950 650 -1050 0 0 0 N
+S 700 -1050 650 -1050 0 0 0 N
+S 700 -950 650 -950 0 0 0 N
+P 2 0 0 0 -750 700 -600 700 N
+P 2 0 0 0 -600 1000 -550 1000 N
+P 2 0 0 0 -500 -1050 -500 -950 N
+P 2 0 0 0 -500 -600 -500 -650 N
+P 2 0 0 0 -500 -550 -500 -600 N
+P 3 0 0 0 -500 -200 -500 -250 -750 -250 N
+P 3 0 0 0 -500 300 -500 350 -850 350 N
+P 3 0 0 0 500 350 500 -50 800 -50 N
+P 3 0 0 0 500 650 500 1050 650 1050 N
+P 4 0 0 0 -800 750 -750 750 -750 650 -800 650 N
+P 4 0 0 0 -650 1050 -600 1050 -600 950 -650 950 N
+X 3.3V 3V3 -1300 -850 300 R 50 50 1 1 W
+X 5V 5V1 -1300 -950 300 R 50 50 1 1 W
+X SPI_5V 5V2 1300 -550 300 L 50 50 1 1 W
+X A0 A0 -1300 -150 300 R 50 50 1 1 B
+X A1 A1 -1300 -50 300 R 50 50 1 1 B
+X A2 A2 -1300 50 300 R 50 50 1 1 B
+X A3 A3 -1300 150 300 R 50 50 1 1 B
+X A4 A4 -1300 250 300 R 50 50 1 1 B
+X A5 A5 -1300 350 300 R 50 50 1 1 B
+X AREF AREF -1300 -250 300 R 50 50 1 1 I
+X D0_RX0 D0 -1300 1050 300 R 50 50 1 1 B
+X D1_TX0 D1 -1300 950 300 R 50 50 1 1 B
+X D10_CS D10 1300 250 300 L 50 50 1 1 B
+X D11 D11 1300 150 300 L 50 50 1 1 B
+X D12 D12 1300 50 300 L 50 50 1 1 B
+X D13 D13 1300 -50 300 L 50 50 1 1 B
+X D2_INT0 D2 1300 1050 300 L 50 50 1 1 B
+X D3_INT1 D3 1300 950 300 L 50 50 1 1 B
+X D4 D4 1300 850 300 L 50 50 1 1 B
+X D5 D5 1300 750 300 L 50 50 1 1 B
+X D6 D6 1300 650 300 L 50 50 1 1 B
+X D7 D7 1300 550 300 L 50 50 1 1 B
+X D8 D8 1300 450 300 L 50 50 1 1 B
+X D9 D9 1300 350 300 L 50 50 1 1 B
+X GND GND1 -1300 -550 300 R 50 50 1 1 W
+X GND GND2 -1300 -650 300 R 50 50 1 1 W
+X GND GND3 -1300 -750 300 R 50 50 1 1 W
+X SPI_GND GND4 1300 -650 300 L 50 50 1 1 W
+X IOREF IORF 1300 -1050 300 L 50 50 1 1 O
+X SPI_MISO MISO 1300 -250 300 L 50 50 1 1 I
+X SPI_MOSI MOSI 1300 -350 300 L 50 50 1 1 O
+X RESET RST1 1300 -950 300 L 50 50 1 1 C L
+X SPI_RESET RST2 1300 -750 300 L 50 50 1 1 C L
+X SPI_SCK SCK 1300 -450 300 L 50 50 1 1 O C
+X SCL SCL -1300 750 300 R 50 50 1 1 B C
+X SDA SDA -1300 650 300 R 50 50 1 1 B
+X VIN VIN -1300 -1050 300 R 50 50 1 1 W
+ENDDRAW
+ENDDEF
+#
+# power_GNDD
+#
+DEF power_GNDD #PWR 0 0 Y Y 1 F P
 F0 "#PWR" 0 -250 50 H I C CNN
-F1 "power_GND" 0 -150 50 H V C CNN
+F1 "power_GNDD" 0 -125 50 H V C CNN
 F2 "" 0 0 50 H I C CNN
 F3 "" 0 0 50 H I C CNN
 DRAW
-P 6 0 1 0 0 0 0 -50 50 -50 0 -100 -50 -50 0 -50 N
-X GND 1 0 0 0 D 50 50 1 1 W N
+S -50 -60 50 -80 0 1 10 F
+P 2 0 1 0 0 0 0 -60 N
+X GNDD 1 0 0 0 D 50 50 1 1 W N
 ENDDRAW
 ENDDEF
 #

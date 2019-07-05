@@ -1,4 +1,4 @@
-(kicad_pcb (version 20171130) (host pcbnew 5.1.2-5.1.2)
+(kicad_pcb (version 20171130) (host pcbnew 5.1.2)
 
   (general
     (thickness 1.6)
@@ -1193,6 +1193,7 @@
     (at 172.86 115.46 90)
     (descr "BNC connector, Tyco 1-1337543-0")
     (path /5D263EAD)
+    (zone_connect 2)
     (fp_text reference J9 (at 0 -14.9 90) (layer F.SilkS)
       (effects (font (size 1 1) (thickness 0.2)))
     )
@@ -1219,11 +1220,13 @@
     (fp_line (start -7.4 -13.7) (end 7.4 -13.7) (layer F.SilkS) (width 0.3))
     (fp_line (start -7.4 0) (end 7.4 0) (layer F.SilkS) (width 0.3))
     (pad 1 thru_hole circle (at 0 -12.38 90) (size 1.5 1.5) (drill 0.9) (layers *.Cu *.Mask F.SilkS)
-      (net 17 D7))
+      (net 17 D7) (zone_connect 2))
     (pad 2 thru_hole circle (at 2.54 -12.38 90) (size 1.5 1.5) (drill 0.9) (layers *.Cu *.Mask F.SilkS)
-      (net 1 DGND))
-    (pad "" np_thru_hole circle (at 5.08 -7.3 90) (size 2.1 2.1) (drill 2.1) (layers *.Cu *.Mask F.SilkS))
-    (pad "" np_thru_hole circle (at -5.08 -7.3 90) (size 2.1 2.1) (drill 2.1) (layers *.Cu *.Mask F.SilkS))
+      (net 1 DGND) (zone_connect 2))
+    (pad "" np_thru_hole circle (at 5.08 -7.3 90) (size 2.1 2.1) (drill 2.1) (layers *.Cu *.Mask F.SilkS)
+      (zone_connect 2))
+    (pad "" np_thru_hole circle (at -5.08 -7.3 90) (size 2.1 2.1) (drill 2.1) (layers *.Cu *.Mask F.SilkS)
+      (zone_connect 2))
     (model walter/conn_rf/bnc_90_1-1337543-0.wrl
       (at (xyz 0 0 0))
       (scale (xyz 1 1 1))
