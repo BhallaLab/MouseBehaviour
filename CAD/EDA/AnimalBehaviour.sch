@@ -1,4 +1,5 @@
 EESchema Schematic File Version 4
+LIBS:AnimalBehaviour-cache
 EELAYER 29 0
 EELAYER END
 $Descr A4 11693 8268
@@ -390,7 +391,7 @@ Wire Wire Line
 Wire Wire Line
 	1800 4900 1950 4900
 $Comp
-L AnimalBehaviour-rescue:PCB_SSR_4Ch_LLT-BhallaLabComponents Assr4ch1
+L BhallaLabComponents:PCB_SSR_4Ch_LLT Assr4ch1
 U 1 1 5D27A18F
 P 2550 5150
 F 0 "Assr4ch1" H 2375 5850 50  0000 L CNN
@@ -533,7 +534,7 @@ U 1 1 5D3F7145
 P 10075 2300
 F 0 "J10" H 10075 2781 50  0000 C CNN
 F 1 "Cam" H 10075 2690 50  0000 C CNN
-F 2 "MD-60SM:CUI_MD-60SM" H 10075 2300 50  0001 C CNN
+F 2 "MD_60SM:CUI_MD-60SM" H 10075 2300 50  0001 C CNN
 F 3 "http://www.mouser.com/ds/2/18/40_c091_abd_e-75918.pdf" H 10075 2300 50  0001 C CNN
 	1    10075 2300
 	1    0    0    -1  
@@ -557,7 +558,7 @@ U 1 1 5D22EBC4
 P 10100 3225
 F 0 "J11" H 10100 3706 50  0000 C CNN
 F 1 "Imaging" H 10100 3615 50  0000 C CNN
-F 2 "BhallaLab:Connector_Mini-DIN_Female_6Pin_2rows" H 10100 3225 50  0001 C CNN
+F 2 "MD_60SM:CUI_MD-60SM" H 10100 3225 50  0001 C CNN
 F 3 "http://www.mouser.com/ds/2/18/40_c091_abd_e-75918.pdf" H 10100 3225 50  0001 C CNN
 	1    10100 3225
 	1    0    0    -1  

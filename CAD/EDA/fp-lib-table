@@ -1,5 +1,5 @@
 (fp_lib_table
   (lib (name Arduino)(type KiCad)(uri ${KIPRJMOD}/arduino-kicad-library/Arduino.pretty)(options "")(descr ""))
   (lib (name BhallaLab)(type KiCad)(uri ${KIPRJMOD}/BhallaLab.pretty)(options "")(descr ""))
-  (lib (name MD-60SM)(type Legacy)(uri ${KIPRJMOD}/MD-60SM.mod)(options "")(descr ""))
+  (lib (name MD_60SM)(type KiCad)(uri ${KIPRJMOD}/MD_60SM.pretty)(options "")(descr ""))
 )
