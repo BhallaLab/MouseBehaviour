@@ -1,5 +1,4 @@
 EESchema Schematic File Version 4
-LIBS:AnimalBehaviour-cache
 EELAYER 29 0
 EELAYER END
 $Descr A4 11693 8268
@@ -534,7 +533,7 @@ U 1 1 5D3F7145
 P 10075 2300
 F 0 "J10" H 10075 2781 50  0000 C CNN
 F 1 "Cam" H 10075 2690 50  0000 C CNN
-F 2 "BhallaLab:Connector_Mini-DIN_Female_6Pin_2rows" H 10075 2300 50  0001 C CNN
+F 2 "MD-60SM:CUI_MD-60SM" H 10075 2300 50  0001 C CNN
 F 3 "http://www.mouser.com/ds/2/18/40_c091_abd_e-75918.pdf" H 10075 2300 50  0001 C CNN
 	1    10075 2300
 	1    0    0    -1  

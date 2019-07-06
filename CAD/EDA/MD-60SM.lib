@@ -1,0 +1,36 @@
+EESchema-LIBRARY Version 2.3
+#encoding utf-8
+#(c) SnapEDA 2016 (snapeda.com)
+#This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License (CC BY-SA) with Design Exception 1.0
+#
+# MD-60SM
+#
+DEF MD-60SM J 0 40 Y Y 1 L N
+F0 "J" -200 426 50 H V L BNN
+F1 "MD-60SM" -200 -601 50 H V L BNN
+F2 "CUI_MD-60SM" 0 0 50 H I L BNN
+F3 "https://www.cui.com/product/interconnect/connectors/din-connectors/md-sm-series?utm_source=snapeda.com&utm_medium=referral&utm_campaign=snapedaBOM" 0 0 50 H I L BNN
+F4 "3~9 Positions, Receptacle, Right Angle, Through Hole, Shielded, Mini Circular DIN Connector" 0 0 50 H I L BNN
+F5 "CUI Inc." 0 0 50 H I L BNN
+F6 "CP-2260-ND" 0 0 50 H I L BNN
+F7 "https://www.digikey.com/product-detail/en/cui-inc/MD-60SM/CP-2260-ND/96940?utm_source=snapeda&utm_medium=aggregator&utm_campaign=symbol" 0 0 50 H I L BNN
+F8 "MD-60SM" 0 0 50 H I L BNN
+F9 "None" 0 0 50 H I L BNN
+DRAW
+P 2 0 0 10 -200 400 200 400 N
+P 2 0 0 10 200 400 200 -500 N
+P 2 0 0 10 200 -500 -200 -500 N
+P 2 0 0 10 -200 -500 -200 400 N
+X 1 1 -400 300 200 R 40 40 0 0 P 
+X 2 2 -400 200 200 R 40 40 0 0 P 
+X 3 3 -400 100 200 R 40 40 0 0 P 
+X SHIELD S1 -400 -400 200 R 40 40 0 0 P 
+X SHIELD S2 -400 -400 200 R 40 40 0 0 P 
+X SHIELD S3 -400 -400 200 R 40 40 0 0 P 
+X 4 4 -400 0 200 R 40 40 0 0 P 
+X 5 5 -400 -100 200 R 40 40 0 0 P 
+X 6 6 -400 -200 200 R 40 40 0 0 P 
+ENDDRAW
+ENDDEF
+#
+# End Library

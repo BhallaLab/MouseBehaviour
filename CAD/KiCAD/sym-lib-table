@@ -1,5 +1,0 @@
-(sym_lib_table
-  (lib (name DoraBabu)(type Legacy)(uri ${KIPRJMOD}/DoraBabu.lib)(options "")(descr ""))
-  (lib (name arduino)(type Legacy)(uri ${KIPRJMOD}/arduino-kicad-library/arduino.lib)(options "")(descr ""))
-  (lib (name BhallaLabComponents)(type Legacy)(uri ${KIPRJMOD}/BhallaLabComponents.lib)(options "")(descr ""))
-)

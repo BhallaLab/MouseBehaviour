@@ -1,9 +1,10 @@
-# KiCAD 
+# EDA, Electronic Design Automation
+
 This folder contains electrical CAD designs. You'd need kicad version 5 or higher
 
 `.pro` files are kicad files (ask Dilawar).
 
-# 3dCAD
+# CAD, Computer Aided Design
 
 This folder contains 3D cad designs for 3d printing etc. You'd need 
 `freecad` or `openscad` to view the designs.

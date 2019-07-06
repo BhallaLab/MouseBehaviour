@@ -1,0 +1,5 @@
+(sym_lib_table
+  (lib (name BhallaLabComponents)(type Legacy)(uri ${KIPRJMOD}/BhallaLabComponents.lib)(options "")(descr ""))
+  (lib (name arduino)(type Legacy)(uri ${KIPRJMOD}/arduino-kicad-library/arduino.lib)(options "")(descr ""))
+  (lib (name MD-60SM)(type Legacy)(uri ${KIPRJMOD}/MD-60SM.lib)(options "")(descr ""))
+)
