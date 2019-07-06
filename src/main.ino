@@ -539,10 +539,9 @@ void do_trial( size_t trial_num, bool isprobe = false )
     while( (millis( ) - stamp_) <= duration )
     {
         write_data_line( );
-        // Switch camera OFF after 500 ms into POST.
-        if( (millis() - stamp_) >= 500 )
+        // Switch camera OFF after 2500 ms into POST.
+        if( (millis() - stamp_) >= 2500 )
             digitalWrite( CAMERA_TTL_PIN, LOW );
-        delay(50);
     }
 
     digitalWrite( IMAGING_TRIGGER_PIN, LOW ); /* Shut down the imaging. */
