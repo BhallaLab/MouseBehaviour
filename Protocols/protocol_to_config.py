@@ -38,6 +38,10 @@ def main():
             v = '"%s"' % v
         k = k.replace( '-', '_' )
         k = k.replace( ' ', '_' )
+        # The US value can not be longer than 10 chars. else arduino code will
+        # break.
+        if k.strip() == "USValue":
+            v = v[:10]
         print( '#define PROTO_%s      %s' % (k,v))
     return True
 

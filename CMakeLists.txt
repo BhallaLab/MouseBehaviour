@@ -30,6 +30,9 @@ else (NOT PORT)
     message(STATUS "Default serial port ${PORT}" )
 endif (NOT PORT)
 
+set(CMAKE_CXX_STANDARD 11)
+
+find_package(PythonInterp REQUIRED)
 
 # Options related to Arduino board.
 # Set the board tag
@@ -63,7 +66,7 @@ if((NOT ANIMAL_NAME) OR (NOT SESSION_NUM) OR (NOT PROTO_CODE))
     message(FATAL_ERROR 
         "Set ANIMAL_NAME, SESSION_NUM, and PROTO_CODE to cmake; e.g. \n"
         "\tcmake -DANIMAL_NAME=k3 -DSESSION_NUM=1 -DPROTO_CODE=All1 ..\n"
-        "For info on protocols, see file 'Protocols/BehaviourProtocols.xlsx'"
+        "For info on protocols, see file 'Protocols/BehaviourProtocols.csv'"
         " in the top directory."
         )
 endif()
@@ -77,12 +80,13 @@ execute_process(COMMAND
     OUTPUT_STRIP_TRAILING_WHITESPACE
     )
 message(STATUS "Writing protocol ${PROTO_CODE} config to file.")
-file(WRITE ${CMAKE_CURRENT_SOURCE_DIR}/src/protocol.h "${PROTOCOL_CONFIG}")
+file(WRITE ${CMAKE_CURRENT_SOURCE_DIR}/Arduino/protocol.h "${PROTOCOL_CONFIG}")
 
 # Set DATA DIRirectory to store data for given animal, session, and protocol
 # code. 
 set(DATADIR
     "$ENV{HOME}/DATA/${ANIMAL_NAME}/${ANIMAL_NAME}_${PROTO_CODE}_${SESSION_NUM}")
+
 if(EXISTS ${DATADIR})
     set(DATADIR
         "$ENV{HOME}/DATA/${ANIMAL_NAME}/${ANIMAL_NAME}_${PROTO_CODE}_${SESSION_NUM}/${COMPILE_TIME}")
@@ -94,7 +98,11 @@ configure_file( ${CMAKE_SOURCE_DIR}/Makefile.arduino.in
     )
 
 set(ARDUINO_TARGET_NAME protocol_${PROTO_CODE})
-set(ARDUINO_SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
+set(ARDUINO_SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/Arduino)
+
+# Now add the client and server 
+set(CAMERA_SERVER_DIR ${CMAKE_CURRENT_SOURCE_DIR}/PointGreyCamera)
+add_subdirectory(${CAMERA_SERVER_DIR})
 
 # Write variables to config.h file.
 configure_file(${ARDUINO_SRC_DIR}/config.h.in ${ARDUINO_SRC_DIR}/config.h)
@@ -122,7 +130,7 @@ add_custom_target(upload
 # make miniterm will launch the miniterm.py .
 add_custom_target(miniterm
     DEPENDS upload 
-    COMMAND miniterm.py ${PORT} ${BAUD_RATE}
+    COMMAND ${PYTHON_EXECUTABLE} -m serial.tools.miniterm ${PORT} ${BAUD_RATE}
     VERBATIM 
     )
 
@@ -133,15 +141,15 @@ add_custom_target(reset_boards
     VERBATIM
     )
 
+
 # pass these arguments to camera server.
 SET(RUN_ARGS --port ${PORT} --datadir ${DATADIR})
 add_custom_target(run  
     DEPENDS cam_server upload
-    COMMAND ${CMAKE_BINARY_DIR}/cam_server ${RUN_ARGS}
+    COMMAND LD_LIBRARY_PATH=${CAMERA_SERVER_DIR}/external/lib 
+        ${CMAKE_BINARY_DIR}/cam_server ${RUN_ARGS}
     COMMENT "Run arduino client and camera client"
     WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
     VERBATIM
     )
 
-# Now add the client and server 
-add_subdirectory(${CMAKE_SOURCE_DIR}/PointGreyCamera)

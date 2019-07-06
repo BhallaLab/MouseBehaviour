@@ -1,9 +1,8 @@
 /***
- *    Protocol for EyeBlinkConditioning.
- *
- *    The protocols are read from the file '../Protocols/BehaviourProtocols.csv'
- *    by a python script. The cmake build system generates appropriate header
- *    file protocol.h.
+ *    The protocols are stored in '../Protocols/BehaviourProtocols.csv'. A
+ *    protocol is chosen at build time by passing -DPROTO_CODE option to cmake.
+ *    A python script '../Protocols/protocol_to_config.py" converts a given
+ *    protocol to protocol.h file.
  *
  *         Author:  Dilawar Singh <dilawars@ncbs.res.in>
  *   Organization:  NCBS Bangalore
@@ -31,26 +30,24 @@ unsigned dt_                    = 2;
 unsigned write_dt_              = 2;
 unsigned trial_count_           = 0;
 unsigned long trial_start_time_ = 0;
-char trial_state_[5]            = "PRE_";
-
-/*-----------------------------------------------------------------------------
- *  User response
- *-----------------------------------------------------------------------------*/
 int incoming_byte_              = 0;
 bool reboot_                    = false;
 
-ISR(WDT_vect)
-{
-    // Handle interuppts here.
-    // Nothing to handle.
-}
+// NOTE: Should be big enough to hold the state. 10 char long is ok.
+// NOTE: ProtoUSValue should be more than 10 character long.
+char trial_state_[11]            = "PRE_";
+
 
 /* --------------------------------------------------------------------------*/
-/**
+/** WATCHDOG TIMER:
  * @Synopsis  When ctrl+c is pressed, reboot_ is set true and we restart the
- * arduino else ctrl+c will not stop arduino from giving stimulus.
+ * arduino. Without watchdog timer, I could not think of any other way to
+ * implement ctrl+C resetting the board.
  */
 /* ----------------------------------------------------------------------------*/
+ISR(WDT_vect)
+{ }
+
 void reset_watchdog( )
 {
     if( not reboot_ )
@@ -113,8 +110,10 @@ void write_data_line( )
 
     char msg[100];
     sprintf(msg, "%lu,%s,%d,%d,%d,%d,%d,%d,%s,%d,%ld"
-            , timestamp, PROTO_CODE, trial_count_, puff, tone, led
-            , camera, microscope, trial_state_, shock_pin_readout, encoder_value_
+            , timestamp, PROTO_CODE, trial_count_
+            , puff, tone, led
+            , camera, microscope, trial_state_
+            , shock_pin_readout, encoder_value_
            );
 
     // Compute angular velocity.
@@ -125,7 +124,6 @@ void write_data_line( )
 
     Serial.print(msg + String(","));
     Serial.println(angular_velocity_, 5);
-    delay( 3 );
 }
 
 /**
@@ -189,13 +187,14 @@ void led_on( unsigned int duration )
  * @Param duration
  */
 /* ----------------------------------------------------------------------------*/
-void apply_shock( int duration )
+void deliverShock( int duration )
 {
+    Serial.println( ">>>Delivering shock" );
+    enableInputToStimIsolator();
     stamp_ = millis();
-    digitalWrite(SHOCK_STIM_ISOLATER_PIN, HIGH);
     while( (millis() - stamp_) < duration)
         write_data_line();
-    digitalWrite(SHOCK_STIM_ISOLATER_PIN, LOW);
+    disableInputToStimIsolator();
 }
 
 
@@ -205,6 +204,8 @@ void apply_shock( int duration )
 void wait_for_start( )
 {
     sprintf( trial_state_, "INVA" );
+    enableReadingShockPad();
+
     while( true )
     {
 
@@ -230,12 +231,12 @@ void wait_for_start( )
         }
         else if( is_command_read( 'c', true ) )
         {
-            Serial.println( ">>>Received c. Giving shock" );
-            digitalWrite(SHOCK_RELAY_PIN, HIGH);
+            Serial.println( ">>>Received c. Giving shock for 500 ms" );
+            disableReadingShockPad();
             delay(10);
-            apply_shock( 50 );
+            deliverShock( 500 );
             delay(10);
-            digitalWrite(SHOCK_RELAY_PIN, LOW);
+            enableReadingShockPad();
         }
         else if( is_command_read( 'l', true ) )
         {
@@ -287,19 +288,18 @@ void setup()
     // chars per ms i.e. baud rate should be higher than 100,000.
     Serial.begin( 115200 );
 
-    //esetup watchdog. If not reset in 2 seconds, it reboots the system.
-    wdt_enable( WDTO_2S );
-    wdt_reset();
+
     // Random seed.
     randomSeed( analogRead(A5) );
 
     //esetup watchdog. If not reset in 2 seconds, it reboots the system.
     stamp_ = millis( );
 
-    // SHOCK.
-    pinMode( SHOCK_PWM_PIN, OUTPUT );
-    pinMode( SHOCK_RELAY_PIN, OUTPUT);
-    pinMode( SHOCK_STIM_ISOLATER_PIN, OUTPUT);
+    pinMode(SHOCK_PWM_PIN, OUTPUT);
+    pinMode(SHOCK_STIM_ISOLATER_PIN, OUTPUT);
+
+    pinMode( SHOCK_RELAY_PIN_CHAN_12, OUTPUT);
+    pinMode( SHOCK_RELAY_PIN_CHAN_34, OUTPUT);
 
     // CS AND US
     pinMode( TONE_PIN, OUTPUT );
@@ -316,25 +316,20 @@ void setup()
     digitalWrite(ROTARY_ENC_A, HIGH); //turn pullup resistor on
     digitalWrite(ROTARY_ENC_B, HIGH); //turn pullup resistor on
 
-#if 0
-    //call updateEncoder() when any high/low changed seen
-    attachInterrupt( digitalPinToInterrupt(2), ISR_ON_PIN2, RISING);
-    attachInterrupt( digitalPinToInterrupt(3), ISR_ON_PIN3, RISING);
-#else
     // NOTE: This changes with board. Testing with UNO. The above snippet is
     // preferred when available.
     attachInterrupt(0, ISR_ON_PIN2, RISING);
     attachInterrupt(1, ISR_ON_PIN3, RISING);
-#endif
+
+    // It is in Shocker.h file.
+    configureShockingTimer();
+
+    // setup watchdog. If not reset in 2 seconds, it reboots the system.
+    wdt_enable( WDTO_2S );
+    wdt_reset();
     
-
-    // fixme: move after wait_for_start
-    start_shocker();
-
     print_trial_info( );
     wait_for_start( );
-
-
 }
 
 void do_zero_trial( )
@@ -361,29 +356,11 @@ void do_empty_trial( size_t trial_num, int duration = 10 )
     Serial.println( ">>     TRIAL OVER." );
 }
 
-void monitor_for_shock(void)
+void wait_and_print( size_t howlong )  // ms
 {
-    if ( numLoops > STIM_INTERVAL ) 
-    {
-        if ( shock_pin_readout < TOUCH_THRESHOLD ) 
-        {
-            // Oops, the animal isn't even touching the pad. Wait a bit.
-            numLoops = NUM_LOOP_RESET;
-        } 
-        else 
-        { 
-            // Give the tingle stimulus.
-            digitalWrite( SHOCK_RELAY_PIN, LOW ); // Switch in the stim, switch out ADC
-            delay(10);
-            digitalWrite( SHOCK_STIM_ISOLATER_PIN, HIGH ); // Deliver stimulus.
-            delay(50);
-            digitalWrite( SHOCK_STIM_ISOLATER_PIN, LOW );
-            delay(10);
-            digitalWrite( SHOCK_RELAY_PIN, HIGH ); // Switch back to ADC
-            numLoops = 0;
-        }
-    }
-    numLoops ++;
+    int s = millis();
+    while( millis() - s <= howlong )
+        write_data_line();
 }
 
 
@@ -413,7 +390,7 @@ void do_trial( size_t trial_num, bool isprobe = false )
     // apprently shutter delay for the camera and only required for trial number
     // 1.
     if (trial_num > 0)
-        delay(60); // Shutter delay; Only for the first trial
+        delay(60); // Shutter delay.
 
     stamp_ = millis( );
 
@@ -494,7 +471,8 @@ void do_trial( size_t trial_num, bool isprobe = false )
 
     if(String(PROTO_USValue) == String("SHOCK"))
     {
-        digitalWrite(SHOCK_RELAY_PIN, HIGH);
+        //Serial.println( ">>>Disabled SHOCKPAD." );
+        disableReadingShockPad();
         delay(10);
     }
 
@@ -511,10 +489,13 @@ void do_trial( size_t trial_num, bool isprobe = false )
     else
     {
         sprintf( trial_state_, PROTO_USValue );
-        if(String(PROTO_USValue) == String("PUFF"))
+        if(String(PROTO_USValue) == String("SHOCK"))
+        {
+            //Serial.println( ">>> DELIVER shock");
+            deliverShock(duration);
+        }
+        else if(String(PROTO_USValue) == String("PUFF"))
             play_puff( duration );
-        else if(String(PROTO_USValue) == String("SHOCK"))
-            apply_shock(duration);
         else
         {
             while( (millis( ) - stamp_) <= duration )
@@ -528,7 +509,8 @@ void do_trial( size_t trial_num, bool isprobe = false )
     if(String(PROTO_USValue) == String("SHOCK"))
     {
         delay(10);
-        digitalWrite(SHOCK_RELAY_PIN, LOW);
+        //Serial.println( ">>>Enabled SHOCKPAD." );
+        enableReadingShockPad();
     }
 
     /*-----------------------------------------------------------------------------

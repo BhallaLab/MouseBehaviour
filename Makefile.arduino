@@ -27,7 +27,7 @@ BOARD_TAG         = uno
 
 # MONITOR_BAUDRATE
 # It must be set to Serial baudrate value you are using.
-MONITOR_BAUDRATE  = 38400
+MONITOR_BAUDRATE  = 115200
 
 # CFLAGS_STD
 # Set the C standard to be used during compilation. Documentation (https://github.com/WeAreLeka/Arduino-Makefile/blob/std-flags/arduino-mk-vars.md#cflags_std)
@@ -57,11 +57,11 @@ OBJDIR            = $(PROJECT_DIR)/bin/$(BOARD_TAG)/$(CURRENT_DIR)
 ARDUINO_LIBS      = 
 
 # INO file and other cpp files
-LOCAL_INO_SRCS     = $(PROJECT_DIR)/src/main.ino 
-LOCAL_CPP_SRCS     = 
+LOCAL_INO_SRCS     = $(PROJECT_DIR)/Arduino/main.ino 
+LOCAL_CPP_SRCS     = $(PROJECT_DIR)/Arduino/TimerOne/TimerOne.cpp
 
 ### Do not touch - the path to Arduino.mk, inside the ARDMK_DIR
 include $(ARDMK_DIR)/Arduino.mk
 
 run : upload
-	miniterm.py /dev/ttyACM0 38400
+	python -m serial.tools.miniterm $(MONITOR_PORT) $(MONITOR_BAUDRATE)

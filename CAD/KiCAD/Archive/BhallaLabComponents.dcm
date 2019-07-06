@@ -1,0 +1,9 @@
+EESchema-DOCLIB  Version 2.0
+#
+$CMP RotaryEncoder
+D Orange's Rotary Encoder
+K Optical Rotary Encoder
+F https://robu.in/wp-content/uploads/2016/02/User-Manual-Orange-3806-OPTI-400-AB-OC-Rotary-Encoder-ROBU.IN_.pdf
+$ENDCMP
+#
+#End Doc Library
