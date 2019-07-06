@@ -586,21 +586,19 @@ F 3 "" H 1550 2950 50  0001 C CNN
 $EndComp
 Wire Wire Line
 	1225 2950 1400 2950
-Text GLabel 1225 3250 0    60   Input ~ 0
+Text GLabel 1225 3175 0    60   Input ~ 0
 AGND
 $Comp
 L power:GNDA #PWR02
 U 1 1 5D24B4AF
-P 1550 3250
-F 0 "#PWR02" H 1550 3000 50  0001 C CNN
-F 1 "GNDA" V 1555 3122 50  0000 R CNN
-F 2 "" H 1550 3250 50  0001 C CNN
-F 3 "" H 1550 3250 50  0001 C CNN
-	1    1550 3250
+P 1550 3175
+F 0 "#PWR02" H 1550 2925 50  0001 C CNN
+F 1 "GNDA" V 1555 3047 50  0000 R CNN
+F 2 "" H 1550 3175 50  0001 C CNN
+F 3 "" H 1550 3175 50  0001 C CNN
+	1    1550 3175
 	0    -1   -1   0   
 $EndComp
-Wire Wire Line
-	1550 3250 1350 3250
 $Comp
 L power:PWR_FLAG #FLG03
 U 1 1 5D24E1FD
@@ -615,20 +613,6 @@ $EndComp
 Connection ~ 1400 2950
 Wire Wire Line
 	1400 2950 1550 2950
-$Comp
-L power:PWR_FLAG #FLG01
-U 1 1 5D24E255
-P 1350 3250
-F 0 "#FLG01" H 1350 3325 50  0001 C CNN
-F 1 "PWR_FLAG" H 1350 3423 50  0000 C CNN
-F 2 "" H 1350 3250 50  0001 C CNN
-F 3 "~" H 1350 3250 50  0001 C CNN
-	1    1350 3250
-	1    0    0    -1  
-$EndComp
-Connection ~ 1350 3250
-Wire Wire Line
-	1350 3250 1225 3250
 Text GLabel 1550 3475 2    60   Input ~ 0
 5V
 Wire Wire Line
@@ -732,4 +716,26 @@ F 3 "" H 8825 775 50  0001 C CNN
 	1    8475 925 
 	1    0    0    -1  
 $EndComp
+$Comp
+L Connector_Generic:Conn_01x02 J13
+U 1 1 5D2BFB14
+P 6275 5925
+F 0 "J13" H 6355 5917 50  0000 L CNN
+F 1 "StimIsoIN" H 6355 5826 50  0000 L CNN
+F 2 "Connector_Molex:Molex_KK-254_AE-6410-02A_1x02_P2.54mm_Vertical" H 6275 5925 50  0001 C CNN
+F 3 "~" H 6275 5925 50  0001 C CNN
+	1    6275 5925
+	1    0    0    -1  
+$EndComp
+Text GLabel 6075 5925 0    60   Input ~ 0
+DGND
+Text GLabel 6075 6025 0    60   Input ~ 0
+ShockStimIsolator
+Wire Wire Line
+	1225 3175 1400 3175
+Wire Wire Line
+	1400 2950 1400 3175
+Connection ~ 1400 3175
+Wire Wire Line
+	1400 3175 1550 3175
 $EndSCHEMATC
