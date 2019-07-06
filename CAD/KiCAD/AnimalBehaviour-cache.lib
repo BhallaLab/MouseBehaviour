@@ -1,46 +1,6 @@
 EESchema-LIBRARY Version 2.4
 #encoding utf-8
 #
-# AnimalBehaviour-rescue_DIODE-ArduinoEncoderShield_anzal-rescue-AnimalBehaviour-rescue
-#
-DEF AnimalBehaviour-rescue_DIODE-ArduinoEncoderShield_anzal-rescue-AnimalBehaviour-rescue D 0 40 N N 1 F N
-F0 "D" 0 100 40 H V C CNN
-F1 "AnimalBehaviour-rescue_DIODE-ArduinoEncoderShield_anzal-rescue-AnimalBehaviour-rescue" 0 -100 40 H V C CNN
-F2 "" 0 0 60 H V C CNN
-F3 "" 0 0 60 H V C CNN
-$FPLIST
- D?
- S*
-$ENDFPLIST
-DRAW
-P 2 0 1 6 50 50 50 -50 N
-P 3 0 1 0 -50 50 50 0 -50 -50 F
-X A 1 -200 0 150 R 40 40 1 1 P
-X K 2 200 0 150 L 40 40 1 1 P
-ENDDRAW
-ENDDEF
-#
-# AnimalBehaviour-rescue_R-ArduinoEncoderShield_anzal-rescue-AnimalBehaviour-rescue
-#
-DEF AnimalBehaviour-rescue_R-ArduinoEncoderShield_anzal-rescue-AnimalBehaviour-rescue R 0 0 N Y 1 F N
-F0 "R" 80 0 40 V V C CNN
-F1 "AnimalBehaviour-rescue_R-ArduinoEncoderShield_anzal-rescue-AnimalBehaviour-rescue" 7 1 40 V V C CNN
-F2 "" -70 0 30 V V C CNN
-F3 "" 0 0 30 H V C CNN
-$FPLIST
- R?
- SM0603
- SM0805
- R?-*
- SM1206
-$ENDFPLIST
-DRAW
-S -40 150 40 -150 0 1 12 N
-X ~ 1 0 250 100 D 60 60 1 1 P
-X ~ 2 0 -250 100 U 60 60 1 1 P
-ENDDRAW
-ENDDEF
-#
 # Connector_Conn_01x02_Male
 #
 DEF Connector_Conn_01x02_Male J 0 40 Y N 1 F N
@@ -304,6 +264,45 @@ X ~ 2 0 -150 110 U 50 50 1 1 P
 ENDDRAW
 ENDDEF
 #
+# Device_D
+#
+DEF Device_D D 0 40 N N 1 F N
+F0 "D" 0 100 50 H V C CNN
+F1 "Device_D" 0 -100 50 H V C CNN
+F2 "" 0 0 50 H I C CNN
+F3 "" 0 0 50 H I C CNN
+$FPLIST
+ TO-???*
+ *_Diode_*
+ *SingleDiode*
+ D_*
+$ENDFPLIST
+DRAW
+P 2 0 1 8 -50 50 -50 -50 N
+P 2 0 1 0 50 0 -50 0 N
+P 4 0 1 8 50 50 50 -50 -50 0 50 50 N
+X K 1 -150 0 100 R 50 50 1 1 P
+X A 2 150 0 100 L 50 50 1 1 P
+ENDDRAW
+ENDDEF
+#
+# Device_R
+#
+DEF Device_R R 0 0 N Y 1 F N
+F0 "R" 80 0 50 V V C CNN
+F1 "Device_R" 0 0 50 V V C CNN
+F2 "" -70 0 50 V I C CNN
+F3 "" 0 0 50 H I C CNN
+$FPLIST
+ R_*
+$ENDFPLIST
+DRAW
+S -40 -100 40 100 0 1 10 N
+X ~ 1 0 150 50 D 50 50 1 1 P
+X ~ 2 0 -150 50 U 50 50 1 1 P
+ENDDRAW
+ENDDEF
+#
 # Device_R_POT
 #
 DEF Device_R_POT RV 0 40 Y N 1 F N
@@ -485,6 +484,19 @@ DRAW
 S -50 -60 50 -80 0 1 10 F
 P 2 0 1 0 0 0 0 -60 N
 X GNDD 1 0 0 0 D 50 50 1 1 W N
+ENDDRAW
+ENDDEF
+#
+# power_PWR_FLAG
+#
+DEF power_PWR_FLAG #FLG 0 0 N N 1 F P
+F0 "#FLG" 0 75 50 H I C CNN
+F1 "power_PWR_FLAG" 0 150 50 H V C CNN
+F2 "" 0 0 50 H I C CNN
+F3 "" 0 0 50 H I C CNN
+DRAW
+P 6 0 1 0 0 0 0 50 -40 75 0 100 40 75 0 50 N
+X pwr 1 0 0 0 U 50 50 0 0 w
 ENDDRAW
 ENDDEF
 #

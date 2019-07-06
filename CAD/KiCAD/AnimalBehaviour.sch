@@ -105,26 +105,14 @@ F 3 "" H 4550 2200 60  0000 C CNN
 $EndComp
 Text GLabel 4750 1900 2    60   Input ~ 0
 RST
-Text GLabel 4750 2000 2    60   Input ~ 0
-3V3
-Text GLabel 4750 2100 2    60   Input ~ 0
-5V
 Text GLabel 4750 2200 2    60   Input ~ 0
 DGND
 Text GLabel 4750 2300 2    60   Input ~ 0
 DGND
-Text GLabel 4750 2400 2    60   Input ~ 0
+Text GLabel 5225 2400 2    60   Input ~ 0
 V_IN
 Text GLabel 8550 3450 2    60   Input ~ 0
 RST
-Text GLabel 5950 3350 0    60   Input ~ 0
-3V3
-Text GLabel 5950 3450 0    60   Input ~ 0
-5V
-Text GLabel 5950 3050 0    60   Input ~ 0
-DGND
-Text GLabel 5950 3550 0    60   Input ~ 0
-V_IN
 Text GLabel 4750 2600 2    60   Input ~ 0
 A0
 Text GLabel 4750 2700 2    60   Input ~ 0
@@ -170,8 +158,6 @@ Text GLabel 2400 2150 2    60   Input ~ 0
 DGND
 Wire Wire Line
 	1800 2050 2400 2050
-Wire Wire Line
-	1800 2150 2250 2150
 Text GLabel 1950 5100 2    60   Input ~ 0
 D6
 Text GLabel 1950 4900 2    60   Input ~ 0
@@ -180,11 +166,6 @@ Text GLabel 1900 4650 2    60   Input ~ 0
 Vcc
 Text Notes 1850 4250 0    50   ~ 10
 SSR Relay\n
-Wire Wire Line
-	2250 2200 2250 2150
-Connection ~ 2250 2150
-Wire Wire Line
-	2250 2150 2400 2150
 Text Notes 5650 6300 0    50   ~ 10
 LED\n
 Text Notes 1600 6300 0    50   ~ 10
@@ -219,23 +200,12 @@ F 3 "https://www.vishay.com/docs/81181/4n35.pdf" H 8850 4250 50  0001 L CNN
 	1    8850 4250
 	1    0    0    -1  
 $EndComp
-$Comp
-L AnimalBehaviour-rescue:R-ArduinoEncoderShield_anzal-rescue-AnimalBehaviour-rescue R3
-U 1 1 5D221F97
-P 8300 4150
-F 0 "R3" V 8115 4150 40  0000 C CNN
-F 1 "470E" V 8191 4150 40  0000 C CNN
-F 2 "Resistor_THT:R_Axial_DIN0414_L11.9mm_D4.5mm_P25.40mm_Horizontal" V 8230 4150 30  0001 C CNN
-F 3 "" H 8300 4150 30  0000 C CNN
-	1    8300 4150
-	0    1    1    0   
-$EndComp
 Text GLabel 8050 4150 0    60   Input ~ 0
 D11
 Text GLabel 8550 4350 0    60   Input ~ 0
 DGND
 $Comp
-L AnimalBehaviour-rescue:R-ArduinoEncoderShield_anzal-rescue-AnimalBehaviour-rescue R4
+L Device:R R4
 U 1 1 5D222B56
 P 9200 4650
 F 0 "R4" H 9271 4688 40  0000 L CNN
@@ -247,8 +217,6 @@ F 3 "" H 9200 4650 30  0000 C CNN
 $EndComp
 Wire Wire Line
 	9150 4350 9200 4350
-Wire Wire Line
-	9200 4350 9200 4400
 Text GLabel 9200 5000 0    60   Input ~ 0
 AGND
 Wire Wire Line
@@ -274,8 +242,6 @@ Wire Wire Line
 Wire Wire Line
 	9950 4950 9200 4950
 Connection ~ 9200 4950
-Wire Wire Line
-	9200 4950 9200 4900
 $Comp
 L Connector:Conn_01x02_Male J12
 U 1 1 5D2282D7
@@ -292,7 +258,7 @@ Wire Wire Line
 Wire Wire Line
 	9950 4050 9950 4150
 $Comp
-L AnimalBehaviour-rescue:DIODE-ArduinoEncoderShield_anzal-rescue-AnimalBehaviour-rescue D1
+L Device:D D1
 U 1 1 5D22A71C
 P 9700 3950
 F 0 "D1" V 9738 3872 40  0000 R CNN
@@ -418,7 +384,7 @@ F 3 "~" H 6900 4750 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L AnimalBehaviour-rescue:R-ArduinoEncoderShield_anzal-rescue-AnimalBehaviour-rescue R2
+L Device:R R2
 U 1 1 5D261F4B
 P 6900 5250
 F 0 "R2" H 6971 5288 40  0000 L CNN
@@ -474,8 +440,6 @@ D5
 Text GLabel 2850 4750 2    60   Input ~ 0
 A0
 Wire Wire Line
-	6900 5500 7250 5500
-Wire Wire Line
 	7250 5500 7250 5450
 Wire Wire Line
 	6900 4600 6900 4550
@@ -525,9 +489,6 @@ PAD-
 Text GLabel 6750 5500 0    60   Input ~ 0
 DGND
 Wire Wire Line
-	6750 5500 6900 5500
-Connection ~ 6900 5500
-Wire Wire Line
 	6900 5000 7050 5000
 Wire Wire Line
 	7050 5000 7050 4750
@@ -555,25 +516,10 @@ Wire Wire Line
 Connection ~ 1350 5100
 Text GLabel 2000 3600 2    60   Input ~ 0
 Vcc
-Text GLabel 1750 3600 0    60   Input ~ 0
-5V
-Wire Wire Line
-	1750 3600 2000 3600
 Text GLabel 5250 6700 0    60   Input ~ 0
 D9
 Text Notes 4600 800  0    60   ~ 0
 Extra pin for new arduino version\n
-$Comp
-L AnimalBehaviour-rescue:R-ArduinoEncoderShield_anzal-rescue-AnimalBehaviour-rescue R1
-U 1 1 5D21C427
-P 5500 6700
-F 0 "R1" V 5315 6700 40  0000 C CNN
-F 1 "470E" V 5391 6700 40  0000 C CNN
-F 2 "Resistor_THT:R_Axial_DIN0414_L11.9mm_D4.5mm_P25.40mm_Horizontal" V 5430 6700 30  0001 C CNN
-F 3 "" H 5500 6700 30  0000 C CNN
-	1    5500 6700
-	0    1    1    0   
-$EndComp
 Text GLabel 5400 6800 0    60   Input ~ 0
 DGND
 $Comp
@@ -590,35 +536,10 @@ $EndComp
 Wire Wire Line
 	5400 6800 5850 6800
 Wire Wire Line
-	5850 6700 5750 6700
-Wire Wire Line
 	1800 1850 2400 1850
 Wire Wire Line
 	1800 1950 2400 1950
 NoConn ~ 6900 4900
-$Comp
-L power:GNDD #PWR02
-U 1 1 5D2143A2
-P 2250 2200
-F 0 "#PWR02" H 2250 1950 50  0001 C CNN
-F 1 "GNDD" H 2254 2045 50  0000 C CNN
-F 2 "" H 2250 2200 50  0001 C CNN
-F 3 "" H 2250 2200 50  0001 C CNN
-	1    2250 2200
-	1    0    0    -1  
-$EndComp
-$Comp
-L power:GNDD #PWR01
-U 1 1 5D2152C0
-P 1900 4750
-F 0 "#PWR01" H 1900 4500 50  0001 C CNN
-F 1 "GNDD" V 1904 4640 50  0000 R CNN
-F 2 "" H 1900 4750 50  0001 C CNN
-F 3 "" H 1900 4750 50  0001 C CNN
-	1    1900 4750
-	0    -1   -1   0   
-$EndComp
-NoConn ~ 5950 3150
 Text GLabel 5950 2750 0    60   Input ~ 0
 AREF
 $Comp
@@ -650,4 +571,165 @@ NoConn ~ 5950 1450
 NoConn ~ 5950 1550
 NoConn ~ 5950 1750
 NoConn ~ 5950 1850
+Wire Wire Line
+	6750 5500 6900 5500
+Wire Wire Line
+	6900 5000 6900 5100
+Wire Wire Line
+	6900 5400 6900 5500
+Connection ~ 6900 5500
+Wire Wire Line
+	6900 5500 7250 5500
+Wire Wire Line
+	9200 4800 9200 4950
+Wire Wire Line
+	9200 4350 9200 4500
+Wire Wire Line
+	9700 3750 9700 3800
+Wire Wire Line
+	9700 4100 9700 4150
+Text GLabel 1900 4750 2    60   Input ~ 0
+DGND
+$Comp
+L Device:R R3
+U 1 1 5D221F97
+P 8300 4150
+F 0 "R3" V 8115 4150 40  0000 C CNN
+F 1 "470E" V 8191 4150 40  0000 C CNN
+F 2 "Resistor_THT:R_Axial_DIN0414_L11.9mm_D4.5mm_P25.40mm_Horizontal" V 8230 4150 30  0001 C CNN
+F 3 "" H 8300 4150 30  0000 C CNN
+	1    8300 4150
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	8050 4150 8150 4150
+Wire Wire Line
+	8450 4150 8550 4150
+$Comp
+L Device:R R1
+U 1 1 5D21C427
+P 5500 6700
+F 0 "R1" V 5315 6700 40  0000 C CNN
+F 1 "470E" V 5391 6700 40  0000 C CNN
+F 2 "Resistor_THT:R_Axial_DIN0414_L11.9mm_D4.5mm_P25.40mm_Horizontal" V 5430 6700 30  0001 C CNN
+F 3 "" H 5500 6700 30  0000 C CNN
+	1    5500 6700
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	5650 6700 5850 6700
+Wire Wire Line
+	5350 6700 5250 6700
+Text GLabel 2000 3775 2    60   Input ~ 0
+DGND
+Wire Wire Line
+	1750 3775 2000 3775
+Text GLabel 5950 3550 0    60   Input ~ 0
+V_IN
+$Comp
+L power:GNDD #PWR0101
+U 1 1 5D21B10A
+P 1750 3775
+F 0 "#PWR0101" H 1750 3525 50  0001 C CNN
+F 1 "GNDD" V 1754 3665 50  0000 R CNN
+F 2 "" H 1750 3775 50  0001 C CNN
+F 3 "" H 1750 3775 50  0001 C CNN
+	1    1750 3775
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	1750 3600 2000 3600
+Text GLabel 1750 3600 0    60   Input ~ 0
+5V
+Text GLabel 5950 3250 0    60   Input ~ 0
+DGND
+Text GLabel 5950 3150 0    60   Input ~ 0
+DGND
+Text GLabel 5950 3050 0    60   Input ~ 0
+DGND
+Text GLabel 5950 3450 0    60   Input ~ 0
+5V
+Text GLabel 5950 3350 0    60   Input ~ 0
+3V3
+Text GLabel 5225 2000 2    60   Input ~ 0
+3V3
+Text GLabel 5225 2100 2    60   Input ~ 0
+5V
+NoConn ~ 8550 2750
+NoConn ~ 8550 2850
+NoConn ~ 8550 2950
+NoConn ~ 8550 3050
+NoConn ~ 8550 3150
+NoConn ~ 8550 3250
+NoConn ~ 8550 3550
+$Comp
+L power:PWR_FLAG #FLG0101
+U 1 1 5D249963
+P 5075 1925
+F 0 "#FLG0101" H 5075 2000 50  0001 C CNN
+F 1 "PWR_FLAG" H 5075 2098 50  0000 C CNN
+F 2 "" H 5075 1925 50  0001 C CNN
+F 3 "~" H 5075 1925 50  0001 C CNN
+	1    5075 1925
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	4750 2000 5075 2000
+Wire Wire Line
+	5075 1925 5075 2000
+Connection ~ 5075 2000
+Wire Wire Line
+	5075 2000 5225 2000
+Wire Wire Line
+	1800 2150 2075 2150
+$Comp
+L power:PWR_FLAG #FLG0102
+U 1 1 5D25020E
+P 2075 2200
+F 0 "#FLG0102" H 2075 2275 50  0001 C CNN
+F 1 "PWR_FLAG" H 2075 2373 50  0000 C CNN
+F 2 "" H 2075 2200 50  0001 C CNN
+F 3 "~" H 2075 2200 50  0001 C CNN
+	1    2075 2200
+	-1   0    0    1   
+$EndComp
+Wire Wire Line
+	2075 2200 2075 2150
+Connection ~ 2075 2150
+Wire Wire Line
+	2075 2150 2400 2150
+$Comp
+L power:PWR_FLAG #FLG0103
+U 1 1 5D2522BA
+P 5150 2375
+F 0 "#FLG0103" H 5150 2450 50  0001 C CNN
+F 1 "PWR_FLAG" H 5150 2548 50  0000 C CNN
+F 2 "" H 5150 2375 50  0001 C CNN
+F 3 "~" H 5150 2375 50  0001 C CNN
+	1    5150 2375
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	4750 2400 5150 2400
+Wire Wire Line
+	5150 2375 5150 2400
+Connection ~ 5150 2400
+Wire Wire Line
+	5150 2400 5225 2400
+$Comp
+L power:PWR_FLAG #FLG0104
+U 1 1 5D25582A
+P 5125 2100
+F 0 "#FLG0104" H 5125 2175 50  0001 C CNN
+F 1 "PWR_FLAG" H 5125 2273 50  0000 C CNN
+F 2 "" H 5125 2100 50  0001 C CNN
+F 3 "~" H 5125 2100 50  0001 C CNN
+	1    5125 2100
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	4750 2100 5125 2100
+Connection ~ 5125 2100
+Wire Wire Line
+	5125 2100 5225 2100
 $EndSCHEMATC
