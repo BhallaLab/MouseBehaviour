@@ -2,7 +2,7 @@
 
   (general
     (thickness 1.6)
-    (drawings 0)
+    (drawings 5)
     (tracks 314)
     (zones 0)
     (modules 26)
@@ -73,10 +73,10 @@
       (usegerberextensions false)
       (usegerberattributes false)
       (usegerberadvancedattributes false)
-      (creategerberjobfile false)
+      (creategerberjobfile true)
       (excludeedgelayer true)
-      (linewidth 0.100000)
-      (plotframeref false)
+      (linewidth 0.200000)
+      (plotframeref true)
       (viasonmask false)
       (mode 1)
       (useauxorigin false)
@@ -92,9 +92,9 @@
       (subtractmaskfromsilk false)
       (outputformat 1)
       (mirror false)
-      (drillshape 1)
+      (drillshape 0)
       (scaleselection 1)
-      (outputdirectory ""))
+      (outputdirectory "GERBER/"))
   )
 
   (net 0 "")
@@ -1673,6 +1673,12 @@
       (rotate (xyz 0 0 0))
     )
   )
+
+  (gr_line (start 122.5 123.5) (end 122.5 40.5) (layer Edge.Cuts) (width 0.1) (tstamp 5D221FAB))
+  (gr_line (start 226.5 123.5) (end 122.5 123.5) (layer Edge.Cuts) (width 0.1))
+  (gr_line (start 226.5 59) (end 226.5 123.5) (layer Edge.Cuts) (width 0.1))
+  (gr_line (start 208 40.5) (end 226.5 59) (layer Edge.Cuts) (width 0.1))
+  (gr_line (start 122.5 40.5) (end 208 40.5) (layer Edge.Cuts) (width 0.1))
 
   (segment (start 134.67 105.84) (end 154.81 85.7) (width 0.25) (layer F.Cu) (net 1))
   (segment (start 154.81 85.7) (end 158.5 85.7) (width 0.25) (layer F.Cu) (net 1))
