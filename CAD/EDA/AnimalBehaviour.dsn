@@ -49,7 +49,7 @@
       (place RV1 206500 -110500 front 270 (PN R_POT_TRIM))
     )
     (component "BhallaLab:CUI_TB001-500-02BE"
-      (place ShockPad1 216000 -105500 front 270 (PN ShockPad))
+      (place ShockPad1 217000 -110500 front 90 (PN ShockPad))
     )
     (component "BhallaLab:Jack_3.5mm_CUI_SJ1-3533NG_Horizontal"
       (place J7 193500 -44500 front 0 (PN AudioJack2))
@@ -59,12 +59,12 @@
       (place J10 165500 -50500 front 0 (PN Cam))
     )
     (component "Connector_Molex:Molex_KK-254_AE-6410-02A_1x02_P2.54mm_Vertical"
-      (place J13 218000 -82000 front 0 (PN StimIsoIN))
+      (place J13 218000 -82000 front 270 (PN StimIsoIN))
       (place J6 175500 -54000 front 0 (PN CAM))
     )
     (component "Connector_Molex:Molex_KK-254_AE-6410-04A_1x04_P2.54mm_Vertical"
       (place J1 135500 -83000 front 90 (PN SSR_INPUT))
-      (place RotaryEncoder1 135500 -95000 front 90 (PN "Orange Optical RotaryEncoder"))
+      (place RotaryEncoder1 204000 -54000 front 0 (PN "Orange Optical RotaryEncoder"))
     )
     (component SSR4Channel:4ChannelSSR
       (place Assr4ch1 169500 -95000 front 180 (PN PCB_SSR_4Ch_LLT))
@@ -81,7 +81,7 @@
       (place C1 187500 -106000 front 180 (PN 47nF))
     )
     (component "Diode_THT:D_DO-15_P12.70mm_Horizontal"
-      (place D1 158500 -73000 front 270 (PN DIODE))
+      (place D1 162500 -82500 front 180 (PN DIODE))
     )
     (component "Connector_Molex:Molex_KK-254_AE-6410-08A_1x08_P2.54mm_Vertical"
       (place J2 203500 -66500 front 270 (PN "SSR OUT"))
@@ -89,16 +89,16 @@
     (component "Connector_Molex:Molex_KK-254_AE-6410-02A_1x02_P2.54mm_Vertical::1"
       (place J5 150500 -53000 front 0 (PN Imaging))
       (place J9 182000 -54000 front 0 (PN LED))
-      (place J12 134500 -113000 front 90 (PN Conn_01x02_Male))
+      (place J12 135500 -94500 front 90 (PN JSolenoid))
     )
     (component "Connector_BarrelJack:BarrelJack_CUI_PJ-063AH_Horizontal"
-      (place J3 211000 -70000 front 90 (PN StimCurrentInject))
+      (place J3 212500 -95000 front 90 (PN StimCurrentInject))
     )
     (component Connector_Coaxial:BNC_TEConnectivity_1478204_Vertical
-      (place J4 216500 -94000 front 90 (PN StimIsoIN))
+      (place J4 217500 -71000 front 90 (PN StimIsoIN))
     )
     (component "Connector_Molex:Molex_KK-254_AE-6410-03A_1x03_P2.54mm_Vertical"
-      (place J8 134670 -105840 front 90 (PN Conn_01x03_Male))
+      (place J8 135500 -109500 front 90 (PN "Ext Supp"))
     )
     (component "Package_TO_SOT_THT:TO-220-3_Horizontal_TabDown"
       (place Q1 159500 -90000 front 180 (PN IRF540N))
