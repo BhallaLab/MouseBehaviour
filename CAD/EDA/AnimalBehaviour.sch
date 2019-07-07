@@ -1,12 +1,13 @@
 EESchema Schematic File Version 4
+LIBS:AnimalBehaviour-cache
 EELAYER 29 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
 Sheet 1 1
 Title "MouseBehaviour: Electrical CAD Design"
-Date "2019-07-06"
-Rev "0.2.0"
+Date "2019-07-07"
+Rev "0.3.0"
 Comp "BhallaLab, NCBS Bangalore"
 Comment1 "Dorababu/Dilawar Singh"
 Comment2 ""
@@ -169,32 +170,10 @@ Text GLabel 8350 3200 2    60   Input ~ 0
 DGND
 Text GLabel 8350 3100 2    60   Input ~ 0
 ImagingTrig
-$Comp
-L Connector:Conn_01x02_Male J6
-U 1 1 5D25BBED
-P 8175 2350
-F 0 "J6" H 8283 2531 50  0000 C CNN
-F 1 "CAM" H 8283 2440 50  0000 C CNN
-F 2 "Connector_Molex:Molex_KK-254_AE-6410-02A_1x02_P2.54mm_Vertical" H 8175 2350 50  0001 C CNN
-F 3 "~" H 8175 2350 50  0001 C CNN
-	1    8175 2350
-	1    0    0    -1  
-$EndComp
 Text GLabel 8375 2450 2    60   Input ~ 0
 DGND
 Text GLabel 8375 2350 2    60   Input ~ 0
 CamTTL
-$Comp
-L Device:R_POT RV1
-U 1 1 5D261470
-P 1525 1600
-F 0 "RV1" H 1456 1646 50  0000 R CNN
-F 1 "1 MegOhm" H 1456 1555 50  0000 R CNN
-F 2 "Potentiometer_THT:Potentiometer_Alps_RK09L_Single_Vertical" H 1525 1600 50  0001 C CNN
-F 3 "~" H 1525 1600 50  0001 C CNN
-	1    1525 1600
-	1    0    0    -1  
-$EndComp
 $Comp
 L Device:R R1
 U 1 1 5D261F4B
@@ -440,17 +419,6 @@ NoConn ~ 3125 2025
 NoConn ~ 3125 1925
 NoConn ~ 3125 1825
 NoConn ~ 5725 2225
-$Comp
-L Connector:AudioJack2 J7
-U 1 1 5D36E723
-P 8750 1550
-F 0 "J7" H 8570 1533 50  0000 R CNN
-F 1 "AudioJack2" H 8570 1624 50  0000 R CNN
-F 2 "Connector_Audio:Jack_3.5mm_CUI_SJ-3523-SMT_Horizontal" H 8750 1550 50  0001 C CNN
-F 3 "~" H 8750 1550 50  0001 C CNN
-	1    8750 1550
-	-1   0    0    1   
-$EndComp
 Text GLabel 8550 1550 0    50   Input ~ 0
 TONE+
 Wire Wire Line
@@ -527,41 +495,8 @@ Text GLabel 10450 1575 2    60   Input ~ 0
 DGND
 Text GLabel 10600 1675 2    60   Input ~ 0
 LED
-$Comp
-L Connector:DIN-6 J10
-U 1 1 5D3F7145
-P 10075 2300
-F 0 "J10" H 10075 2781 50  0000 C CNN
-F 1 "Cam" H 10075 2690 50  0000 C CNN
-F 2 "MD_60SM:CUI_MD-60SM" H 10075 2300 50  0001 C CNN
-F 3 "http://www.mouser.com/ds/2/18/40_c091_abd_e-75918.pdf" H 10075 2300 50  0001 C CNN
-	1    10075 2300
-	1    0    0    -1  
-$EndComp
 Text GLabel 10075 2600 2    60   Input ~ 0
 DGND
-$Comp
-L Connector:Conn_01x02_Male J5
-U 1 1 5D25B035
-P 8150 3100
-F 0 "J5" H 8258 3281 50  0000 C CNN
-F 1 "ImagingTrig" H 8258 3190 50  0000 C CNN
-F 2 "Connector_Molex:Molex_KK-254_AE-6410-02A_1x02_P2.54mm_Vertical" H 8150 3100 50  0001 C CNN
-F 3 "~" H 8150 3100 50  0001 C CNN
-	1    8150 3100
-	1    0    0    -1  
-$EndComp
-$Comp
-L Connector:DIN-6 J11
-U 1 1 5D22EBC4
-P 10100 3225
-F 0 "J11" H 10100 3706 50  0000 C CNN
-F 1 "Imaging" H 10100 3615 50  0000 C CNN
-F 2 "MD_60SM:CUI_MD-60SM" H 10100 3225 50  0001 C CNN
-F 3 "http://www.mouser.com/ds/2/18/40_c091_abd_e-75918.pdf" H 10100 3225 50  0001 C CNN
-	1    10100 3225
-	1    0    0    -1  
-$EndComp
 Text GLabel 9800 3125 0    60   Input ~ 0
 ImagingTrig
 Text GLabel 10100 3525 2    60   Input ~ 0
@@ -705,17 +640,6 @@ Connection ~ 7875 725
 Wire Wire Line
 	7875 725  7925 725 
 $Comp
-L BhallaLabComponents:PCB-ShockPad ShockPad1
-U 1 1 5D3BD131
-P 8475 925
-F 0 "ShockPad1" H 8825 775 50  0001 C CNN
-F 1 "ShockPad" H 9053 730 50  0000 L CNN
-F 2 "TerminalBlock:TerminalBlock_Altech_AK300-2_P5.00mm" H 8825 775 50  0001 C CNN
-F 3 "" H 8825 775 50  0001 C CNN
-	1    8475 925 
-	1    0    0    -1  
-$EndComp
-$Comp
 L Connector_Generic:Conn_01x02 J13
 U 1 1 5D2BFB14
 P 6275 5925
@@ -737,4 +661,81 @@ Wire Wire Line
 Connection ~ 1400 3175
 Wire Wire Line
 	1400 3175 1550 3175
+$Comp
+L Connector:AudioJack2 J7
+U 1 1 5D36E723
+P 8750 1550
+F 0 "J7" H 8570 1533 50  0000 R CNN
+F 1 "AudioJack2" H 8570 1624 50  0000 R CNN
+F 2 "BhallaLab:Jack_3.5mm_CUI_SJ1-3533NG_Horizontal" H 8750 1550 50  0001 C CNN
+F 3 "https://www.mouser.in/datasheet/2/670/sj1-353xng-1313133.pdf" H 8750 1550 50  0001 C CNN
+	1    8750 1550
+	-1   0    0    1   
+$EndComp
+$Comp
+L Connector:DIN-6 J11
+U 1 1 5D22EBC4
+P 10100 3225
+F 0 "J11" H 10100 3706 50  0000 C CNN
+F 1 "Imaging" H 10100 3615 50  0000 C CNN
+F 2 "MD-60SM:CUI_MD-60SM" H 10100 3225 50  0001 C CNN
+F 3 "http://www.mouser.com/ds/2/18/40_c091_abd_e-75918.pdf" H 10100 3225 50  0001 C CNN
+	1    10100 3225
+	1    0    0    -1  
+$EndComp
+$Comp
+L Connector:Conn_01x02_Male J5
+U 1 1 5D25B035
+P 8150 3100
+F 0 "J5" H 8258 3281 50  0000 C CNN
+F 1 "Imaging" H 8575 3275 50  0000 C CNN
+F 2 "Connector_Molex:Molex_KK-254_AE-6410-02A_1x02_P2.54mm_Vertical" H 8150 3100 50  0001 C CNN
+F 3 "~" H 8150 3100 50  0001 C CNN
+	1    8150 3100
+	1    0    0    -1  
+$EndComp
+$Comp
+L Connector:DIN-6 J10
+U 1 1 5D3F7145
+P 10075 2300
+F 0 "J10" H 10075 2781 50  0000 C CNN
+F 1 "Cam" H 10300 2600 50  0000 C CNN
+F 2 "MD-60SM:CUI_MD-60SM" H 10075 2300 50  0001 C CNN
+F 3 "http://www.mouser.com/ds/2/18/40_c091_abd_e-75918.pdf" H 10075 2300 50  0001 C CNN
+	1    10075 2300
+	1    0    0    -1  
+$EndComp
+$Comp
+L Connector:Conn_01x02_Male J6
+U 1 1 5D25BBED
+P 8175 2350
+F 0 "J6" H 8283 2531 50  0000 C CNN
+F 1 "CAM" H 8450 2550 50  0000 C CNN
+F 2 "Connector_Molex:Molex_KK-254_AE-6410-02A_1x02_P2.54mm_Vertical" H 8175 2350 50  0001 C CNN
+F 3 "~" H 8175 2350 50  0001 C CNN
+	1    8175 2350
+	1    0    0    -1  
+$EndComp
+$Comp
+L BhallaLabComponents:PCB-ShockPad ShockPad1
+U 1 1 5D3BD131
+P 8475 925
+F 0 "ShockPad1" H 8825 775 50  0001 C CNN
+F 1 "ShockPad" H 9053 730 50  0000 L CNN
+F 2 "CUI-TerminalBlock:CUI_TB001-500-02BE" H 8825 775 50  0001 C CNN
+F 3 "" H 8825 775 50  0001 C CNN
+	1    8475 925 
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R_POT_TRIM RV1
+U 1 1 5D22AE7D
+P 1525 1600
+F 0 "RV1" H 1455 1646 50  0000 R CNN
+F 1 "R_POT_TRIM" H 1455 1555 50  0000 R CNN
+F 2 "Potentiometer_THT:Potentiometer_Bourns_3296Y_Vertical" H 1525 1600 50  0001 C CNN
+F 3 "~" H 1525 1600 50  0001 C CNN
+	1    1525 1600
+	1    0    0    -1  
+$EndComp
 $EndSCHEMATC
