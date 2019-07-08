@@ -40,10 +40,10 @@
             212000 -134500))
     (via "Via[0-1]_800:400_um")
     (rule
-      (width 250)
-      (clearance 200.1)
-      (clearance 200.1 (type default_smd))
-      (clearance 50 (type smd_smd))
+      (width 400)
+      (clearance 400.1)
+      (clearance 400.1 (type default_smd))
+      (clearance 100 (type smd_smd))
     )
   )
   (placement
@@ -68,7 +68,7 @@
       (place J6 160500 -66500 front 0 (PN CAM))
     )
     (component "Connector_Molex:Molex_KK-254_AE-6410-04A_1x04_P2.54mm_Vertical"
-      (place J1 121000 -105000 front 90 (PN SSR_INPUT))
+      (place J1 121000 -96500 front 90 (PN SSR_INPUT))
       (place RotaryEncoder1 196000 -66000 front 0 (PN "Orange Optical RotaryEncoder"))
     )
     (component SSR4Channel:4ChannelSSR
@@ -78,15 +78,18 @@
       (place XA1 115730 -127270 front 0 (PN Arduino_Uno_Shield))
     )
     (component Resistor_THT:R_Axial_DIN0414_L11.9mm_D4.5mm_P25.40mm_Horizontal
-      (place R1 159500 -104000 front 180 (PN 1K))
-      (place R4 134500 -89000 front 0 (PN 470E))
-      (place R3 160000 -96000 front 180 (PN 10K))
+      (place R1 159000 -104250 front 180 (PN 1K))
+      (place R2 133500 -83000 front 0 (PN 470E))
+      (place R3 159000 -98000 front 180 (PN 10K))
+    )
+    (component Resistor_THT:R_Axial_DIN0414_L11.9mm_D4.5mm_P25.40mm_Horizontal::1
+      (place R4 133500 -91250 front 0 (PN 470E))
     )
     (component Capacitor_THT:CP_Radial_D5.0mm_P2.00mm
       (place C1 173000 -120000 front 90 (PN 47nF))
     )
     (component "Diode_THT:D_DO-15_P12.70mm_Horizontal"
-      (place D1 134000 -122000 front 90 (PN DIODE))
+      (place D1 134000 -119500 front 0 (PN DIODE))
     )
     (component "Connector_Molex:Molex_KK-254_AE-6410-08A_1x08_P2.54mm_Vertical"
       (place J2 188500 -79000 front 270 (PN "SSR OUT"))
@@ -94,19 +97,16 @@
     (component "Connector_Molex:Molex_KK-254_AE-6410-02A_1x02_P2.54mm_Vertical::1"
       (place J5 135500 -65500 front 0 (PN Imaging))
       (place J9 167000 -66500 front 0 (PN LED))
-      (place J12 120500 -112000 front 90 (PN JSolenoid))
+      (place J12 121000 -106500 front 90 (PN JSolenoid))
     )
     (component Connector_Coaxial:BNC_TEConnectivity_1478204_Vertical
-      (place J4 202500 -83500 front 270 (PN StimIsoIN))
+      (place J4 202825 -78825 front 270 (PN StimIsoIN))
     )
     (component "Connector_Molex:Molex_KK-254_AE-6410-03A_1x03_P2.54mm_Vertical"
-      (place J8 120500 -122000 front 90 (PN "Ext Supp"))
+      (place J8 121000 -119500 front 90 (PN "Ext Supp"))
     )
     (component "Package_TO_SOT_THT:TO-220-3_Horizontal_TabDown"
       (place Q1 174000 -89000 front 180 (PN IRF540N))
-    )
-    (component Resistor_THT:R_Axial_DIN0414_L11.9mm_D4.5mm_P25.40mm_Horizontal::1
-      (place R2 134500 -82000 front 0 (PN 470E))
     )
     (component "Package_DIP:DIP-6_W7.62mm_Socket"
       (place U1 165500 -120500 front 180 (PN 4N35))
@@ -435,6 +435,26 @@
       (outline (path signal 100  6750 2250  6750 -2250))
       (pin Oval[A]Pad_2400x2400_um 2 25400 0)
       (pin Round[A]Pad_2400_um 1 0 0)
+    )
+    (image Resistor_THT:R_Axial_DIN0414_L11.9mm_D4.5mm_P25.40mm_Horizontal::1
+      (outline (path signal 100  6750 2250  6750 -2250))
+      (outline (path signal 100  6750 -2250  18650 -2250))
+      (outline (path signal 100  18650 -2250  18650 2250))
+      (outline (path signal 100  18650 2250  6750 2250))
+      (outline (path signal 100  0 0  6750 0))
+      (outline (path signal 100  25400 0  18650 0))
+      (outline (path signal 120  6630 2370  6630 -2370))
+      (outline (path signal 120  6630 -2370  18770 -2370))
+      (outline (path signal 120  18770 -2370  18770 2370))
+      (outline (path signal 120  18770 2370  6630 2370))
+      (outline (path signal 120  1440 0  6630 0))
+      (outline (path signal 120  23960 0  18770 0))
+      (outline (path signal 50  -1450 2500  -1450 -2500))
+      (outline (path signal 50  -1450 -2500  26850 -2500))
+      (outline (path signal 50  26850 -2500  26850 2500))
+      (outline (path signal 50  26850 2500  -1450 2500))
+      (pin Round[A]Pad_2400_um 1 0 0)
+      (pin Oval[A]Pad_2400x2400_um 2 25400 0)
     )
     (image Capacitor_THT:CP_Radial_D5.0mm_P2.00mm
       (outline (path signal 100  3500 0  3421.46 -621.725  3190.77 -1204.38  2822.42 -1711.37
@@ -795,26 +815,6 @@
       (pin Oval[A]Pad_1905x2000_um 2 2540 0)
       (pin Oval[A]Pad_1905x2000_um 3 5080 0)
     )
-    (image Resistor_THT:R_Axial_DIN0414_L11.9mm_D4.5mm_P25.40mm_Horizontal::1
-      (outline (path signal 100  6750 2250  6750 -2250))
-      (outline (path signal 100  6750 -2250  18650 -2250))
-      (outline (path signal 100  18650 -2250  18650 2250))
-      (outline (path signal 100  18650 2250  6750 2250))
-      (outline (path signal 100  0 0  6750 0))
-      (outline (path signal 100  25400 0  18650 0))
-      (outline (path signal 120  6630 2370  6630 -2370))
-      (outline (path signal 120  6630 -2370  18770 -2370))
-      (outline (path signal 120  18770 -2370  18770 2370))
-      (outline (path signal 120  18770 2370  6630 2370))
-      (outline (path signal 120  1440 0  6630 0))
-      (outline (path signal 120  23960 0  18770 0))
-      (outline (path signal 50  -1450 2500  -1450 -2500))
-      (outline (path signal 50  -1450 -2500  26850 -2500))
-      (outline (path signal 50  26850 -2500  26850 2500))
-      (outline (path signal 50  26850 2500  -1450 2500))
-      (pin Round[A]Pad_2400_um 1 0 0)
-      (pin Oval[A]Pad_2400x2400_um 2 25400 0)
-    )
     (image "Package_DIP:DIP-6_W7.62mm_Socket"
       (outline (path signal 100  1635 1270  6985 1270))
       (outline (path signal 100  6985 1270  6985 -6350))
@@ -1084,8 +1084,8 @@
         (use_via Via[0-1]_800:400_um)
       )
       (rule
-        (width 250)
-        (clearance 200.1)
+        (width 400)
+        (clearance 400.1)
       )
     )
   )
