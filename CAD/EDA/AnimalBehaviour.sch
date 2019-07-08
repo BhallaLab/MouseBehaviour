@@ -1,5 +1,4 @@
 EESchema Schematic File Version 4
-LIBS:AnimalBehaviour-cache
 EELAYER 29 0
 EELAYER END
 $Descr A4 11693 8268
@@ -70,7 +69,7 @@ F 3 "" H 9425 4900 30  0000 C CNN
 $EndComp
 Wire Wire Line
 	9375 4600 9425 4600
-Text GLabel 9425 5250 0    60   Input ~ 0
+Text GLabel 9425 5250 3    60   Input ~ 0
 AGND
 Wire Wire Line
 	9425 5250 9425 5200
@@ -119,7 +118,7 @@ F 1 "DIODE" V 9887 4122 40  0000 R CNN
 F 2 "Diode_THT:D_DO-15_P12.70mm_Horizontal" H 9925 4200 60  0001 C CNN
 F 3 "" H 9925 4200 60  0000 C CNN
 	1    9925 4200
-	0    -1   -1   0   
+	0    1    1    0   
 $EndComp
 Wire Wire Line
 	9925 4400 10175 4400
@@ -654,13 +653,6 @@ Text GLabel 6075 5925 0    60   Input ~ 0
 DGND
 Text GLabel 6075 6025 0    60   Input ~ 0
 ShockStimIsolator
-Wire Wire Line
-	1225 3175 1400 3175
-Wire Wire Line
-	1400 2950 1400 3175
-Connection ~ 1400 3175
-Wire Wire Line
-	1400 3175 1550 3175
 $Comp
 L Connector:AudioJack2 J7
 U 1 1 5D36E723
@@ -738,4 +730,20 @@ F 3 "~" H 1525 1600 50  0001 C CNN
 	1    1525 1600
 	1    0    0    -1  
 $EndComp
+Wire Wire Line
+	1225 3175 1375 3175
+$Comp
+L power:PWR_FLAG #FLG?
+U 1 1 5D22F188
+P 1375 3175
+F 0 "#FLG?" H 1375 3250 50  0001 C CNN
+F 1 "PWR_FLAG" H 1375 3348 50  0000 C CNN
+F 2 "" H 1375 3175 50  0001 C CNN
+F 3 "~" H 1375 3175 50  0001 C CNN
+	1    1375 3175
+	1    0    0    -1  
+$EndComp
+Connection ~ 1375 3175
+Wire Wire Line
+	1375 3175 1550 3175
 $EndSCHEMATC

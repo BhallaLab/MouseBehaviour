@@ -52,7 +52,7 @@
       (place ShockPad1 217000 -110500 front 90 (PN ShockPad))
     )
     (component "BhallaLab:Jack_3.5mm_CUI_SJ1-3533NG_Horizontal"
-      (place J7 193500 -44500 front 0 (PN AudioJack2))
+      (place J7 194000 -44000 front 0 (PN AudioJack2))
     )
     (component "MD-60SM:CUI_MD-60SM"
       (place J11 139500 -50000 front 0 (PN Imaging))
@@ -63,7 +63,7 @@
       (place J6 175500 -54000 front 0 (PN CAM))
     )
     (component "Connector_Molex:Molex_KK-254_AE-6410-04A_1x04_P2.54mm_Vertical"
-      (place J1 135500 -83000 front 90 (PN SSR_INPUT))
+      (place J1 136000 -92500 front 90 (PN SSR_INPUT))
       (place RotaryEncoder1 204000 -54000 front 0 (PN "Orange Optical RotaryEncoder"))
     )
     (component SSR4Channel:4ChannelSSR
@@ -73,15 +73,15 @@
       (place XA1 130730 -114770 front 0 (PN Arduino_Uno_Shield))
     )
     (component Resistor_THT:R_Axial_DIN0414_L11.9mm_D4.5mm_P25.40mm_Horizontal
-      (place R1 187720 -95210 front 90 (PN 1K))
-      (place R4 168670 -95210 front 90 (PN 470E))
-      (place R3 181370 -95210 front 90 (PN 10K))
+      (place R1 174500 -91500 front 180 (PN 1K))
+      (place R4 149500 -76500 front 0 (PN 470E))
+      (place R3 175000 -83500 front 180 (PN 10K))
     )
     (component Capacitor_THT:CP_Radial_D5.0mm_P2.00mm
-      (place C1 187500 -106000 front 180 (PN 47nF))
+      (place C1 188000 -107500 front 90 (PN 47nF))
     )
     (component "Diode_THT:D_DO-15_P12.70mm_Horizontal"
-      (place D1 162500 -82500 front 180 (PN DIODE))
+      (place D1 149000 -109500 front 90 (PN DIODE))
     )
     (component "Connector_Molex:Molex_KK-254_AE-6410-08A_1x08_P2.54mm_Vertical"
       (place J2 203500 -66500 front 270 (PN "SSR OUT"))
@@ -89,22 +89,22 @@
     (component "Connector_Molex:Molex_KK-254_AE-6410-02A_1x02_P2.54mm_Vertical::1"
       (place J5 150500 -53000 front 0 (PN Imaging))
       (place J9 182000 -54000 front 0 (PN LED))
-      (place J12 135500 -94500 front 90 (PN JSolenoid))
+      (place J12 135500 -99500 front 90 (PN JSolenoid))
     )
     (component "Connector_BarrelJack:BarrelJack_CUI_PJ-063AH_Horizontal"
       (place J3 212500 -95000 front 90 (PN StimCurrentInject))
     )
     (component Connector_Coaxial:BNC_TEConnectivity_1478204_Vertical
-      (place J4 217500 -71000 front 90 (PN StimIsoIN))
+      (place J4 217500 -71000 front 270 (PN StimIsoIN))
     )
     (component "Connector_Molex:Molex_KK-254_AE-6410-03A_1x03_P2.54mm_Vertical"
       (place J8 135500 -109500 front 90 (PN "Ext Supp"))
     )
     (component "Package_TO_SOT_THT:TO-220-3_Horizontal_TabDown"
-      (place Q1 159500 -90000 front 180 (PN IRF540N))
+      (place Q1 189000 -76500 front 180 (PN IRF540N))
     )
     (component Resistor_THT:R_Axial_DIN0414_L11.9mm_D4.5mm_P25.40mm_Horizontal::1
-      (place R2 175020 -95210 front 90 (PN 470E))
+      (place R2 149500 -69500 front 0 (PN 470E))
     )
     (component "Package_DIP:DIP-6_W7.62mm_Socket"
       (place U1 180500 -108000 front 180 (PN 4N35))
@@ -996,10 +996,7 @@
   )
   (network
     (net EX_12V
-      (pins D1-2 J8-1 J12-1)
-    )
-    (net "Net-(D1-Pad1)"
-      (pins D1-1 J12-2 Q1-2)
+      (pins D1-1 J8-1 J12-1)
     )
     (net 5V
       (pins J1-1 RotaryEncoder1-3 XA1-5V1)
@@ -1017,8 +1014,7 @@
       (pins J2-2 J3-2)
     )
     (net AGND
-      (pins J7-S J11-6 J10-6 J13-1 J1-2 RotaryEncoder1-4 XA1-GND1 R1-2 C1-2 J5-2 J6-2
-        J4-2 J4-2@1 J4-2@2 J4-2@3 J9-2 J8-3 Q1-3 R3-2 U1-2)
+      (pins J7-S J8-3 Q1-3 R3-2)
     )
     (net EX_5V
       (pins J8-2 U1-5)
@@ -1071,11 +1067,18 @@
     (net TONE+
       (pins J7-T XA1-D8)
     )
-    (class kicad_default "" 5V AGND CamTTL EX_12V EX_5V EncA EncB ImagingTrig
-      LED "Net-(D1-Pad1)" "Net-(J10-Pad1)" "Net-(J10-Pad3)" "Net-(J10-Pad4)"
-      "Net-(J10-Pad5)" "Net-(J11-Pad1)" "Net-(J11-Pad3)" "Net-(J11-Pad4)"
-      "Net-(J11-Pad5)" "Net-(J9-Pad1)" "Net-(Q1-Pad1)" "Net-(R1-Pad1)" "Net-(R2-Pad1)"
-      "Net-(RV1-Pad3)" "Net-(U1-Pad3)" "Net-(U1-Pad6)" "Net-(XA1-Pad3V3)"
+    (net DGND
+      (pins J11-6 J10-6 J13-1 J1-2 RotaryEncoder1-4 XA1-GND1 R1-2 C1-2 J5-2 J6-2 J4-2
+        J4-2@1 J4-2@2 J4-2@3 J9-2 U1-2)
+    )
+    (net "Net-(D1-Pad2)"
+      (pins D1-2 J12-2 Q1-2)
+    )
+    (class kicad_default "" 5V AGND CamTTL DGND EX_12V EX_5V EncA EncB ImagingTrig
+      LED "Net-(D1-Pad1)" "Net-(D1-Pad2)" "Net-(J10-Pad1)" "Net-(J10-Pad3)"
+      "Net-(J10-Pad4)" "Net-(J10-Pad5)" "Net-(J11-Pad1)" "Net-(J11-Pad3)"
+      "Net-(J11-Pad4)" "Net-(J11-Pad5)" "Net-(J9-Pad1)" "Net-(Q1-Pad1)" "Net-(R1-Pad1)"
+      "Net-(R2-Pad1)" "Net-(RV1-Pad3)" "Net-(U1-Pad3)" "Net-(U1-Pad6)" "Net-(XA1-Pad3V3)"
       "Net-(XA1-Pad5V2)" "Net-(XA1-PadA1)" "Net-(XA1-PadA2)" "Net-(XA1-PadA3)"
       "Net-(XA1-PadA4)" "Net-(XA1-PadA5)" "Net-(XA1-PadAREF)" "Net-(XA1-PadD0)"
       "Net-(XA1-PadD1)" "Net-(XA1-PadD13)" "Net-(XA1-PadGND2)" "Net-(XA1-PadGND3)"
