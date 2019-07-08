@@ -21,21 +21,23 @@
       )
     )
     (boundary
-      (path pcb 0  226500 -59000  226500 -123500  122500 -123500  122500 -40500
-            208000 -40500  226500 -59000)
+      (path pcb 0  214500 -68000  214500 -136000  108500 -136000  108500 -50000
+            195500 -50000  214500 -68000)
     )
-    (keepout "" (polygon signal 0  158400 -48400  158400 -50600  159100 -50600  159100 -48400
-            158400 -48400))
-    (keepout "" (polygon signal 0  171900 -48400  171900 -50600  172600 -50600  172600 -48400
-            171900 -48400))
-    (keepout "" (polygon signal 0  132400 -47900  132400 -50100  133100 -50100  133100 -47900
-            132400 -47900))
-    (keepout "" (polygon signal 0  145900 -47900  145900 -50100  146600 -50100  146600 -47900
-            145900 -47900))
-    (keepout "" (polygon signal 0  164400 -48350  164400 -49050  166600 -49050  166600 -48350
-            164400 -48350))
-    (keepout "" (polygon signal 0  138400 -47850  138400 -48550  140600 -48550  140600 -47850
-            138400 -47850))
+    (keepout "" (polygon signal 0  143400 -60900  143400 -63100  144100 -63100  144100 -60900
+            143400 -60900))
+    (keepout "" (polygon signal 0  156900 -60900  156900 -63100  157600 -63100  157600 -60900
+            156900 -60900))
+    (keepout "" (polygon signal 0  117400 -60400  117400 -62600  118100 -62600  118100 -60400
+            117400 -60400))
+    (keepout "" (polygon signal 0  130900 -60400  130900 -62600  131600 -62600  131600 -60400
+            130900 -60400))
+    (keepout "" (polygon signal 0  149400 -60850  149400 -61550  151600 -61550  151600 -60850
+            149400 -60850))
+    (keepout "" (polygon signal 0  123400 -60350  123400 -61050  125600 -61050  125600 -60350
+            123400 -60350))
+    (keepout "" (polygon B.Cu 0  212000 -134500  212000 -128000  185500 -128000  185500 -134500
+            212000 -134500))
     (via "Via[0-1]_800:400_um")
     (rule
       (width 250)
@@ -45,72 +47,124 @@
     )
   )
   (placement
+    (component "Connector_Audio:Jack_3.5mm_CUI_SJ1-3533NG_Horizontal_CircularHoles"
+      (place J7 181000 -57000 front 0 (PN AudioJack2))
+    )
+    (component "Connector_BarrelJack:BarrelJack_CUI_PJ-063AH_Horizontal_CircularHoles"
+      (place J3 197500 -107500 front 90 (PN StimCurrentInject))
+    )
     (component Potentiometer_THT:Potentiometer_Bourns_3296Y_Vertical
-      (place RV1 206500 -110500 front 270 (PN R_POT_TRIM))
+      (place RV1 191500 -123000 front 270 (PN R_POT_TRIM))
     )
     (component "BhallaLab:CUI_TB001-500-02BE"
-      (place ShockPad1 217000 -110500 front 90 (PN ShockPad))
-    )
-    (component "BhallaLab:Jack_3.5mm_CUI_SJ1-3533NG_Horizontal"
-      (place J7 194000 -44000 front 0 (PN AudioJack2))
+      (place ShockPad1 202000 -123000 front 90 (PN ShockPad))
     )
     (component "MD-60SM:CUI_MD-60SM"
-      (place J11 139500 -50000 front 0 (PN Imaging))
-      (place J10 165500 -50500 front 0 (PN Cam))
+      (place J11 124500 -62500 front 0 (PN Imaging))
+      (place J10 150500 -63000 front 0 (PN Cam))
     )
     (component "Connector_Molex:Molex_KK-254_AE-6410-02A_1x02_P2.54mm_Vertical"
-      (place J13 218000 -82000 front 270 (PN StimIsoIN))
-      (place J6 175500 -54000 front 0 (PN CAM))
+      (place J13 203000 -94500 front 270 (PN StimIsoIN))
+      (place J6 160500 -66500 front 0 (PN CAM))
     )
     (component "Connector_Molex:Molex_KK-254_AE-6410-04A_1x04_P2.54mm_Vertical"
-      (place J1 136000 -92500 front 90 (PN SSR_INPUT))
-      (place RotaryEncoder1 204000 -54000 front 0 (PN "Orange Optical RotaryEncoder"))
+      (place J1 121000 -105000 front 90 (PN SSR_INPUT))
+      (place RotaryEncoder1 196000 -66000 front 0 (PN "Orange Optical RotaryEncoder"))
     )
     (component SSR4Channel:4ChannelSSR
-      (place Assr4ch1 169500 -95000 front 180 (PN PCB_SSR_4Ch_LLT))
+      (place Assr4ch1 154500 -107500 front 180 (PN PCB_SSR_4Ch_LLT))
     )
     (component Arduino:Arduino_Uno_Shield
-      (place XA1 130730 -114770 front 0 (PN Arduino_Uno_Shield))
+      (place XA1 115730 -127270 front 0 (PN Arduino_Uno_Shield))
     )
     (component Resistor_THT:R_Axial_DIN0414_L11.9mm_D4.5mm_P25.40mm_Horizontal
-      (place R1 174500 -91500 front 180 (PN 1K))
-      (place R4 149500 -76500 front 0 (PN 470E))
-      (place R3 175000 -83500 front 180 (PN 10K))
+      (place R1 159500 -104000 front 180 (PN 1K))
+      (place R4 134500 -89000 front 0 (PN 470E))
+      (place R3 160000 -96000 front 180 (PN 10K))
     )
     (component Capacitor_THT:CP_Radial_D5.0mm_P2.00mm
-      (place C1 188000 -107500 front 90 (PN 47nF))
+      (place C1 173000 -120000 front 90 (PN 47nF))
     )
     (component "Diode_THT:D_DO-15_P12.70mm_Horizontal"
-      (place D1 149000 -109500 front 90 (PN DIODE))
+      (place D1 134000 -122000 front 90 (PN DIODE))
     )
     (component "Connector_Molex:Molex_KK-254_AE-6410-08A_1x08_P2.54mm_Vertical"
-      (place J2 203500 -66500 front 270 (PN "SSR OUT"))
+      (place J2 188500 -79000 front 270 (PN "SSR OUT"))
     )
     (component "Connector_Molex:Molex_KK-254_AE-6410-02A_1x02_P2.54mm_Vertical::1"
-      (place J5 150500 -53000 front 0 (PN Imaging))
-      (place J9 182000 -54000 front 0 (PN LED))
-      (place J12 135500 -99500 front 90 (PN JSolenoid))
-    )
-    (component "Connector_BarrelJack:BarrelJack_CUI_PJ-063AH_Horizontal"
-      (place J3 212500 -95000 front 90 (PN StimCurrentInject))
+      (place J5 135500 -65500 front 0 (PN Imaging))
+      (place J9 167000 -66500 front 0 (PN LED))
+      (place J12 120500 -112000 front 90 (PN JSolenoid))
     )
     (component Connector_Coaxial:BNC_TEConnectivity_1478204_Vertical
-      (place J4 217500 -71000 front 270 (PN StimIsoIN))
+      (place J4 202500 -83500 front 270 (PN StimIsoIN))
     )
     (component "Connector_Molex:Molex_KK-254_AE-6410-03A_1x03_P2.54mm_Vertical"
-      (place J8 135500 -109500 front 90 (PN "Ext Supp"))
+      (place J8 120500 -122000 front 90 (PN "Ext Supp"))
     )
     (component "Package_TO_SOT_THT:TO-220-3_Horizontal_TabDown"
-      (place Q1 189000 -76500 front 180 (PN IRF540N))
+      (place Q1 174000 -89000 front 180 (PN IRF540N))
     )
     (component Resistor_THT:R_Axial_DIN0414_L11.9mm_D4.5mm_P25.40mm_Horizontal::1
-      (place R2 149500 -69500 front 0 (PN 470E))
+      (place R2 134500 -82000 front 0 (PN 470E))
     )
     (component "Package_DIP:DIP-6_W7.62mm_Socket"
-      (place U1 180500 -108000 front 180 (PN 4N35))
+      (place U1 165500 -120500 front 180 (PN 4N35))
     )
   )
   (library
+    (image "Connector_Audio:Jack_3.5mm_CUI_SJ1-3533NG_Horizontal_CircularHoles"
+      (outline (path signal 50  4700 5700  -4500 5700))
+      (outline (path signal 50  4700 -13300  4700 5700))
+      (outline (path signal 50  -4500 -13300  4700 -13300))
+      (outline (path signal 50  -4500 5700  -4500 -13300))
+      (outline (path signal 120  -2220 1320  -2220 5320))
+      (outline (path signal 120  -4120 1320  -2220 1320))
+      (outline (path signal 120  -4120 -12920  -4120 1320))
+      (outline (path signal 120  4320 -12920  -4120 -12920))
+      (outline (path signal 120  4320 1320  4320 -12920))
+      (outline (path signal 120  4020 1320  4320 1320))
+      (outline (path signal 120  4020 5320  4020 1320))
+      (outline (path signal 120  -2220 5320  4020 5320))
+      (outline (path signal 100  -2100 1200  -2100 5200))
+      (outline (path signal 100  -4000 1200  -2100 1200))
+      (outline (path signal 100  -4000 -12800  -4000 1200))
+      (outline (path signal 100  4200 -12800  -4000 -12800))
+      (outline (path signal 100  4200 1200  4200 -12800))
+      (outline (path signal 100  3900 1200  4200 1200))
+      (outline (path signal 100  3900 5200  3900 1200))
+      (outline (path signal 100  -2100 5200  3900 5200))
+      (pin Round[A]Pad_2800_um R 2000 -7900)
+      (pin Round[A]Pad_2800_um T 2000 -2400)
+      (pin Round[A]Pad_2800_um S 0 0)
+    )
+    (image "Connector_BarrelJack:BarrelJack_CUI_PJ-063AH_Horizontal_CircularHoles"
+      (outline (path signal 50  6750 2500  -6750 2500))
+      (outline (path signal 50  6750 -12500  6750 2500))
+      (outline (path signal 50  -6750 -12500  6750 -12500))
+      (outline (path signal 50  -6750 2500  -6750 -12500))
+      (outline (path signal 120  -1000 2300  1000 2300))
+      (outline (path signal 120  -5110 -12110  -5110 -9050))
+      (outline (path signal 120  5110 -12110  -5110 -12110))
+      (outline (path signal 120  5110 -9050  5110 -12110))
+      (outline (path signal 120  5110 1110  5110 -4950))
+      (outline (path signal 120  2300 1110  5110 1110))
+      (outline (path signal 120  -5110 1110  -2300 1110))
+      (outline (path signal 120  -5110 -4950  -5110 1110))
+      (outline (path signal 100  -5000 -12000  -5000 1000))
+      (outline (path signal 100  5000 -12000  -5000 -12000))
+      (outline (path signal 100  5000 1000  5000 -12000))
+      (outline (path signal 100  1000 1000  5000 1000))
+      (outline (path signal 100  0 0  1000 1000))
+      (outline (path signal 100  -1000 1000  0 0))
+      (outline (path signal 100  -5000 1000  -1000 1000))
+      (pin Round[A]Pad_3500_um MP 4500 -7000)
+      (pin Round[A]Pad_3500_um MP@1 -4500 -7000)
+      (pin Round[A]Pad_3300_um 2 0 -6000)
+      (pin Rect[A]Pad_4000x4000_um 1 0 0)
+      (keepout "" (circle F.Cu 1600 0 -9000))
+      (keepout "" (circle B.Cu 1600 0 -9000))
+    )
     (image Potentiometer_THT:Potentiometer_Bourns_3296Y_Vertical
       (outline (path signal 50  2500 1400  -7600 1400))
       (outline (path signal 50  2500 -3950  2500 1400))
@@ -154,31 +208,6 @@
       (outline (path signal 127  -2500 -4000  -2500 5000))
       (pin Round[A]Pad_1950_um 2 5000 0)
       (pin Rect[A]Pad_1950x1950_um 1 0 0)
-    )
-    (image "BhallaLab:Jack_3.5mm_CUI_SJ1-3533NG_Horizontal"
-      (outline (path signal 50  4700 5700  -4500 5700))
-      (outline (path signal 50  4700 -13300  4700 5700))
-      (outline (path signal 50  -4500 -13300  4700 -13300))
-      (outline (path signal 50  -4500 5700  -4500 -13300))
-      (outline (path signal 120  -2220 1320  -2220 5320))
-      (outline (path signal 120  -4120 1320  -2220 1320))
-      (outline (path signal 120  -4120 -12920  -4120 1320))
-      (outline (path signal 120  4320 -12920  -4120 -12920))
-      (outline (path signal 120  4320 1320  4320 -12920))
-      (outline (path signal 120  4020 1320  4320 1320))
-      (outline (path signal 120  4020 5320  4020 1320))
-      (outline (path signal 120  -2220 5320  4020 5320))
-      (outline (path signal 100  -2100 1200  -2100 5200))
-      (outline (path signal 100  -4000 1200  -2100 1200))
-      (outline (path signal 100  -4000 -12800  -4000 1200))
-      (outline (path signal 100  4200 -12800  -4000 -12800))
-      (outline (path signal 100  4200 1200  4200 -12800))
-      (outline (path signal 100  3900 1200  4200 1200))
-      (outline (path signal 100  3900 5200  3900 1200))
-      (outline (path signal 100  -2100 5200  3900 5200))
-      (pin Oval[A]Pad_2800x1800_um R 2000 -7900)
-      (pin Oval[A]Pad_2800x1800_um T 2000 -2400)
-      (pin Oval[A]Pad_2800x1800_um S 0 0)
     )
     (image "MD-60SM:CUI_MD-60SM"
       (outline (path signal 100  -7620 -1910  -7695.3 -2066.37  -7864.5 -2104.99  -8000.19 -1996.78
@@ -675,33 +704,6 @@
       (pin RoundRect[A]Pad_1740x2200_250.95_um 1 0 0)
       (pin Oval[A]Pad_1740x2200_um 2 2540 0)
     )
-    (image "Connector_BarrelJack:BarrelJack_CUI_PJ-063AH_Horizontal"
-      (outline (path signal 100  -5000 1000  -1000 1000))
-      (outline (path signal 100  -1000 1000  0 0))
-      (outline (path signal 100  0 0  1000 1000))
-      (outline (path signal 100  1000 1000  5000 1000))
-      (outline (path signal 100  5000 1000  5000 -12000))
-      (outline (path signal 100  5000 -12000  -5000 -12000))
-      (outline (path signal 100  -5000 -12000  -5000 1000))
-      (outline (path signal 120  -5110 -4950  -5110 1110))
-      (outline (path signal 120  -5110 1110  -2300 1110))
-      (outline (path signal 120  2300 1110  5110 1110))
-      (outline (path signal 120  5110 1110  5110 -4950))
-      (outline (path signal 120  5110 -9050  5110 -12110))
-      (outline (path signal 120  5110 -12110  -5110 -12110))
-      (outline (path signal 120  -5110 -12110  -5110 -9050))
-      (outline (path signal 120  -1000 1300  1000 1300))
-      (outline (path signal 50  -6000 1500  -6000 -12500))
-      (outline (path signal 50  -6000 -12500  6000 -12500))
-      (outline (path signal 50  6000 -12500  6000 1500))
-      (outline (path signal 50  6000 1500  -6000 1500))
-      (pin Rect[A]Pad_4000x2000_um 1 0 0)
-      (pin Oval[A]Pad_3300x2000_um 2 0 -6000)
-      (pin Oval[A]Pad_2000x3500_um MP -4500 -7000)
-      (pin Oval[A]Pad_2000x3500_um MP@1 4500 -7000)
-      (keepout "" (circle F.Cu 1600 0 -9000))
-      (keepout "" (circle B.Cu 1600 0 -9000))
-    )
     (image Connector_Coaxial:BNC_TEConnectivity_1478204_Vertical
       (outline (path signal 50  5500 5500  5500 -5500))
       (outline (path signal 50  5500 -5500  -5500 -5500))
@@ -868,6 +870,21 @@
       (shape (circle B.Cu 2400))
       (attach off)
     )
+    (padstack Round[A]Pad_2800_um
+      (shape (circle F.Cu 2800))
+      (shape (circle B.Cu 2800))
+      (attach off)
+    )
+    (padstack Round[A]Pad_3300_um
+      (shape (circle F.Cu 3300))
+      (shape (circle B.Cu 3300))
+      (attach off)
+    )
+    (padstack Round[A]Pad_3500_um
+      (shape (circle F.Cu 3500))
+      (shape (circle B.Cu 3500))
+      (attach off)
+    )
     (padstack Round[A]Pad_3556_um
       (shape (circle F.Cu 3556))
       (shape (circle B.Cu 3556))
@@ -903,24 +920,9 @@
       (shape (path B.Cu 1740  0 -230  0 230))
       (attach off)
     )
-    (padstack Oval[A]Pad_2800x1800_um
-      (shape (path F.Cu 1800  -500 0  500 0))
-      (shape (path B.Cu 1800  -500 0  500 0))
-      (attach off)
-    )
     (padstack Oval[A]Pad_1905x2000_um
       (shape (path F.Cu 1905  0 -47.5  0 47.5))
       (shape (path B.Cu 1905  0 -47.5  0 47.5))
-      (attach off)
-    )
-    (padstack Oval[A]Pad_3300x2000_um
-      (shape (path F.Cu 2000  -650 0  650 0))
-      (shape (path B.Cu 2000  -650 0  650 0))
-      (attach off)
-    )
-    (padstack Oval[A]Pad_2000x3500_um
-      (shape (path F.Cu 2000  0 -750  0 750))
-      (shape (path B.Cu 2000  0 -750  0 750))
       (attach off)
     )
     (padstack Oval[A]Pad_2400x2400_um
@@ -963,9 +965,9 @@
       (shape (rect B.Cu -1200 -1200 1200 1200))
       (attach off)
     )
-    (padstack Rect[A]Pad_4000x2000_um
-      (shape (rect F.Cu -2000 -1000 2000 1000))
-      (shape (rect B.Cu -2000 -1000 2000 1000))
+    (padstack Rect[A]Pad_4000x4000_um
+      (shape (rect F.Cu -2000 -2000 2000 2000))
+      (shape (rect B.Cu -2000 -2000 2000 2000))
       (attach off)
     )
     (padstack Rect[A]Pad_1408x1408_um
@@ -1008,13 +1010,13 @@
       (pins ShockPad1-1 J2-1 J2-5)
     )
     (net OUT+
-      (pins J2-4 J3-1)
+      (pins J3-1 J2-4)
     )
     (net "OUT-"
-      (pins J2-2 J3-2)
+      (pins J3-2 J2-2)
     )
     (net AGND
-      (pins J7-S J8-3 Q1-3 R3-2)
+      (pins J7-T J8-3 Q1-3 R3-2)
     )
     (net EX_5V
       (pins J8-2 U1-5)
@@ -1065,7 +1067,7 @@
       (pins J1-3 XA1-D4)
     )
     (net TONE+
-      (pins J7-T XA1-D8)
+      (pins J7-S XA1-D8)
     )
     (net DGND
       (pins J11-6 J10-6 J13-1 J1-2 RotaryEncoder1-4 XA1-GND1 R1-2 C1-2 J5-2 J6-2 J4-2
@@ -1075,17 +1077,9 @@
       (pins D1-2 J12-2 Q1-2)
     )
     (class kicad_default "" 5V AGND CamTTL DGND EX_12V EX_5V EncA EncB ImagingTrig
-      LED "Net-(D1-Pad1)" "Net-(D1-Pad2)" "Net-(J10-Pad1)" "Net-(J10-Pad3)"
-      "Net-(J10-Pad4)" "Net-(J10-Pad5)" "Net-(J11-Pad1)" "Net-(J11-Pad3)"
-      "Net-(J11-Pad4)" "Net-(J11-Pad5)" "Net-(J9-Pad1)" "Net-(Q1-Pad1)" "Net-(R1-Pad1)"
-      "Net-(R2-Pad1)" "Net-(RV1-Pad3)" "Net-(U1-Pad3)" "Net-(U1-Pad6)" "Net-(XA1-Pad3V3)"
-      "Net-(XA1-Pad5V2)" "Net-(XA1-PadA1)" "Net-(XA1-PadA2)" "Net-(XA1-PadA3)"
-      "Net-(XA1-PadA4)" "Net-(XA1-PadA5)" "Net-(XA1-PadAREF)" "Net-(XA1-PadD0)"
-      "Net-(XA1-PadD1)" "Net-(XA1-PadD13)" "Net-(XA1-PadGND2)" "Net-(XA1-PadGND3)"
-      "Net-(XA1-PadGND4)" "Net-(XA1-PadIORF)" "Net-(XA1-PadMISO)" "Net-(XA1-PadMOSI)"
-      "Net-(XA1-PadRST1)" "Net-(XA1-PadRST2)" "Net-(XA1-PadSCK)" "Net-(XA1-PadSCL)"
-      "Net-(XA1-PadSDA)" "Net-(XA1-PadVIN)" OUT+ "OUT-" PAD+ "PAD-" Puff ShockPWM
-      ShockRead ShockRelayCh12 ShockRelayCh34 ShockStimIsolator TONE+
+      LED "Net-(D1-Pad2)" "Net-(J9-Pad1)" "Net-(Q1-Pad1)" "Net-(R1-Pad1)"
+      "Net-(R2-Pad1)" OUT+ "OUT-" PAD+ "PAD-" Puff ShockPWM ShockRead ShockRelayCh12
+      ShockRelayCh34 ShockStimIsolator TONE+
       (circuit
         (use_via Via[0-1]_800:400_um)
       )

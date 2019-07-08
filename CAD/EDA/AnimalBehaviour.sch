@@ -1,4 +1,5 @@
 EESchema Schematic File Version 4
+LIBS:AnimalBehaviour-cache
 EELAYER 29 0
 EELAYER END
 $Descr A4 11693 8268
@@ -233,7 +234,7 @@ U 1 1 5D26C0F3
 P 6150 4925
 F 0 "J3" H 6150 4525 50  0000 C CNN
 F 1 "StimCurrentInject" H 6150 4650 50  0000 C CNN
-F 2 "Connector_BarrelJack:BarrelJack_CUI_PJ-063AH_Horizontal" H 6200 4885 50  0001 C CNN
+F 2 "Connector_BarrelJack:BarrelJack_CUI_PJ-063AH_Horizontal_CircularHoles" H 6200 4885 50  0001 C CNN
 F 3 "~" H 6200 4885 50  0001 C CNN
 	1    6150 4925
 	-1   0    0    1   
@@ -418,7 +419,7 @@ NoConn ~ 3125 2025
 NoConn ~ 3125 1925
 NoConn ~ 3125 1825
 NoConn ~ 5725 2225
-Text GLabel 8550 1550 0    50   Input ~ 0
+Text GLabel 8550 1650 0    50   Input ~ 0
 TONE+
 Wire Wire Line
 	10225 1050 10075 1050
@@ -445,7 +446,7 @@ F 3 "" H 10375 1100 50  0001 C CNN
 $EndComp
 Text Notes 1000 1275 0    50   ~ 0
 ShockPad is connected to A0.
-Text GLabel 8550 1650 0    50   Input ~ 0
+Text GLabel 8550 1550 0    50   Input ~ 0
 TONE-
 Text GLabel 8550 1850 0    50   Input ~ 0
 TONE-
@@ -659,7 +660,7 @@ U 1 1 5D36E723
 P 8750 1550
 F 0 "J7" H 8570 1533 50  0000 R CNN
 F 1 "AudioJack2" H 8570 1624 50  0000 R CNN
-F 2 "BhallaLab:Jack_3.5mm_CUI_SJ1-3533NG_Horizontal" H 8750 1550 50  0001 C CNN
+F 2 "Connector_Audio:Jack_3.5mm_CUI_SJ1-3533NG_Horizontal_CircularHoles" H 8750 1550 50  0001 C CNN
 F 3 "https://www.mouser.in/datasheet/2/670/sj1-353xng-1313133.pdf" H 8750 1550 50  0001 C CNN
 	1    8750 1550
 	-1   0    0    1   
@@ -733,10 +734,10 @@ $EndComp
 Wire Wire Line
 	1225 3175 1375 3175
 $Comp
-L power:PWR_FLAG #FLG?
+L power:PWR_FLAG #FLG0103
 U 1 1 5D22F188
 P 1375 3175
-F 0 "#FLG?" H 1375 3250 50  0001 C CNN
+F 0 "#FLG0103" H 1375 3250 50  0001 C CNN
 F 1 "PWR_FLAG" H 1375 3348 50  0000 C CNN
 F 2 "" H 1375 3175 50  0001 C CNN
 F 3 "~" H 1375 3175 50  0001 C CNN
