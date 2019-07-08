@@ -1,5 +1,4 @@
 EESchema Schematic File Version 4
-LIBS:AnimalBehaviour-cache
 EELAYER 29 0
 EELAYER END
 $Descr A4 11693 8268
@@ -45,123 +44,123 @@ Arduino  Uno\n
 $Comp
 L Isolator:4N35 U1
 U 1 1 5D2209DC
-P 9075 4500
-F 0 "U1" H 9075 4825 50  0000 C CNN
-F 1 "4N35" H 9075 4734 50  0000 C CNN
-F 2 "Package_DIP:DIP-6_W7.62mm_Socket" H 8875 4300 50  0001 L CIN
-F 3 "https://www.vishay.com/docs/81181/4n35.pdf" H 9075 4500 50  0001 L CNN
-	1    9075 4500
+P 8000 5125
+F 0 "U1" H 8000 5450 50  0000 C CNN
+F 1 "4N35" H 8000 5359 50  0000 C CNN
+F 2 "Package_DIP:DIP-6_W7.62mm_Socket" H 7800 4925 50  0001 L CIN
+F 3 "https://www.vishay.com/docs/81181/4n35.pdf" H 8000 5125 50  0001 L CNN
+	1    8000 5125
 	1    0    0    -1  
 $EndComp
-Text GLabel 8275 4400 0    60   Input ~ 0
+Text GLabel 7200 5025 0    60   Input ~ 0
 Puff
-Text GLabel 8775 4600 0    60   Input ~ 0
+Text GLabel 7700 5225 0    60   Input ~ 0
 DGND
 Wire Wire Line
-	9375 4600 9425 4600
-Text GLabel 9425 5250 3    60   Input ~ 0
+	8300 5225 8350 5225
+Text GLabel 8350 5875 3    60   Input ~ 0
 AGND
 Wire Wire Line
-	9425 5250 9425 5200
+	8350 5875 8350 5825
 Wire Wire Line
-	9425 4500 9375 4500
-Connection ~ 9425 4600
+	8350 5125 8300 5125
+Connection ~ 8350 5225
 $Comp
 L Transistor_FET:IRF540N Q1
 U 1 1 5D2269C5
-P 10075 4600
-F 0 "Q1" H 10281 4646 50  0000 L CNN
-F 1 "IRF540N" H 10281 4555 50  0000 L CNN
-F 2 "Package_TO_SOT_THT:TO-220-3_Horizontal_TabDown" H 10325 4525 50  0001 L CIN
-F 3 "http://www.irf.com/product-info/datasheets/data/irf540n.pdf" H 10075 4600 50  0001 L CNN
-	1    10075 4600
+P 9000 5225
+F 0 "Q1" H 9206 5271 50  0000 L CNN
+F 1 "IRF540N" H 9206 5180 50  0000 L CNN
+F 2 "Package_TO_SOT_THT:TO-220-3_Horizontal_TabDown" H 9250 5150 50  0001 L CIN
+F 3 "http://www.irf.com/product-info/datasheets/data/irf540n.pdf" H 9000 5225 50  0001 L CNN
+	1    9000 5225
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	9425 4600 9875 4600
+	8350 5225 8800 5225
 Wire Wire Line
-	10175 4800 10175 5200
+	9100 5425 9100 5825
 Wire Wire Line
-	10175 5200 9425 5200
-Connection ~ 9425 5200
+	9100 5825 8350 5825
+Connection ~ 8350 5825
 $Comp
-L Connector:Conn_01x02_Male J12
+L Connector:Conn_01x02_Male J10
 U 1 1 5D2282D7
-P 10375 4200
-F 0 "J12" H 10347 4174 50  0000 R CNN
-F 1 "JSolenoid" H 10347 4083 50  0000 R CNN
-F 2 "Connector_Molex:Molex_KK-254_AE-6410-02A_1x02_P2.54mm_Vertical" H 10375 4200 50  0001 C CNN
-F 3 "~" H 10375 4200 50  0001 C CNN
-	1    10375 4200
+P 9300 4825
+F 0 "J10" H 9272 4799 50  0000 R CNN
+F 1 "JSolenoid" H 9272 4708 50  0000 R CNN
+F 2 "Connector_Molex:Molex_KK-254_AE-6410-02A_1x02_P2.54mm_Vertical" H 9300 4825 50  0001 C CNN
+F 3 "~" H 9300 4825 50  0001 C CNN
+	1    9300 4825
 	-1   0    0    -1  
 $EndComp
 Wire Wire Line
-	10175 3900 10175 4000
+	9100 4525 9100 4625
 Wire Wire Line
-	10175 4300 10175 4400
+	9100 4925 9100 5025
 $Comp
 L Device:D D1
 U 1 1 5D22A71C
-P 9925 4200
-F 0 "D1" V 9963 4122 40  0000 R CNN
-F 1 "DIODE" V 9887 4122 40  0000 R CNN
-F 2 "Diode_THT:D_DO-15_P12.70mm_Horizontal" H 9925 4200 60  0001 C CNN
-F 3 "" H 9925 4200 60  0000 C CNN
-	1    9925 4200
+P 8850 4825
+F 0 "D1" V 8888 4747 40  0000 R CNN
+F 1 "DIODE" V 8812 4747 40  0000 R CNN
+F 2 "Diode_THT:D_DO-15_P12.70mm_Horizontal" H 8850 4825 60  0001 C CNN
+F 3 "" H 8850 4825 60  0000 C CNN
+	1    8850 4825
 	0    1    1    0   
 $EndComp
 Wire Wire Line
-	9925 4400 10175 4400
-Connection ~ 10175 4400
+	8850 5025 9100 5025
+Connection ~ 9100 5025
 Wire Wire Line
-	9925 4000 10175 4000
-Connection ~ 10175 4000
+	8850 4625 9100 4625
+Connection ~ 9100 4625
 Wire Wire Line
-	10175 4000 10175 4200
-Text Notes 9225 3800 0    50   ~ 10
+	9100 4625 9100 4825
+Text Notes 8150 4425 0    50   ~ 10
 Solenoid driver\n
 Text GLabel 5950 5575 0    60   Input ~ 0
 ShockStimIsolator
 Text GLabel 5950 5675 0    60   Input ~ 0
 DGND
-Text GLabel 9450 6100 0    60   Input ~ 0
+Text GLabel 10175 5050 0    60   Input ~ 0
 AGND
 Wire Wire Line
-	9450 6100 9550 6100
-Text GLabel 9450 5900 0    60   Input ~ 0
+	10175 5050 10275 5050
+Text GLabel 10175 4850 0    60   Input ~ 0
 EX_12V
 Wire Wire Line
-	9450 5900 9550 5900
-Text GLabel 10175 3900 2    60   Input ~ 0
+	10175 4850 10275 4850
+Text GLabel 9100 4525 2    60   Input ~ 0
 EX_12V
 $Comp
-L Connector:Conn_01x03_Male J8
+L Connector:Conn_01x03_Male J14
 U 1 1 5D2389C2
-P 9750 6000
-F 0 "J8" H 9722 6024 50  0000 R CNN
-F 1 "Ext Supp" H 9722 5933 50  0000 R CNN
-F 2 "Connector_Molex:Molex_KK-254_AE-6410-03A_1x03_P2.54mm_Vertical" H 9750 6000 50  0001 C CNN
-F 3 "~" H 9750 6000 50  0001 C CNN
-	1    9750 6000
+P 10475 4950
+F 0 "J14" H 10447 4974 50  0000 R CNN
+F 1 "Ext Supp" H 10447 4883 50  0000 R CNN
+F 2 "Connector_Molex:Molex_KK-254_AE-6410-03A_1x03_P2.54mm_Vertical" H 10475 4950 50  0001 C CNN
+F 3 "~" H 10475 4950 50  0001 C CNN
+	1    10475 4950
 	-1   0    0    -1  
 $EndComp
-Text GLabel 9450 6000 0    60   Input ~ 0
+Text GLabel 10175 4950 0    60   Input ~ 0
 EX_5V
 Wire Wire Line
-	9450 6000 9550 6000
-Text GLabel 9425 4000 0    60   Input ~ 0
+	10175 4950 10275 4950
+Text GLabel 8350 4625 0    60   Input ~ 0
 EX_5V
 Wire Wire Line
-	9425 4000 9425 4500
-Text Notes 9250 5650 0    50   ~ 10
+	8350 4625 8350 5125
+Text Notes 8175 6275 0    50   ~ 10
 External supply\n
-Text GLabel 8350 3200 2    60   Input ~ 0
+Text GLabel 8575 4025 2    60   Input ~ 0
 DGND
-Text GLabel 8350 3100 2    60   Input ~ 0
+Text GLabel 8575 3925 2    60   Input ~ 0
 ImagingTrig
-Text GLabel 8375 2450 2    60   Input ~ 0
+Text GLabel 8600 3275 2    60   Input ~ 0
 DGND
-Text GLabel 8375 2350 2    60   Input ~ 0
+Text GLabel 8600 3175 2    60   Input ~ 0
 CamTTL
 $Comp
 L Device:C C1
@@ -175,10 +174,10 @@ F 3 "~" H 1875 2150 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L Connector:Conn_Coaxial J4
+L Connector:Conn_Coaxial J5
 U 1 1 5D263EAD
 P 6300 5575
-F 0 "J4" H 6400 5550 50  0000 L CNN
+F 0 "J5" H 6400 5550 50  0000 L CNN
 F 1 "StimIsoIN" H 6000 5725 50  0000 L CNN
 F 2 "Connector_Coaxial:BNC_TEConnectivity_1478204_Vertical" H 6300 5575 50  0001 C CNN
 F 3 " ~" H 6300 5575 50  0001 C CNN
@@ -228,7 +227,7 @@ Wire Wire Line
 Wire Wire Line
 	1675 1850 1675 1600
 NoConn ~ 1525 1750
-NoConn ~ 9375 4400
+NoConn ~ 8300 5025
 $Comp
 L arduino:Arduino_Uno_Shield XA1
 U 1 1 5D1FCEB8
@@ -254,28 +253,28 @@ Connection ~ 1525 2350
 Wire Wire Line
 	1525 2350 1875 2350
 Wire Wire Line
-	9425 5050 9425 5200
+	8350 5675 8350 5825
 Wire Wire Line
-	9425 4600 9425 4750
+	8350 5225 8350 5375
 Wire Wire Line
-	9925 4000 9925 4050
+	8850 4625 8850 4675
 Wire Wire Line
-	9925 4350 9925 4400
+	8850 4975 8850 5025
 $Comp
 L Device:R R2
 U 1 1 5D221F97
-P 8525 4400
-F 0 "R2" V 8340 4400 40  0000 C CNN
-F 1 "470E" V 8416 4400 40  0000 C CNN
-F 2 "Resistor_THT:R_Axial_DIN0309_L9.0mm_D3.2mm_P5.08mm_Vertical" V 8455 4400 30  0001 C CNN
-F 3 "" H 8525 4400 30  0000 C CNN
-	1    8525 4400
+P 7450 5025
+F 0 "R2" V 7265 5025 40  0000 C CNN
+F 1 "470E" V 7341 5025 40  0000 C CNN
+F 2 "Resistor_THT:R_Axial_DIN0309_L9.0mm_D3.2mm_P5.08mm_Vertical" V 7380 5025 30  0001 C CNN
+F 3 "" H 7450 5025 30  0000 C CNN
+	1    7450 5025
 	0    1    1    0   
 $EndComp
 Wire Wire Line
-	8275 4400 8375 4400
+	7200 5025 7300 5025
 Wire Wire Line
-	8675 4400 8775 4400
+	7600 5025 7700 5025
 Text GLabel 3125 3125 0    60   Input ~ 0
 5V
 NoConn ~ 5725 2425
@@ -397,7 +396,7 @@ NoConn ~ 3125 2025
 NoConn ~ 3125 1925
 NoConn ~ 3125 1825
 NoConn ~ 5725 2225
-Text GLabel 8550 1650 0    50   Input ~ 0
+Text GLabel 8775 2475 0    50   Input ~ 0
 TONE+
 Wire Wire Line
 	10225 1050 10075 1050
@@ -424,62 +423,47 @@ F 3 "" H 10375 1100 50  0001 C CNN
 $EndComp
 Text Notes 1000 1275 0    50   ~ 0
 ShockPad is connected to A0.
-Text GLabel 8550 1550 0    50   Input ~ 0
+Text GLabel 8775 2375 0    50   Input ~ 0
 TONE-
-Text GLabel 8550 1850 0    50   Input ~ 0
-TONE-
-$Comp
-L power:GNDA #PWR03
-U 1 1 5D3E5D29
-P 8800 1850
-F 0 "#PWR03" H 8800 1600 50  0001 C CNN
-F 1 "GNDA" V 8805 1722 50  0000 R CNN
-F 2 "" H 8800 1850 50  0001 C CNN
-F 3 "" H 8800 1850 50  0001 C CNN
-	1    8800 1850
-	0    -1   -1   0   
-$EndComp
 Wire Wire Line
-	8800 1850 8550 1850
+	10725 2500 10825 2500
 Wire Wire Line
-	10500 1675 10600 1675
-Wire Wire Line
-	10200 1675 10000 1675
+	10425 2500 10225 2500
 $Comp
 L Device:R R4
 U 1 1 5D21C427
-P 10350 1675
-F 0 "R4" V 10165 1675 40  0000 C CNN
-F 1 "470E" V 10241 1675 40  0000 C CNN
-F 2 "Resistor_THT:R_Axial_DIN0309_L9.0mm_D3.2mm_P5.08mm_Vertical" V 10280 1675 30  0001 C CNN
-F 3 "" H 10350 1675 30  0000 C CNN
-	1    10350 1675
+P 10575 2500
+F 0 "R4" V 10390 2500 40  0000 C CNN
+F 1 "470E" V 10466 2500 40  0000 C CNN
+F 2 "Resistor_THT:R_Axial_DIN0309_L9.0mm_D3.2mm_P5.08mm_Vertical" V 10505 2500 30  0001 C CNN
+F 3 "" H 10575 2500 30  0000 C CNN
+	1    10575 2500
 	0    -1   -1   0   
 $EndComp
 Wire Wire Line
-	10450 1575 10000 1575
+	10675 2400 10225 2400
 $Comp
-L Connector:Conn_01x02_Male J9
+L Connector:Conn_01x02_Male J11
 U 1 1 5D2AE3AD
-P 9800 1675
-F 0 "J9" H 9772 1649 50  0000 R CNN
-F 1 "LED" H 9772 1558 50  0000 R CNN
-F 2 "Connector_Molex:Molex_KK-254_AE-6410-02A_1x02_P2.54mm_Vertical" H 9800 1675 50  0001 C CNN
-F 3 "~" H 9800 1675 50  0001 C CNN
-	1    9800 1675
+P 10025 2500
+F 0 "J11" H 9997 2474 50  0000 R CNN
+F 1 "LED" H 9997 2383 50  0000 R CNN
+F 2 "Connector_Molex:Molex_KK-254_AE-6410-02A_1x02_P2.54mm_Vertical" H 10025 2500 50  0001 C CNN
+F 3 "~" H 10025 2500 50  0001 C CNN
+	1    10025 2500
 	1    0    0    1   
 $EndComp
-Text GLabel 10450 1575 2    60   Input ~ 0
+Text GLabel 10675 2400 2    60   Input ~ 0
 DGND
-Text GLabel 10600 1675 2    60   Input ~ 0
+Text GLabel 10825 2500 2    60   Input ~ 0
 LED
-Text GLabel 10075 2600 2    60   Input ~ 0
+Text GLabel 10300 3425 2    60   Input ~ 0
 DGND
-Text GLabel 9800 3125 0    60   Input ~ 0
+Text GLabel 10025 3950 0    60   Input ~ 0
 ImagingTrig
-Text GLabel 10100 3525 2    60   Input ~ 0
+Text GLabel 10325 4350 2    60   Input ~ 0
 DGND
-Text GLabel 9775 2200 0    60   Input ~ 0
+Text GLabel 10000 3025 0    60   Input ~ 0
 CamTTL
 Text Notes 3300 4400 0    50   ~ 10
 Shock Pad Subcircuit
@@ -544,14 +528,14 @@ Connection ~ 1375 3475
 Wire Wire Line
 	1375 3475 1225 3475
 NoConn ~ 10225 750 
-NoConn ~ 10075 2000
-NoConn ~ 10375 2200
-NoConn ~ 10375 2400
-NoConn ~ 9775 2400
-NoConn ~ 9800 3325
-NoConn ~ 10100 2925
-NoConn ~ 10400 3125
-NoConn ~ 10400 3325
+NoConn ~ 10300 2825
+NoConn ~ 10600 3025
+NoConn ~ 10600 3225
+NoConn ~ 10000 3225
+NoConn ~ 10025 4150
+NoConn ~ 10325 3750
+NoConn ~ 10625 3950
+NoConn ~ 10625 4150
 Text GLabel 7800 725  0    60   Input ~ 0
 PAD+
 Text GLabel 7800 1125 0    60   Input ~ 0
@@ -590,10 +574,10 @@ Wire Wire Line
 Wire Wire Line
 	7800 1125 7900 1125
 $Comp
-L power:PWR_FLAG #FLG0101
+L power:PWR_FLAG #FLG05
 U 1 1 5D29A9FD
 P 7900 1125
-F 0 "#FLG0101" H 7900 1200 50  0001 C CNN
+F 0 "#FLG05" H 7900 1200 50  0001 C CNN
 F 1 "PWR_FLAG" H 7900 1298 50  0000 C CNN
 F 2 "" H 7900 1125 50  0001 C CNN
 F 3 "~" H 7900 1125 50  0001 C CNN
@@ -604,10 +588,10 @@ Connection ~ 7900 1125
 Wire Wire Line
 	7900 1125 7925 1125
 $Comp
-L power:PWR_FLAG #FLG0102
+L power:PWR_FLAG #FLG04
 U 1 1 5D29AC37
 P 7875 725
-F 0 "#FLG0102" H 7875 800 50  0001 C CNN
+F 0 "#FLG04" H 7875 800 50  0001 C CNN
 F 1 "PWR_FLAG" H 7875 898 50  0000 C CNN
 F 2 "" H 7875 725 50  0001 C CNN
 F 3 "~" H 7875 725 50  0001 C CNN
@@ -618,10 +602,10 @@ Connection ~ 7875 725
 Wire Wire Line
 	7875 725  7925 725 
 $Comp
-L Connector_Generic:Conn_01x02 J13
+L Connector_Generic:Conn_01x02 J4
 U 1 1 5D2BFB14
 P 6275 5925
-F 0 "J13" H 6355 5917 50  0000 L CNN
+F 0 "J4" H 6355 5917 50  0000 L CNN
 F 1 "StimIsoIN" H 6355 5826 50  0000 L CNN
 F 2 "Connector_Molex:Molex_KK-254_AE-6410-02A_1x02_P2.54mm_Vertical" H 6275 5925 50  0001 C CNN
 F 3 "~" H 6275 5925 50  0001 C CNN
@@ -633,69 +617,47 @@ DGND
 Text GLabel 6075 6025 0    60   Input ~ 0
 ShockStimIsolator
 $Comp
-L Connector:AudioJack2 J7
-U 1 1 5D36E723
-P 8750 1550
-F 0 "J7" H 8570 1533 50  0000 R CNN
-F 1 "AudioJack2" H 8570 1624 50  0000 R CNN
-F 2 "Connector_Audio:Jack_3.5mm_CUI_SJ1-3533NG_Horizontal_CircularHoles" H 8750 1550 50  0001 C CNN
-F 3 "https://www.mouser.in/datasheet/2/670/sj1-353xng-1313133.pdf" H 8750 1550 50  0001 C CNN
-	1    8750 1550
-	-1   0    0    1   
-$EndComp
-$Comp
-L Connector:DIN-6 J11
+L Connector:DIN-6 J13
 U 1 1 5D22EBC4
-P 10100 3225
-F 0 "J11" H 10100 3706 50  0000 C CNN
-F 1 "Imaging" H 10100 3615 50  0000 C CNN
-F 2 "MD-60SM:CUI_MD-60SM" H 10100 3225 50  0001 C CNN
-F 3 "http://www.mouser.com/ds/2/18/40_c091_abd_e-75918.pdf" H 10100 3225 50  0001 C CNN
-	1    10100 3225
-	1    0    0    -1  
-$EndComp
-$Comp
-L Connector:Conn_01x02_Male J5
-U 1 1 5D25B035
-P 8150 3100
-F 0 "J5" H 8258 3281 50  0000 C CNN
-F 1 "Imaging" H 8575 3275 50  0000 C CNN
-F 2 "Connector_Molex:Molex_KK-254_AE-6410-02A_1x02_P2.54mm_Vertical" H 8150 3100 50  0001 C CNN
-F 3 "~" H 8150 3100 50  0001 C CNN
-	1    8150 3100
-	1    0    0    -1  
-$EndComp
-$Comp
-L Connector:DIN-6 J10
-U 1 1 5D3F7145
-P 10075 2300
-F 0 "J10" H 10075 2781 50  0000 C CNN
-F 1 "Cam" H 10300 2600 50  0000 C CNN
-F 2 "MD-60SM:CUI_MD-60SM" H 10075 2300 50  0001 C CNN
-F 3 "http://www.mouser.com/ds/2/18/40_c091_abd_e-75918.pdf" H 10075 2300 50  0001 C CNN
-	1    10075 2300
+P 10325 4050
+F 0 "J13" H 10325 4531 50  0000 C CNN
+F 1 "Imaging" H 10325 4440 50  0000 C CNN
+F 2 "MD-60SM:CUI_MD-60SM" H 10325 4050 50  0001 C CNN
+F 3 "http://www.mouser.com/ds/2/18/40_c091_abd_e-75918.pdf" H 10325 4050 50  0001 C CNN
+	1    10325 4050
 	1    0    0    -1  
 $EndComp
 $Comp
 L Connector:Conn_01x02_Male J6
-U 1 1 5D25BBED
-P 8175 2350
-F 0 "J6" H 8283 2531 50  0000 C CNN
-F 1 "CAM" H 8450 2550 50  0000 C CNN
-F 2 "Connector_Molex:Molex_KK-254_AE-6410-02A_1x02_P2.54mm_Vertical" H 8175 2350 50  0001 C CNN
-F 3 "~" H 8175 2350 50  0001 C CNN
-	1    8175 2350
+U 1 1 5D25B035
+P 8375 3925
+F 0 "J6" H 8483 4106 50  0000 C CNN
+F 1 "Imaging" H 8800 4100 50  0000 C CNN
+F 2 "Connector_Molex:Molex_KK-254_AE-6410-02A_1x02_P2.54mm_Vertical" H 8375 3925 50  0001 C CNN
+F 3 "~" H 8375 3925 50  0001 C CNN
+	1    8375 3925
 	1    0    0    -1  
 $EndComp
 $Comp
-L BhallaLabComponents:PCB-ShockPad ShockPad1
-U 1 1 5D3BD131
-P 8475 925
-F 0 "ShockPad1" H 8825 775 50  0001 C CNN
-F 1 "ShockPad" H 9053 730 50  0000 L CNN
-F 2 "CUI-TerminalBlock:CUI_TB001-500-02BE" H 8825 775 50  0001 C CNN
-F 3 "" H 8825 775 50  0001 C CNN
-	1    8475 925 
+L Connector:DIN-6 J12
+U 1 1 5D3F7145
+P 10300 3125
+F 0 "J12" H 10300 3606 50  0000 C CNN
+F 1 "Cam" H 10525 3425 50  0000 C CNN
+F 2 "MD-60SM:CUI_MD-60SM" H 10300 3125 50  0001 C CNN
+F 3 "http://www.mouser.com/ds/2/18/40_c091_abd_e-75918.pdf" H 10300 3125 50  0001 C CNN
+	1    10300 3125
+	1    0    0    -1  
+$EndComp
+$Comp
+L Connector:Conn_01x02_Male J7
+U 1 1 5D25BBED
+P 8400 3175
+F 0 "J7" H 8508 3356 50  0000 C CNN
+F 1 "CAM" H 8675 3375 50  0000 C CNN
+F 2 "Connector_Molex:Molex_KK-254_AE-6410-02A_1x02_P2.54mm_Vertical" H 8400 3175 50  0001 C CNN
+F 3 "~" H 8400 3175 50  0001 C CNN
+	1    8400 3175
 	1    0    0    -1  
 $EndComp
 $Comp
@@ -712,10 +674,10 @@ $EndComp
 Wire Wire Line
 	1225 3175 1375 3175
 $Comp
-L power:PWR_FLAG #FLG0103
+L power:PWR_FLAG #FLG01
 U 1 1 5D22F188
 P 1375 3175
-F 0 "#FLG0103" H 1375 3250 50  0001 C CNN
+F 0 "#FLG01" H 1375 3250 50  0001 C CNN
 F 1 "PWR_FLAG" H 1375 3348 50  0000 C CNN
 F 2 "" H 1375 3175 50  0001 C CNN
 F 3 "~" H 1375 3175 50  0001 C CNN
@@ -728,12 +690,12 @@ Wire Wire Line
 $Comp
 L Device:R R3
 U 1 1 5D222B56
-P 9425 4900
-F 0 "R3" H 9496 4938 40  0000 L CNN
-F 1 "10K" H 9496 4862 40  0000 L CNN
-F 2 "Resistor_THT:R_Axial_DIN0309_L9.0mm_D3.2mm_P5.08mm_Vertical" V 9355 4900 30  0001 C CNN
-F 3 "" H 9425 4900 30  0000 C CNN
-	1    9425 4900
+P 8350 5525
+F 0 "R3" H 8421 5563 40  0000 L CNN
+F 1 "10K" H 8421 5487 40  0000 L CNN
+F 2 "Resistor_THT:R_Axial_DIN0309_L9.0mm_D3.2mm_P5.08mm_Vertical" V 8280 5525 30  0001 C CNN
+F 3 "" H 8350 5525 30  0000 C CNN
+	1    8350 5525
 	1    0    0    -1  
 $EndComp
 $Comp
@@ -747,4 +709,47 @@ F 3 "" H 1525 2100 30  0000 C CNN
 	1    1525 2100
 	1    0    0    -1  
 $EndComp
+$Comp
+L Connector:AudioJack2 J9
+U 1 1 5D36E723
+P 8975 2375
+F 0 "J9" H 8795 2358 50  0000 R CNN
+F 1 "TONE" H 8795 2449 50  0000 R CNN
+F 2 "Connector_Audio:Jack_3.5mm_CUI_SJ1-3533NG_Horizontal_CircularHoles" H 8975 2375 50  0001 C CNN
+F 3 "https://www.mouser.in/datasheet/2/670/sj1-353xng-1313133.pdf" H 8975 2375 50  0001 C CNN
+	1    8975 2375
+	-1   0    0    1   
+$EndComp
+Wire Wire Line
+	9025 2675 8775 2675
+Text GLabel 8775 2675 0    50   Input ~ 0
+TONE-
+$Comp
+L Connector_Generic:Conn_01x02 J8
+U 1 1 5D23E125
+P 8925 2075
+F 0 "J8" H 9005 2067 50  0000 L CNN
+F 1 "TONE" H 9005 1976 50  0000 L CNN
+F 2 "Connector_Molex:Molex_KK-254_AE-6410-02A_1x02_P2.54mm_Vertical" H 8925 2075 50  0001 C CNN
+F 3 "~" H 8925 2075 50  0001 C CNN
+	1    8925 2075
+	1    0    0    -1  
+$EndComp
+$Comp
+L BhallaLabComponents:PCB-ShockPad ShockPad1
+U 1 1 5D3BD131
+P 8525 975
+F 0 "ShockPad1" H 8875 825 50  0001 C CNN
+F 1 "ShockPad" H 9103 780 50  0000 L CNN
+F 2 "CUI-TerminalBlock:CUI_TB001-500-02BE" H 8875 825 50  0001 C CNN
+F 3 "" H 8875 825 50  0001 C CNN
+	1    8525 975 
+	1    0    0    -1  
+$EndComp
+Text GLabel 8725 2075 0    50   Input ~ 0
+TONE-
+Text GLabel 8725 2175 0    50   Input ~ 0
+TONE+
+Text GLabel 9025 2675 2    60   Input ~ 0
+DGND
 $EndSCHEMATC
