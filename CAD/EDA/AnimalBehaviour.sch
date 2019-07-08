@@ -57,17 +57,6 @@ Text GLabel 8275 4400 0    60   Input ~ 0
 Puff
 Text GLabel 8775 4600 0    60   Input ~ 0
 DGND
-$Comp
-L Device:R R3
-U 1 1 5D222B56
-P 9425 4900
-F 0 "R3" H 9496 4938 40  0000 L CNN
-F 1 "10K" H 9496 4862 40  0000 L CNN
-F 2 "Resistor_THT:R_Axial_DIN0414_L11.9mm_D4.5mm_P25.40mm_Horizontal" V 9355 4900 30  0001 C CNN
-F 3 "" H 9425 4900 30  0000 C CNN
-	1    9425 4900
-	1    0    0    -1  
-$EndComp
 Wire Wire Line
 	9375 4600 9425 4600
 Text GLabel 9425 5250 3    60   Input ~ 0
@@ -175,17 +164,6 @@ DGND
 Text GLabel 8375 2350 2    60   Input ~ 0
 CamTTL
 $Comp
-L Device:R R1
-U 1 1 5D261F4B
-P 1525 2100
-F 0 "R1" H 1596 2138 40  0000 L CNN
-F 1 "1K" H 1596 2062 40  0000 L CNN
-F 2 "Resistor_THT:R_Axial_DIN0414_L11.9mm_D4.5mm_P25.40mm_Horizontal" V 1455 2100 30  0001 C CNN
-F 3 "" H 1525 2100 30  0000 C CNN
-	1    1525 2100
-	1    0    0    -1  
-$EndComp
-$Comp
 L Device:C C1
 U 1 1 5D263290
 P 1875 2150
@@ -289,7 +267,7 @@ U 1 1 5D221F97
 P 8525 4400
 F 0 "R2" V 8340 4400 40  0000 C CNN
 F 1 "470E" V 8416 4400 40  0000 C CNN
-F 2 "Resistor_THT:R_Axial_DIN0414_L11.9mm_D4.5mm_P25.40mm_Horizontal" V 8455 4400 30  0001 C CNN
+F 2 "Resistor_THT:R_Axial_DIN0309_L9.0mm_D3.2mm_P5.08mm_Vertical" V 8455 4400 30  0001 C CNN
 F 3 "" H 8525 4400 30  0000 C CNN
 	1    8525 4400
 	0    1    1    0   
@@ -473,7 +451,7 @@ U 1 1 5D21C427
 P 10350 1675
 F 0 "R4" V 10165 1675 40  0000 C CNN
 F 1 "470E" V 10241 1675 40  0000 C CNN
-F 2 "Resistor_THT:R_Axial_DIN0414_L11.9mm_D4.5mm_P25.40mm_Horizontal" V 10280 1675 30  0001 C CNN
+F 2 "Resistor_THT:R_Axial_DIN0309_L9.0mm_D3.2mm_P5.08mm_Vertical" V 10280 1675 30  0001 C CNN
 F 3 "" H 10350 1675 30  0000 C CNN
 	1    10350 1675
 	0    -1   -1   0   
@@ -747,4 +725,26 @@ $EndComp
 Connection ~ 1375 3175
 Wire Wire Line
 	1375 3175 1550 3175
+$Comp
+L Device:R R3
+U 1 1 5D222B56
+P 9425 4900
+F 0 "R3" H 9496 4938 40  0000 L CNN
+F 1 "10K" H 9496 4862 40  0000 L CNN
+F 2 "Resistor_THT:R_Axial_DIN0309_L9.0mm_D3.2mm_P5.08mm_Vertical" V 9355 4900 30  0001 C CNN
+F 3 "" H 9425 4900 30  0000 C CNN
+	1    9425 4900
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R R1
+U 1 1 5D261F4B
+P 1525 2100
+F 0 "R1" H 1596 2138 40  0000 L CNN
+F 1 "1K" H 1596 2062 40  0000 L CNN
+F 2 "Resistor_THT:R_Axial_DIN0309_L9.0mm_D3.2mm_P5.08mm_Vertical" V 1455 2100 30  0001 C CNN
+F 3 "" H 1525 2100 30  0000 C CNN
+	1    1525 2100
+	1    0    0    -1  
+$EndComp
 $EndSCHEMATC
