@@ -1,7 +1,7 @@
 (export (version D)
   (design
     (source /home/dilawars/Work.HG/GITHUB/BhallaLab/MouseBehaviour/CAD/EDA/AnimalBehaviour.sch)
-    (date "Tue 09 Jul 2019 10:14:12 AM IST")
+    (date "Tue 09 Jul 2019 10:21:56 AM IST")
     (tool "Eeschema 5.1.2-5.1.2")
     (sheet (number 1) (name /) (tstamps /)
       (title_block

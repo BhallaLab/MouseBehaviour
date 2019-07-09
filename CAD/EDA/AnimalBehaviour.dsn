@@ -21,21 +21,21 @@
       )
     )
     (boundary
-      (path pcb 0  215000 -146500  110000 -146500  110000 -70000  215000 -70000
-            215000 -146500)
+      (path pcb 0  214000 -148000  107500 -148000  107500 -64500  214000 -64500
+            214000 -148000)
     )
-    (keepout "" (polygon signal 0  203900 -103400  203900 -104100  206100 -104100  206100 -103400
-            203900 -103400))
-    (keepout "" (polygon signal 0  205450 -95900  205450 -98100  206150 -98100  206150 -95900
-            205450 -95900))
-    (keepout "" (polygon signal 0  203900 -89900  203900 -90600  206100 -90600  206100 -89900
-            203900 -89900))
-    (keepout "" (polygon signal 0  204100 -87400  204100 -88100  206300 -88100  206300 -87400
-            204100 -87400))
-    (keepout "" (polygon signal 0  205650 -79900  205650 -82100  206350 -82100  206350 -79900
-            205650 -79900))
-    (keepout "" (polygon signal 0  204100 -73900  204100 -74600  206300 -74600  206300 -73900
-            204100 -73900))
+    (keepout "" (polygon signal 0  204400 -102400  204400 -103100  206600 -103100  206600 -102400
+            204400 -102400))
+    (keepout "" (polygon signal 0  205950 -94900  205950 -97100  206650 -97100  206650 -94900
+            205950 -94900))
+    (keepout "" (polygon signal 0  204400 -88900  204400 -89600  206600 -89600  206600 -88900
+            204400 -88900))
+    (keepout "" (polygon signal 0  204400 -83400  204400 -84100  206600 -84100  206600 -83400
+            204400 -83400))
+    (keepout "" (polygon signal 0  205950 -75900  205950 -78100  206650 -78100  206650 -75900
+            205950 -75900))
+    (keepout "" (polygon signal 0  204400 -69900  204400 -70600  206600 -70600  206600 -69900
+            204400 -69900))
     (via "Via[0-1]_800:400_um")
     (rule
       (width 400)
@@ -45,17 +45,20 @@
     )
   )
   (placement
+    (component Arduino:Arduino_Uno_Shield
+      (place XA1 116000 -126000 front 0 (PN Arduino_Uno_Shield))
+    )
     (component "Connector_Molex:Molex_KK-254_AE-6410-04A_1x04_P2.54mm_Vertical"
       (place RotaryEncoder1 190000 -96500 front 270 (PN "Orange Optical RotaryEncoder"))
       (place J1 173990 -83820 front 180 (PN SSR_INPUT))
     )
     (component Capacitor_THT:C_Disc_D5.0mm_W2.5mm_P5.00mm
-      (place C1 173500 -136500 front 180 (PN 47nF))
+      (place C1 181500 -140500 front 270 (PN 47nF))
     )
     (component "Connector_Molex:Molex_KK-254_AE-6410-02A_1x02_P2.54mm_Vertical"
       (place J8 119380 -96520 front 270 (PN TONE))
-      (place J4 190000 -80500 front 270 (PN StimIsoIN))
-      (place J7 190000 -87500 front 270 (PN CAM))
+      (place J4 174500 -68000 front 0 (PN StimIsoIN))
+      (place J7 189500 -82500 front 270 (PN CAM))
     )
     (component Resistor_THT:R_Axial_DIN0309_L9.0mm_D3.2mm_P5.08mm_Vertical
       (place R2 149860 -88900 front 90 (PN 470E))
@@ -67,17 +70,17 @@
       (place J9 113030 -106680 front 90 (PN TONE))
     )
     (component "Connector_BarrelJack:BarrelJack_CUI_PJ-063AH_Horizontal_CircularHoles"
-      (place J3 200000 -129000 front 90 (PN StimCurrentInject))
+      (place J3 200000 -122000 front 90 (PN StimCurrentInject))
     )
     (component Potentiometer_THT:Potentiometer_Bourns_3296Y_Vertical
-      (place RV1 167000 -144000 front 180 (PN R_POT_TRIM))
+      (place RV1 168500 -144000 front 180 (PN R_POT_TRIM))
     )
     (component "BhallaLab:CUI_TB001-500-02BE"
       (place ShockPad1 154500 -141500 front 0 (PN ShockPad))
     )
     (component "MD-60SM:CUI_MD-60SM"
-      (place J13 204200 -81000 front 270 (PN Imaging))
-      (place J12 204000 -97000 front 270 (PN Cam))
+      (place J13 204500 -77000 front 270 (PN Imaging))
+      (place J12 204500 -96000 front 270 (PN Cam))
     )
     (component SSR4Channel:4ChannelSSR
       (place Assr4ch1 154500 -107500 front 180 (PN PCB_SSR_4Ch_LLT))
@@ -89,7 +92,7 @@
       (place J2 190000 -115500 front 270 (PN "SSR OUT"))
     )
     (component "Connector_Molex:Molex_KK-254_AE-6410-02A_1x02_P2.54mm_Vertical::1"
-      (place J6 190000 -73500 front 270 (PN Imaging))
+      (place J6 166500 -68000 front 0 (PN Imaging))
       (place J11 119380 -90170 front 90 (PN LED))
       (place J10 118110 -128270 front 90 (PN JSolenoid))
     )
@@ -107,6 +110,71 @@
     )
   )
   (library
+    (image Arduino:Arduino_Uno_Shield
+      (outline (path signal 150  0 53340  64516 53340))
+      (outline (path signal 150  0 0  66040 0))
+      (outline (path signal 150  64516 53340  66040 51816))
+      (outline (path signal 150  66040 0  66040 1270))
+      (outline (path signal 150  66040 1270  68580 3810))
+      (outline (path signal 150  68580 3810  68580 38100))
+      (outline (path signal 150  68580 38100  66040 40640))
+      (outline (path signal 150  66040 40640  66040 51816))
+      (outline (path signal 150  0 53340  0 0))
+      (outline (path signal 150  -1905 12065  11430 12065))
+      (outline (path signal 150  -1905 12065  -1905 3175))
+      (outline (path signal 150  -1905 3175  11430 3175))
+      (outline (path signal 150  11430 12065  11430 3175))
+      (outline (path signal 150  -6350 43815  -6350 32385))
+      (outline (path signal 150  9525 43815  9525 32385))
+      (outline (path signal 150  9525 43815  -6350 43815))
+      (outline (path signal 150  9525 32385  -6350 32385))
+      (pin Oval[A]Pad_1727.2x1727.2_um MISO 63627 30480)
+      (pin Oval[A]Pad_1727.2x1727.2_um A5 63500 2540)
+      (pin Oval[A]Pad_1727.2x1727.2_um A4 60960 2540)
+      (pin Oval[A]Pad_1727.2x1727.2_um A3 58420 2540)
+      (pin Oval[A]Pad_1727.2x1727.2_um A2 55880 2540)
+      (pin Oval[A]Pad_1727.2x1727.2_um A1 53340 2540)
+      (pin Oval[A]Pad_1727.2x1727.2_um @1 27940 2540)
+      (pin Oval[A]Pad_1727.2x1727.2_um D11 34036 50800)
+      (pin Oval[A]Pad_1727.2x1727.2_um D12 31496 50800)
+      (pin Oval[A]Pad_1727.2x1727.2_um D13 28956 50800)
+      (pin Oval[A]Pad_1727.2x1727.2_um AREF 23876 50800)
+      (pin Oval[A]Pad_1727.2x1727.2_um SDA 21336 50800)
+      (pin Oval[A]Pad_1727.2x1727.2_um SCL 18796 50800)
+      (pin Oval[A]Pad_1727.2x1727.2_um D10 36576 50800)
+      (pin Oval[A]Pad_1727.2x1727.2_um D9 39116 50800)
+      (pin Oval[A]Pad_1727.2x1727.2_um D8 41656 50800)
+      (pin Oval[A]Pad_1727.2x1727.2_um GND1 26416 50800)
+      (pin Oval[A]Pad_1727.2x1727.2_um D7 45720 50800)
+      (pin Oval[A]Pad_1727.2x1727.2_um D6 48260 50800)
+      (pin Oval[A]Pad_1727.2x1727.2_um D5 50800 50800)
+      (pin Oval[A]Pad_1727.2x1727.2_um D4 53340 50800)
+      (pin Oval[A]Pad_1727.2x1727.2_um D3 55880 50800)
+      (pin Oval[A]Pad_1727.2x1727.2_um D2 58420 50800)
+      (pin Oval[A]Pad_1727.2x1727.2_um D1 60960 50800)
+      (pin Oval[A]Pad_1727.2x1727.2_um D0 63500 50800)
+      (pin Oval[A]Pad_1727.2x1727.2_um IORF 30480 2540)
+      (pin Oval[A]Pad_1727.2x1727.2_um RST1 33020 2540)
+      (pin Oval[A]Pad_1727.2x1727.2_um 3V3 35560 2540)
+      (pin Oval[A]Pad_1727.2x1727.2_um 5V1 38100 2540)
+      (pin Oval[A]Pad_1727.2x1727.2_um GND2 40640 2540)
+      (pin Oval[A]Pad_1727.2x1727.2_um GND3 43180 2540)
+      (pin Oval[A]Pad_1727.2x1727.2_um VIN 45720 2540)
+      (pin Oval[A]Pad_1727.2x1727.2_um A0 50800 2540)
+      (pin Oval[A]Pad_1727.2x1727.2_um 5V2 66167 30480)
+      (pin Oval[A]Pad_1727.2x1727.2_um SCK 63627 27940)
+      (pin Oval[A]Pad_1727.2x1727.2_um MOSI 66167 27940)
+      (pin Oval[A]Pad_1727.2x1727.2_um GND4 66167 25400)
+      (pin Oval[A]Pad_1727.2x1727.2_um RST2 63627 25400)
+      (keepout "" (circle F.Cu 3200 13970 2540))
+      (keepout "" (circle B.Cu 3200 13970 2540))
+      (keepout "" (circle F.Cu 3200 15240 50800))
+      (keepout "" (circle B.Cu 3200 15240 50800))
+      (keepout "" (circle F.Cu 3200 66040 35560))
+      (keepout "" (circle B.Cu 3200 66040 35560))
+      (keepout "" (circle F.Cu 3200 66040 7620))
+      (keepout "" (circle B.Cu 3200 66040 7620))
+    )
     (image "Connector_Molex:Molex_KK-254_AE-6410-04A_1x04_P2.54mm_Vertical"
       (outline (path signal 50  9390 3420  -1770 3420))
       (outline (path signal 50  9390 -3380  9390 3420))
@@ -149,22 +217,22 @@
       (pin RoundRect[A]Pad_1740x2200_250.95_um 1 0 0)
     )
     (image Capacitor_THT:C_Disc_D5.0mm_W2.5mm_P5.00mm
-      (outline (path signal 50  6050 1500  -1050 1500))
-      (outline (path signal 50  6050 -1500  6050 1500))
-      (outline (path signal 50  -1050 -1500  6050 -1500))
-      (outline (path signal 50  -1050 1500  -1050 -1500))
-      (outline (path signal 120  5120 -1055  5120 -1370))
-      (outline (path signal 120  5120 1370  5120 1055))
-      (outline (path signal 120  -120 -1055  -120 -1370))
-      (outline (path signal 120  -120 1370  -120 1055))
-      (outline (path signal 120  -120 -1370  5120 -1370))
-      (outline (path signal 120  -120 1370  5120 1370))
-      (outline (path signal 100  5000 1250  0 1250))
-      (outline (path signal 100  5000 -1250  5000 1250))
-      (outline (path signal 100  0 -1250  5000 -1250))
       (outline (path signal 100  0 1250  0 -1250))
-      (pin Round[A]Pad_1600_um 2 5000 0)
+      (outline (path signal 100  0 -1250  5000 -1250))
+      (outline (path signal 100  5000 -1250  5000 1250))
+      (outline (path signal 100  5000 1250  0 1250))
+      (outline (path signal 120  -120 1370  5120 1370))
+      (outline (path signal 120  -120 -1370  5120 -1370))
+      (outline (path signal 120  -120 1370  -120 1055))
+      (outline (path signal 120  -120 -1055  -120 -1370))
+      (outline (path signal 120  5120 1370  5120 1055))
+      (outline (path signal 120  5120 -1055  5120 -1370))
+      (outline (path signal 50  -1050 1500  -1050 -1500))
+      (outline (path signal 50  -1050 -1500  6050 -1500))
+      (outline (path signal 50  6050 -1500  6050 1500))
+      (outline (path signal 50  6050 1500  -1050 1500))
       (pin Round[A]Pad_1600_um 1 0 0)
+      (pin Round[A]Pad_1600_um 2 5000 0)
     )
     (image "Connector_Molex:Molex_KK-254_AE-6410-02A_1x02_P2.54mm_Vertical"
       (outline (path signal 50  4310 3420  -1770 3420))
@@ -688,6 +756,11 @@
       (shape (path B.Cu 1700  -850 0  850 0))
       (attach off)
     )
+    (padstack Oval[A]Pad_1727.2x1727.2_um
+      (shape (path F.Cu 1727.2  0 0  0 0))
+      (shape (path B.Cu 1727.2  0 0  0 0))
+      (attach off)
+    )
     (padstack Oval[A]Pad_1740x2200_um
       (shape (path F.Cu 1740  0 -230  0 230))
       (shape (path B.Cu 1740  0 -230  0 230))
@@ -774,7 +847,7 @@
       (pins D1-1 J14-1 J10-1)
     )
     (net 5V
-      (pins RotaryEncoder1-3 J1-1)
+      (pins XA1-5V1 RotaryEncoder1-3 J1-1)
     )
     (net PAD+
       (pins J2-3 J2-7)
@@ -801,47 +874,47 @@
       (pins R2-1 U1-1)
     )
     (net ShockRead
-      (pins C1-1 RV1-1 J2-6)
+      (pins XA1-A0 C1-1 RV1-1 J2-6)
     )
     (net ShockPWM
-      (pins J2-8)
+      (pins XA1-D5 J2-8)
     )
     (net ShockStimIsolator
-      (pins J4-2 J5-1)
+      (pins XA1-D7 J4-2 J5-1)
     )
     (net ImagingTrig
-      (pins J13-2 J6-1)
+      (pins XA1-D12 J13-2 J6-1)
     )
     (net CamTTL
-      (pins J12-2 J7-1)
+      (pins XA1-D10 J12-2 J7-1)
     )
     (net "Net-(R1-Pad1)"
       (pins R1-1 RV1-2)
     )
     (net Puff
-      (pins R2-2)
+      (pins XA1-D11 R2-2)
     )
     (net LED
-      (pins R4-2)
+      (pins XA1-D9 R4-2)
     )
     (net EncB
-      (pins RotaryEncoder1-2)
+      (pins XA1-D3 RotaryEncoder1-2)
     )
     (net EncA
-      (pins RotaryEncoder1-1)
+      (pins XA1-D2 RotaryEncoder1-1)
     )
     (net ShockRelayCh34
-      (pins J1-4)
+      (pins XA1-D6 J1-4)
     )
     (net ShockRelayCh12
-      (pins J1-3)
+      (pins XA1-D4 J1-3)
     )
     (net TONE+
-      (pins J8-2 J9-S)
+      (pins XA1-D8 J8-2 J9-S)
     )
     (net DGND
-      (pins RotaryEncoder1-4 C1-2 J8-1 R1-2 J9-T J13-6 J12-6 J4-1 J1-2 J6-2 J7-2 J5-2
-        J5-2@1 J5-2@2 J5-2@3 J11-2 U1-2)
+      (pins XA1-GND1 RotaryEncoder1-4 C1-2 J8-1 R1-2 J9-T J13-6 J12-6 J4-1 J1-2 J6-2
+        J7-2 J5-2 J5-2@1 J5-2@2 J5-2@3 J11-2 U1-2)
     )
     (net "Net-(D1-Pad2)"
       (pins D1-2 J10-2 Q1-2)
@@ -850,9 +923,17 @@
       (pins R4-1 J11-1)
     )
     (class kicad_default "" 5V AGND CamTTL DGND EX_12V EX_5V EncA EncB ImagingTrig
-      LED "Net-(D1-Pad2)" "Net-(J11-Pad1)" "Net-(Q1-Pad1)" "Net-(R1-Pad1)"
-      "Net-(R2-Pad1)" OUT+ "OUT-" PAD+ "PAD-" Puff ShockPWM ShockRead ShockRelayCh12
-      ShockRelayCh34 ShockStimIsolator TONE+
+      LED "Net-(D1-Pad2)" "Net-(J11-Pad1)" "Net-(J12-Pad1)" "Net-(J12-Pad3)"
+      "Net-(J12-Pad4)" "Net-(J12-Pad5)" "Net-(J13-Pad1)" "Net-(J13-Pad3)"
+      "Net-(J13-Pad4)" "Net-(J13-Pad5)" "Net-(Q1-Pad1)" "Net-(R1-Pad1)" "Net-(R2-Pad1)"
+      "Net-(RV1-Pad3)" "Net-(U1-Pad3)" "Net-(U1-Pad6)" "Net-(XA1-Pad3V3)"
+      "Net-(XA1-Pad5V2)" "Net-(XA1-PadA1)" "Net-(XA1-PadA2)" "Net-(XA1-PadA3)"
+      "Net-(XA1-PadA4)" "Net-(XA1-PadA5)" "Net-(XA1-PadAREF)" "Net-(XA1-PadD0)"
+      "Net-(XA1-PadD1)" "Net-(XA1-PadD13)" "Net-(XA1-PadGND2)" "Net-(XA1-PadGND3)"
+      "Net-(XA1-PadGND4)" "Net-(XA1-PadIORF)" "Net-(XA1-PadMISO)" "Net-(XA1-PadMOSI)"
+      "Net-(XA1-PadRST1)" "Net-(XA1-PadRST2)" "Net-(XA1-PadSCK)" "Net-(XA1-PadSCL)"
+      "Net-(XA1-PadSDA)" "Net-(XA1-PadVIN)" OUT+ "OUT-" PAD+ "PAD-" Puff ShockPWM
+      ShockRead ShockRelayCh12 ShockRelayCh34 ShockStimIsolator TONE+
       (circuit
         (use_via Via[0-1]_800:400_um)
       )
