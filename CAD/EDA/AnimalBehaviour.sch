@@ -152,7 +152,7 @@ Text GLabel 8350 4625 0    60   Input ~ 0
 EX_5V
 Wire Wire Line
 	8350 4625 8350 5125
-Text Notes 8175 6275 0    50   ~ 10
+Text Notes 9875 4700 0    50   ~ 10
 External supply\n
 Text GLabel 8575 4025 2    60   Input ~ 0
 DGND
@@ -168,7 +168,7 @@ U 1 1 5D263290
 P 1875 2150
 F 0 "C1" H 1990 2196 50  0000 L CNN
 F 1 "47nF" H 1990 2105 50  0000 L CNN
-F 2 "Capacitor_THT:CP_Radial_D5.0mm_P2.00mm" H 1913 2000 50  0001 C CNN
+F 2 "Capacitor_THT:C_Disc_D5.0mm_W2.5mm_P5.00mm" H 1913 2000 50  0001 C CNN
 F 3 "~" H 1875 2150 50  0001 C CNN
 	1    1875 2150
 	1    0    0    -1  
@@ -410,17 +410,6 @@ Text GLabel 10075 950  0    60   Input ~ 0
 DGND
 Wire Wire Line
 	10075 950  10225 950 
-$Comp
-L BhallaLabComponents:OrangeOpticalRotaryEncoder RotaryEncoder1
-U 1 1 5D3982F6
-P 10575 950
-F 0 "RotaryEncoder1" H 10575 950 50  0001 C CNN
-F 1 "Orange Optical RotaryEncoder" H 10575 950 0   0001 C CNN
-F 2 "Connector_Molex:Molex_KK-254_AE-6410-04A_1x04_P2.54mm_Vertical" H 10375 1100 50  0001 C CNN
-F 3 "" H 10375 1100 50  0001 C CNN
-	1    10575 950 
-	-1   0    0    1   
-$EndComp
 Text Notes 1000 1275 0    50   ~ 0
 ShockPad is connected to A0.
 Text GLabel 8775 2375 0    50   Input ~ 0
@@ -527,7 +516,6 @@ $EndComp
 Connection ~ 1375 3475
 Wire Wire Line
 	1375 3475 1225 3475
-NoConn ~ 10225 750 
 NoConn ~ 10300 2825
 NoConn ~ 10600 3025
 NoConn ~ 10600 3225
@@ -752,4 +740,19 @@ Text GLabel 8725 2175 0    50   Input ~ 0
 TONE+
 Text GLabel 9025 2675 2    60   Input ~ 0
 DGND
+$Comp
+L BhallaLabComponents:OrangeOpticalRotaryEncoder RotaryEncoder1
+U 1 1 5D3982F6
+P 10575 950
+F 0 "RotaryEncoder1" H 10575 950 50  0001 C CNN
+F 1 "Orange Optical RotaryEncoder" H 10575 950 0   0001 C CNN
+F 2 "Connector_Molex:Molex_KK-254_AE-6410-04A_1x04_P2.54mm_Vertical" H 10375 1100 50  0001 C CNN
+F 3 "" H 10375 1100 50  0001 C CNN
+	1    10575 950 
+	-1   0    0    1   
+$EndComp
+Text GLabel 10075 750  0    60   Input ~ 0
+DGND
+Wire Wire Line
+	10075 750  10225 750 
 $EndSCHEMATC
