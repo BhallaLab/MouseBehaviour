@@ -1,12 +1,13 @@
 EESchema Schematic File Version 4
+LIBS:AnimalBehaviour-cache
 EELAYER 29 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
 Sheet 1 1
 Title "MouseBehaviour: EDA Designs"
-Date "2019-07-09"
-Rev "6"
+Date "2019-07-10"
+Rev "7"
 Comp "BhallaLab, NCBS Bangalore"
 Comment1 "Dorababu/Dilawar Singh"
 Comment2 "Helpdesk Ticket No: 197588"
@@ -216,9 +217,9 @@ F 3 "~" H 6200 4885 50  0001 C CNN
 	1    6150 4925
 	-1   0    0    1   
 $EndComp
-Text GLabel 5850 5025 0    60   Input ~ 0
-OUT+
 Text GLabel 5850 4825 0    60   Input ~ 0
+OUT+
+Text GLabel 5850 5025 0    60   Input ~ 0
 OUT-
 Text GLabel 1375 2350 0    60   Input ~ 0
 DGND
@@ -345,17 +346,6 @@ Wire Wire Line
 	1800 4800 1950 4800
 Wire Wire Line
 	1800 4900 1950 4900
-$Comp
-L BhallaLabComponents:PCB_SSR_4Ch_LLT Assr4ch1
-U 1 1 5D27A18F
-P 2550 5150
-F 0 "Assr4ch1" H 2375 5850 50  0000 L CNN
-F 1 "PCB_SSR_4Ch_LLT" H 2200 5750 50  0000 L CNN
-F 2 "SSR4Channel:4ChannelSSR" H 2550 5150 50  0001 C CNN
-F 3 "https://www.amazon.in/MagiDeal-Solid-State-Module-High-level-Output/dp/B0772RP6KM/ref=sr_1_1?keywords=low+level+trigger+solid+state+relay&qid=1562403716&s=kitchen&sr=1-1" H 2550 5150 50  0001 C CNN
-	1    2550 5150
-	1    0    0    -1  
-$EndComp
 Wire Wire Line
 	3475 5600 3150 5600
 Wire Wire Line
@@ -729,7 +719,7 @@ U 1 1 5D3BD131
 P 8525 975
 F 0 "ShockPad1" H 8875 825 50  0001 C CNN
 F 1 "ShockPad" H 9103 780 50  0000 L CNN
-F 2 "CUI-TerminalBlock:CUI_TB001-500-02BE" H 8875 825 50  0001 C CNN
+F 2 "TerminalBlock_Altech:Altech_AK300_1x02_P5.00mm_45-Degree" H 8875 825 50  0001 C CNN
 F 3 "" H 8875 825 50  0001 C CNN
 	1    8525 975 
 	1    0    0    -1  
@@ -755,4 +745,15 @@ Text GLabel 10075 750  0    60   Input ~ 0
 DGND
 Wire Wire Line
 	10075 750  10225 750 
+$Comp
+L BhallaLabComponents:PCB_SSR_4Ch_LLT Assr4ch1
+U 1 1 5D27A18F
+P 2550 5150
+F 0 "Assr4ch1" H 2375 5850 50  0000 L CNN
+F 1 "PCB_SSR_4Ch_LLT" H 2200 5750 50  0000 L CNN
+F 2 "SSR4Channel:4ChannelSSR" H 2550 5150 50  0001 C CNN
+F 3 "https://www.amazon.in/MagiDeal-Solid-State-Module-High-level-Output/dp/B0772RP6KM/ref=sr_1_1?keywords=low+level+trigger+solid+state+relay&qid=1562403716&s=kitchen&sr=1-1" H 2550 5150 50  0001 C CNN
+	1    2550 5150
+	1    0    0    -1  
+$EndComp
 $EndSCHEMATC
