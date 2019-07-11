@@ -84,3 +84,16 @@ See function `write_data_line` in file `src/main.ino` for updated values.
 # How to analyze data
 
 Go to directory `./analysis` and read the `README.md` file there. 
+
+# Extracting arduino data from tiff file.
+
+Each tiff file contains one trial. The first row of each frame contains arduino
+data. You can extract that using the script
+`./analysis/get_data_line_from_tiff.py` file. 
+
+To extract data run, 
+
+    $ python ./analysis/get_data_line_from_tiff.py /path/to/session/trial01.tiff
+
+It will print the csv files onto the terminal and also save it to a dat file in
+the same folder. A plot file is also generated.
