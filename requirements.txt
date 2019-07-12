@@ -1,5 +1,5 @@
-tifffile
 opencv-python
-readchar
 pyserial
-gnuplotlib
+pillow
+numpy 
+matplotlib
