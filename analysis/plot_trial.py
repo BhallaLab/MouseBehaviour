@@ -67,7 +67,7 @@ def data2df(data):
     # merge both df and sort by tcam.
     df = pd.concat([A, B], axis=0, ignore_index=True, names=cols, sort=True)
     df.sort_values(by=['tcam'], inplace=True)
-    return A
+    return df
 
 def plotTrial(data, obj=None):
     df = data2df(data)
