@@ -379,23 +379,26 @@ int ProcessFrame(void* data, size_t width, size_t height)
         cout << "[WARN] " << e.what() << endl;
     }
 
+    // Append eye value.
     arduinoData.push_back(boost::str(boost::format("%.2f")%eyeValue));
 
     // Draw a back rectangle on the top.
     rectangle(img, Point(1,2), Point(width, 16), 0, -1);
-    putText(img, arduino, Point(10,10), FONT_HERSHEY_SIMPLEX, 0.3, 200);
 
+    // Convert msg to array of uint8 and add at the top of the frame. The first
+    // row contains CSV data read from arduino and the mean value computed from
+    // the frame.
+    string toWrite = boost::algorithm::join(arduinoData, ",");
+    toWrite.resize(width, ' ');
+    cv::Mat infoRow(1, width, CV_8UC1, (void*) toWrite.data());
+
+    // Add test to frame as well.
+    putText(img, toWrite, Point(10,10), FONT_HERSHEY_SIMPLEX, 0.3, 200);
     // If  camera pin is high then show (ON) else show (OFF)
     string cameraStatus = "(OFF)";
     if(arduinoData.size() == 13 && arduinoData[8] == "1")
         cameraStatus = "(ON)";
     putText(img, cameraStatus, Point(img.cols-40, 10), FONT_HERSHEY_SIMPLEX, 0.3, 200);
-
-    // Convert msg to array of uint8 and add at the top of the frame. The first
-    // row contains CSV data read from arduino.
-    string toWrite = arduino;
-    toWrite.resize(width, ' ');
-    cv::Mat infoRow(1, width, CV_8UC1, (void*) toWrite.data());
     
     // Prepend to image.
     cv::vconcat(infoRow, img, img);
@@ -407,6 +410,7 @@ int ProcessFrame(void* data, size_t width, size_t height)
 
     // This frame and arduino data are clubbed together before saving.
     AddToStoreHouse(img, arduinoData);
+
 
     char k = waitKey(2);
     if( k < ' ')

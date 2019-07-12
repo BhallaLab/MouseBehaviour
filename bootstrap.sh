@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 set +x 
-set -e
+set +e
 sudo apt update -y
+set -e
 sudo apt install -y  libopencv-dev libopencv-highgui-dev \
     libopencv-video-dev \
     libopencv-photo-dev
