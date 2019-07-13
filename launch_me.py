@@ -71,7 +71,7 @@ def findTiffFiles(datadir, ext="tif"):
     print( f"[INFO ] Analysing data in {datadir}" )
     datadir = Path(datadir)
     tiffs = []
-    for x in itertools.chain(datadir.glob(f"*.{ext}"), datadir.glob(f"*.{ext}")):
+    for x in itertools.chain(datadir.glob(f"*.{ext}"), datadir.glob(f"*.{ext}f")):
         tiffs.append(TiffFile(x))
     return tiffs
 

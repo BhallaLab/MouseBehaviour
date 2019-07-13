@@ -96,7 +96,6 @@ def data2df(data):
 def plotTrial(data, outfile=None, obj=None):
     df = data2df(data)
     draw_profile_img(df)
-
     fig = plt.figure()
     gridSize = (3, 2)
     ax1 = plt.subplot2grid( gridSize, (0,0), colspan = 2 )
@@ -108,6 +107,7 @@ def plotTrial(data, outfile=None, obj=None):
     ax2.plot(df['tarduino'], df['shock'], color='red', label="Shock")
     ax2.legend()
     ax3.plot(df['tarduino'], df['speed'], label='Speed')
+    ax3.legend()
 
     ax3.set_xlabel('Time (ms)')
 
