@@ -3,7 +3,6 @@ TAG := bhallalab/mousebehaviour:$(VERSION)
 
 all : $(DOCKERFILE)
 	docker build \
-	    --no-cache \
 	    --build-arg http_proxy="http://172.16.223.222:3128" \
 	    --build-arg https_proxy="http://172.16.223.222:3128" \
 	    -t $(TAG) \
