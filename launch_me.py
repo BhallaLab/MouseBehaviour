@@ -5,13 +5,17 @@ __copyright__        = "Copyright 2019-, Dilawar Singh"
 __maintainer__       = "Dilawar Singh"
 __email__            = "dilawars@ncbs.res.in"
 
-import typing as T
 from pathlib import Path
 import PySimpleGUI as sg
 import methods as M
 import canvas as C
 import itertools
 import time
+import sys
+
+if not (sys.version_info.major > 2 and sys.version_info.minor > 5):
+    print( f"[ERROR] Requires python 3.6+" )
+    quit(1)
 
 # Globals.
 class Args: pass
@@ -34,8 +38,11 @@ canvasTabs = sg.TabGroup([[
 # Analysis tab.
 tab2 = [ 
         [sg.In(key='session_dir', do_not_clear=True)
-            , sg.FolderBrowse(target='session_dir')
-            , sg.OK()]
+            , sg.FolderBrowse("Browse DataDir", target='session_dir')
+            , sg.Button("Find TIFF")]
+        , [sg.In(key='data_dir', do_not_clear=True)
+            , sg.FolderBrowse("Select ResultDir", target='data_dir'),  sg.OK()
+            ]
         , [ sg.Button('Analyze All', key='Analyze')
             ,  sg.ProgressBar(1000, orientation='h', size=(20,20), key='__PROGRESS__'), ]
         , [ sg.Listbox(values=[], size=(30, H_//20), enable_events=True
@@ -66,7 +73,7 @@ class TiffFile:
 
     def plotData(self, data, outfile):
         outfile.parent.mkdir(parents=True, exist_ok=True)
-        return plot_trial.plotAndSaveData(data, outfile=outfile, obj=self)
+        return M.plotAndSaveData(data, outfile=outfile, obj=self)
 
 def findTiffFiles(datadir, ext="tif"):
     print( f"[INFO ] Analysing data in {datadir}" )
@@ -82,15 +89,23 @@ def updateTiffFileList(datadir):
     win_.FindElement("__FILELIST__").Update(tiffs)
     return tiffs
 
-def analyzeTiffDir(datadir):
+def analyzeTiffDir(sessiondir, datadir):
     global win_
     global status_
-    tiffs = updateTiffFileList(datadir)
+    tiffs = updateTiffFileList(sessiondir)
     pgbar = win_.FindElement("__PROGRESS__")
     for i, tiff in enumerate(tiffs):
         pgbar.UpdateBar(int((i+1)*1000.0/len(tiffs)))
         status_.Update(f"Analysing {tiff}")
         analyzeTiffFile(tiff)
+
+    # Now analyze the dir.
+    summaryPlotPath = datadir / 'summary.png'
+    M.plotSessionDir(datadir, summaryPlotPath)
+    # Focus on results tab.
+    win_.FindElement("__CANVASES__").SelectTab(1)
+    canvas2 = win_.FindElement("__CANVAS2__").TKCanvas
+    C.showImageFileOnCanvas(canvas2, summaryPlotPath) 
     status_.Update("ALL DONE")
 
 def analyzeTiffFile(tiff):
@@ -119,6 +134,8 @@ def updateDataDirs():
             args_.data_dir = Path(args_.session_dir) / 'analysis'
         else:
             args_.data_dir = Path(args_.data_dir)
+    if args_.data_dir:
+        win_.FindElement("data_dir").Update(args_.data_dir)
 
 def main():
     global win_
@@ -128,12 +145,15 @@ def main():
         event, values = win_.Read()
         if event is None or event == 'Exit':
             break
-        elif event == 'OK':
+        elif event.lower() == 'find tiff':
             updateTiffFileList(values['session_dir'])
             args_.session_dir = Path(values['session_dir'])
             updateDataDirs()
+        elif event.lower() == 'ok':
+            args_.data_dir = Path(values['data_dir'])
+            updateDataDirs()
         elif event == 'Analyze':
-            analyzeTiffDir(args_.session_dir)
+            analyzeTiffDir(args_.session_dir, args_.data_dir)
         elif event == "__FILELIST__":
             analyzeTiffFile( values['__FILELIST__'][0] )
         else:

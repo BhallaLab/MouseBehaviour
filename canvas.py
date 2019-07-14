@@ -7,7 +7,8 @@ __email__            = "dilawars@ncbs.res.in"
 
 from collections import deque
 from pathlib import Path
-import PIL.ImageTk
+from PIL.ImageTk import PhotoImage
+from PIL import Image
 
 figs_, txt_ = [None]*2, ""
 
@@ -28,7 +29,7 @@ def drawNumpyOnCanvas(canvas, frames, data=[]):
     W, H = canvasWH(canvas)
     canvas.delete("all")
     for i, img in enumerate(frames):
-        photo = PIL.ImageTk.PhotoImage(image = PIL.Image.fromarray(img))
+        photo = PhotoImage(image = Image.fromarray(img))
         canvas.create_image(W//2, H//2, image=photo)
         addToGlobalList(photo)
         if txt_:
@@ -39,9 +40,17 @@ def drawNumpyOnCanvas(canvas, frames, data=[]):
 
 def showImageFileOnCanvas(canvas, imgpath : Path):
     print( f"[INFO ] Showing {imgpath}" )
-    img = PIL.ImageTk.PhotoImage(file=str(imgpath))
+    img = Image.open(str(imgpath))
     W, H = canvasWH(canvas)
-    addToGlobalList(img)
+    w, h = img.size
+    scale = min(W/w, H/h, 1)  # scale to fit canvas.
+    if scale < 1 and W > 1 and H > 1:
+        w *= scale
+        h *= scale
+        img = img.resize((int(w),int(h)), Image.ANTIALIAS)
+    photo = PhotoImage(img)
+    addToGlobalList(photo)    # else it won't display.
     canvas.delete("all")
-    canvas.create_image(0, 0, image=img, anchor='nw')
+    # Resize image to canvas size.
+    canvas.create_image(0, 0, image=photo, anchor='nw')
     canvas.update()

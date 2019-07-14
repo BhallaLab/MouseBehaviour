@@ -137,7 +137,10 @@ def plotAndSaveData(data, outfile, obj=None):
 
 
 def getTrialNumber(path: str):
-    return int(path.split('.')[0])
+    try:
+        return int(path.split('.')[0])
+    except Exception:
+        return -1
 
 
 def interpolate_uniform(x0, y0, x1):
@@ -254,7 +257,6 @@ def normalizeAndBaseline(res):
     return res
 
 def plotSession(df):
-    plt.figure(figsize=(15, 10))
     gridSize = (20, 2)
 
     # plot upto 2000ms
@@ -274,26 +276,26 @@ def plotSession(df):
     plotOnAxis(df, ax111, 'blink', probeAx=ax112, summaryAx=ax21)
     plotOnAxis(df, ax121, 'shock', probeAx=ax122, summaryAx=ax22)
 
-    plt.savefig('session.png')
-    plt.close()
 
-
-def generateSessionDir(path):
+def plotSessionDir(path, outfile):
     assert path.is_dir()
     m = {getTrialNumber(x.name): pd.read_hdf(x) for x in path.glob("*.h5")}
+    m = { k : v for k, v in m.items() if k >= 0 }
     res = pd.concat(m.values(), keys=m.keys())
     res = normalizeAndBaseline(res)
+
+    plt.figure(figsize=(15, 10))
     plotSession(res)
+    plt.savefig(outfile)
+    plt.close()
 
 
 def test(path):
     _, data = readTiff(path)
     plotAndSaveData(data, 'trial.png')
 
-
 def test_dir(path):
-    generateSessionDir(path)
-
+    plotSessionDir(path, 'session.png')
 
 def main():
     p = Path(sys.argv[1])
