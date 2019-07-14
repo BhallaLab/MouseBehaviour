@@ -9,7 +9,7 @@ __status__ = "Development"
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 try:
-    mpl.style.use( ['bmh', 'fivethirtyeight'] )
+    mpl.style.use(['bmh', 'fivethirtyeight'])
 except Exception:
     pass
 import pandas as pd
@@ -19,6 +19,7 @@ import io
 from pathlib import Path
 from PIL import Image
 import numpy as np
+import scipy.interpolate as sci
 
 cols = [
     'tcam', 'tarduino', 'millis', 'proto_code', 'trial_count', 'puff', 'tone',
@@ -141,7 +142,9 @@ def getTrialNumber(path: str):
 
 def interpolate_uniform(x0, y0, x1):
     # given x0, y0, return x1, y1.
-    return np.interp(x1, x0, y0)
+    f = sci.interp1d(x0, y0, kind=1, fill_value='extrapolate')
+    return f(x1)
+
 
 def showImage(ax, xyz, what='', X=None, Y=None, **kwargs):
     X, Y, Z = xyz
@@ -153,10 +156,12 @@ def showImage(ax, xyz, what='', X=None, Y=None, **kwargs):
     #  ax.set_ylabel(kwargs.get('ylabel', r'#Trial'))
     #  ax.set_title(kwargs.get('title', what))
 
+
 def setXTickLabels(ax, labels, every=10):
     indices = range(len(labels))
     ax.set_xticks(indices[::every])
     ax.set_xticklabels(map(int, labels[::every]))
+
 
 def setYTickLabels(ax, labels, every=3):
     indices = range(len(labels))
@@ -164,20 +169,31 @@ def setYTickLabels(ax, labels, every=3):
     ax.set_yticklabels(labels[::every])
 
 
-def plotOnAxis(df, ax, what, probeax=None, **kwargs):
-    ax.grid(False)
-    if probeax is None:
-        probeax.grid(False)
+def subtractBaseline(t, y):
+    # get the baseline upto first 300ms. Each trial has its own baseline.
+    baseline = []
+    for t, yy in zip(t, y):
+        if t < 300:
+            baseline.append(yy)
+    baselineM = np.mean(baseline)
+    y -= baselineM
+    return y
+
+def splitTrialsAndInterpolate(df, what):
+    """
+    Separate out PROBE trials and normal trials according to what e.g., blink,
+    shock etc. Then resample such at each point is 5ms away for each other.
+    """
     trials = df.index.levels[0]
     # evenly spaced 5ms time.
-    newT = np.arange(df['tcam'].min(), df['tcam'].max(), 1)
+    newT = np.arange(df['tcam'].min(), df['tcam'].max(), 5)
     X, Y, Z, XProbe, YProbe, ZProbe = [], [], [], [], [], []
     for trialNum in trials:
         tdf = df.loc[trialNum]
         x, y = tdf['tcam'].values, tdf[what].values
         newY = interpolate_uniform(x, y, newT)
         if 'PROB' in set(tdf['state']):
-            print( f"[INFO ] PROBE type found {trialNum}" )
+            print(f"[INFO ] PROBE type found {trialNum}")
             XProbe.append(newT)
             YProbe.append(trialNum)
             ZProbe.append(newY)
@@ -185,6 +201,15 @@ def plotOnAxis(df, ax, what, probeax=None, **kwargs):
             X.append(newT)
             Y.append(trialNum)
             Z.append(newY)
+    return (X, Y, Z), (XProbe, YProbe, ZProbe), trials
+
+def plotOnAxis(df, ax, what, probeAx=None, summaryAx=None, **kwargs):
+    ax.grid(False)
+    if probeAx is None:
+        probeAx.grid(False)
+
+    (X,Y,Z), (Xp,Yp,Zp), trials = splitTrialsAndInterpolate(df, what)
+    newT = X[0]
 
     # non-probe axis
     im = showImage(ax, (X, Y, Z), what, newT, trials, **kwargs)
@@ -195,37 +220,71 @@ def plotOnAxis(df, ax, what, probeax=None, **kwargs):
     setYTickLabels(ax, Y, every=4)
 
     # Probe trials.
-    im = showImage(probeax, (XProbe, YProbe, ZProbe), '', **kwargs)
-    cb = plt.colorbar(im, ax=probeax)
-    #  cb.remove()
-    probeax.set_ylabel(r'# Probe')
-    setYTickLabels(probeax, YProbe, every=2)
-    setXTickLabels(probeax, newT, every=500)
+    im = showImage(probeAx, (Xp, Yp, Zp), '', **kwargs)
+    cb = plt.colorbar(im, ax=probeAx)
+    cb.remove()
+    probeAx.set_ylabel(r'# Probe')
+    setYTickLabels(probeAx, Yp, every=2)
+    setXTickLabels(probeAx, newT, every=100)
+
+    if summaryAx is not None:
+        print( f"[INFO ] Plotting summary." )
+        zMean, zStd = np.mean(Z, axis=0), np.std(Z, axis=0)
+        summaryAx.fill_between(newT, zMean+zStd, zMean-zStd, alpha=0.3)
+        summaryAx.plot(newT, zMean, label='Without PROBE')
+
+        zpMean, zpStd = np.mean(Zp, axis=0), np.std(Zp, axis=0)
+        summaryAx.fill_between(newT, zpMean+zpStd, zpMean-zpStd, alpha=0.3)
+        summaryAx.plot(newT, zpMean, label='Only PROBE')
+        summaryAx.legend()
+
+        summaryAx.set_xlabel('Time (ms)')
+
+def summaryPlot(df, ax, what):
+    (X,Y,Z), (Xp,Yp,Zp), trials = splitTrialsAndInterpolate(df, what)
+    newT = X[0]
+
+def normalizeAndBaseline(res):
+    # Normalize whole session. 
+    for x in ['blink', 'shock']:
+        res[x] -= res[x].min()
+        res[x] /= res[x].max()
+
+    #  baseline = res[res['tcam'] < 300]
+    return res
 
 def plotSession(df):
     plt.figure(figsize=(15, 10))
     gridSize = (20, 2)
+
+    # plot upto 2000ms
+    df = df[df['tcam'] < 2500]
+
+
     ax111 = plt.subplot2grid(gridSize, (0, 0), colspan=1, rowspan=8)
     ax112 = plt.subplot2grid(gridSize, (8, 0), colspan=1, rowspan=2)
     ax121 = plt.subplot2grid(gridSize, (0, 1), colspan=1, rowspan=8)
     ax122 = plt.subplot2grid(gridSize, (8, 1), colspan=1, rowspan=2)
 
-    ax3 = plt.subplot2grid(gridSize, (10, 0), colspan=1, rowspan=10)
-    ax4 = plt.subplot2grid(gridSize, (10, 1), colspan=1, rowspan=10)
-    plt.subplots_adjust(hspace=5)
+    ax21 = plt.subplot2grid(gridSize, (10, 0), colspan=1, rowspan=10)
+    ax22 = plt.subplot2grid(gridSize, (10, 1), colspan=1, rowspan=10)
 
-    plotOnAxis(df, ax111, 'blink', probeax=ax112)
-    plotOnAxis(df, ax121, 'shock', probeax=ax122)
+    plt.subplots_adjust(hspace=10, wspace=0.2)
+
+    plotOnAxis(df, ax111, 'blink', probeAx=ax112, summaryAx=ax21)
+    plotOnAxis(df, ax121, 'shock', probeAx=ax122, summaryAx=ax22)
 
     plt.savefig('session.png')
     plt.close()
 
 
-def postProcessDir(path):
+def generateSessionDir(path):
     assert path.is_dir()
-    m = {getTrialNumber(x.name) : pd.read_hdf(x) for x in path.glob("*.h5")}
+    m = {getTrialNumber(x.name): pd.read_hdf(x) for x in path.glob("*.h5")}
     res = pd.concat(m.values(), keys=m.keys())
+    res = normalizeAndBaseline(res)
     plotSession(res)
+
 
 def test(path):
     _, data = readTiff(path)
@@ -233,7 +292,7 @@ def test(path):
 
 
 def test_dir(path):
-    postProcessDir(path)
+    generateSessionDir(path)
 
 
 def main():
