@@ -11,8 +11,7 @@ all : $(DOCKERFILE)
 run : 
 	docker run \
 	    --network=host --privileged \
-	    -v /dev/:/dev \
-	    --user=`id -u ${USER}` \
-	    --env="DISPLAY" \
-	    --volume="/tmp/.X11-unix:/tmp/.X11-unix:rw" \
-	    -ilt $(TAG) 
+	    -v /dev:/dev \
+	    -e DISPLAY=$(DISPLAY) \
+	    -v /tmp/.X11-unix:/tmp/.X11-unix:rw \
+	    -it $(TAG) 
