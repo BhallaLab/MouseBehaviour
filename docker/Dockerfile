@@ -33,7 +33,8 @@ RUN export uid=1000 gid=1000 && \
 USER chuha
 ENV HOME /home/chuha
 WORKDIR /home/chuha 
-RUN git clone https://github.com/BhallaLab/MouseBehaviour
+
+RUN git clone https://github.com/BhallaLab/MouseBehaviour.git
 RUN ls -ltra 
-RUN cd MouseBehaviour/PointGreyCamera && cmake . && make && sudo make install
-CMD cd MouseBehaviour && ./gui.py
+RUN cd $HOME/MouseBehaviour/PointGreyCamera && cmake . && make && sudo make install
+CMD cd $HOME/MouseBehaviour && ./gui.py
