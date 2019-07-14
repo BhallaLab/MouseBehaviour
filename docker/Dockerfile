@@ -6,6 +6,7 @@ RUN apt-get install -y software-properties-common
 RUN add-apt-repository -y -u ppa:deadsnakes/ppa
 RUN apt-get install -y git cmake g++ xterm wget curl sudo
 RUN apt-get install -y libboost-all-dev libopencv-dev libserial-dev
+RUN apt-get install -y xauth
 SHELL ["/bin/bash", "-c"]
 RUN apt-get install -y python3.6-venv python3.6-tk python3.6-dev
 RUN ln -s /usr/bin/python3.6 /usr/local/bin/python3

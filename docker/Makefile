@@ -9,9 +9,12 @@ all : $(DOCKERFILE)
 	    .
 
 run : 
-	docker run \
+	docker run --rm \
 	    --network=host --privileged \
 	    -v /dev:/dev \
 	    -e DISPLAY=$(DISPLAY) \
 	    -v /tmp/.X11-unix:/tmp/.X11-unix:rw \
+	    -v $(HOME)/.Xauthority:/home/chuha/.Xauthority:rw \
+	    -v $(HOME)/DATA:/home/chuha/DATA \
+	    --hostname $(shell hostname) \
 	    -it $(TAG) 
