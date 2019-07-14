@@ -22,7 +22,7 @@ RUN python3 -m pip install matplotlib scipy numpy pandas pyserial
 
 RUN git clone https://github.com/BhallaLab/MouseBehaviour
 RUN mkdir -p MouseBehaviour/_build 
-RUN cd MouseBehaviour/_build && cmake .. && make 
+RUN cd MouseBehaviour/PointGrat && cmake .. && make 
 
 
 CMD xterm
