@@ -13,6 +13,7 @@ RUN ln -s /usr/bin/python3.6 /usr/local/bin/python3
 RUN ln -s /usr/bin/python3.6 /usr/local/bin/python
 RUN curl https://bootstrap.pypa.io/get-pip.py | python3 - 
 RUN python3 -m pip install matplotlib scipy numpy pandas pyserial
+RUN python3 -m pip install pysimplegui pillow
 
 # User and group creations.
 #RUN useradd -s /bin/bash --home /home/chuha -m chuha 
