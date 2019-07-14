@@ -34,7 +34,7 @@ USER chuha
 ENV HOME /home/chuha
 WORKDIR /home/chuha 
 
-RUN git clone https://github.com/BhallaLab/MouseBehaviour.git
+RUN git clone https://github.com/BhallaLab/MouseBehaviour
 RUN ls -ltra 
 RUN cd $HOME/MouseBehaviour/PointGreyCamera && cmake . && make && sudo make install
 CMD cd $HOME/MouseBehaviour && ./gui.py
