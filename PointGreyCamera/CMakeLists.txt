@@ -68,3 +68,5 @@ target_link_libraries(cam_server ${SPINNAKER_LIB}
 set_target_properties( cam_server 
     PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}
     )
+
+install(TARGETS cam_server RUNTIME DESTINATION bin)
