@@ -23,7 +23,15 @@ args_ = Args()
 W_, H_ = 800, 600
 
 # Build and Run tab.
-tab1 =  [[sg.T('Build and run.')]]
+tab1 = [ 
+        [ 
+            sg.T('AnimalName'), sg.In(key='ANIMAL_NAME')
+            , sg.T('ProtoCode'), sg.In(key='PROTO_CODE')
+            , sg.T('SessionNum'), sg.In(key='SESSION_NUM')
+            , sg.Button('Build')
+        ]
+    ]
+
 status_ = sg.Text( "STATUS", size=(100,1), key="__STATUS__")
 
 # canvas tabs.
