@@ -13,6 +13,11 @@ import itertools
 import subprocess
 import time
 import sys
+import serial.tools.list_ports
+
+ports_ = [x.device for x in
+        serial.tools.list_ports.comports(include_links=False)]
+defaultPort_ = ports_[0] if ports_ else None
 
 # Default size.
 W_, H_ = 800, 600
@@ -29,16 +34,22 @@ args_.build_dir.mkdir(exist_ok=True)
 
 
 # Build and Run tab.
+sizeInput = (W_//50, 1)
 tab1 = [ 
         [ 
-            sg.T('AnimalName'), sg.In(key='ANIMAL_NAME')
-            , sg.T('ProtoCode'), sg.In(key='PROTO_CODE')
-            , sg.T('SessionNum'), sg.In(key='SESSION_NUM')
+            sg.T('AnimalName'), sg.In(key='ANIMAL_NAME', size=sizeInput)
+            , sg.T('ProtoCode'), sg.In(key='PROTO_CODE', size=sizeInput)
+            , sg.T('SessionNum'), sg.In(key='SESSION_NUM', size=sizeInput)
+            , sg.T('SerialPort'), sg.Combo(ports_, default_value=defaultPort_, key='SERIAL_PORT', size=sizeInput)
             , sg.Button('Build')
         ]
     ]
 
 status_ = sg.Text( "STATUS", size=(100,1), key="__STATUS__")
+
+def updateStatus(what):
+    global status_
+    status_.Update(what)
 
 # canvas tabs.
 canvasTabs = sg.TabGroup([[
@@ -144,8 +155,25 @@ def initBuildEnvironment():
     global args_
     # Find CMakeCache 
     buildDir = args_.build_dir
-    if (buildDir / 'CMakeCache.txt').exists():
+    params = {}
+    cmakeCache = buildDir / 'CMakeCache.txt'
+    if cmakeCache.exists():
         print( f"[INFO ] Found CMakeCache " )
+        with open(cmakeCache, 'r') as f:
+            for line in f:
+                line = line.strip()
+                if not line:
+                    continue
+                if r'//' == line[:2] or '#' == line[0]:
+                    continue
+                key, val = line.split('=')
+                params[key.split(':')[0]] = val
+
+    # update window params
+    for x in ['ANIMAL_NAME', 'SESSION_NUM', 'PROTO_CODE']:
+        win_.FindElement(x).Update(params.get(x, ''))
+    return params
+
 
 def build():
     global win_, args_
@@ -166,7 +194,7 @@ def build():
         , f"-DPROTO_CODE={protoCode}", f"-DSESSION_NUM={sessionNum}"
         , f"{sourceDir}"
         ], cwd = buildDir, universal_newlines=True)
-    print(p)
+    p = subprocess.run( [ "make"], cwd = buildDir, universal_newlines=True)
         
 
 def updateDataDirs():
@@ -202,7 +230,9 @@ def main():
         elif event == "__FILELIST__":
             analyzeTiffFile( values['__FILELIST__'][0] )
         elif event.lower() == 'build':
+            updateStatus("Building ...")
             build()
+            updateStatus("Build Over")
         else:
             print( f"[WARN ] Unsupported event {event}" )
     win_.Close()

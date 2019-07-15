@@ -1,5 +1,7 @@
-opencv-python
 pyserial
 pillow
 numpy 
 matplotlib
+pysimplegui
+scipy
+pandas
