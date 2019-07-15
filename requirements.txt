@@ -5,3 +5,4 @@ matplotlib
 pysimplegui
 scipy
 pandas
+tables

@@ -1,6 +1,10 @@
 cmake_minimum_required(VERSION 2.8)
 project(EyeBlinkBehavour)
 
+option(NOGUI "Write opencv mat to stdout. \
+    No opencv gui is launched by opencv" 
+    OFF)
+
 ###############################################################################
 # TIMESTAMP
 string(TIMESTAMP COMPILE_TIME "%Y-%m-%d%H:%M:%S")
@@ -144,11 +148,18 @@ add_custom_target(reset_boards
 
 # pass these arguments to camera server.
 SET(RUN_ARGS --port ${PORT} --datadir ${DATADIR})
+
+# this can be set by pysimplegui . This will disable opencv window.
+if(NOGUI)
+    message(STATUS "I will write frames in numpy format to stdout")
+    list(APPEND RUN_ARGS "--stdout")
+endif()
+
 add_custom_target(run  
     DEPENDS cam_server upload
     COMMAND LD_LIBRARY_PATH=${CAMERA_SERVER_DIR}/external/lib 
         ${CMAKE_BINARY_DIR}/cam_server ${RUN_ARGS}
-    COMMENT "Run arduino client and camera client"
+    COMMENT "Run arduino client and camera client ${RUN_ARGS}"
     WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
     VERBATIM
     )

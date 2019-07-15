@@ -21,7 +21,7 @@
 
 #define ARDUINO_SERIAL_PORT     "/dev/ttyACM0"
 #define DEFAULT_BBOX            "255,131,521,288"
-#define OPENCV_MAIN_WINDOW      "Frame"
+#define OPENCV_MAIN_WINDOW      "Frame (Press q to quit)"
 
 // Libserial.
 #include <SerialStream.h>
@@ -50,11 +50,12 @@ bool all_done_        = false;
 string validCommands_ = "stlrptc12";                   // Valid char commands.
 
 // Command line arguments.
-string portPath_;
+string portPath_ = "";
+bool writeToStdout_ = false;
 string dataDir_ = "/tmp";
 
 // ROI for the eye.
-string bbox_str_;
+string bbox_str_ = "";
 array<int,4> bbox_={0,0,0,0};
 
 deque<double> roi_(1000, 0.0);
@@ -70,7 +71,7 @@ SerialStream serial_;
 
 void sig_handler( int s )
 {
-    cerr << "user pressed ctrl+c. Terminating everything.. " << endl;
+    cerr << "User pressed ctrl+c. Terminating everything.. " << endl;
     all_done_ = true;
 }
 
@@ -79,6 +80,15 @@ string get_timestamp()
     using namespace boost::posix_time;
     ptime t = microsec_clock::universal_time();
     return to_iso_extended_string(t);
+}
+
+void dumpData(const cv::Mat& mat)
+{
+    // size_t n = mat.total();
+    // string s((char*)mat.data, n);
+    // cout << ':' << s << endl;
+    cv::imwrite("frame.png", mat);
+    cout << "FRAMEWRITTEN" << endl;
 }
 
 /* --------------------------------------------------------------------------*/
@@ -90,6 +100,9 @@ string get_timestamp()
 /* ----------------------------------------------------------------------------*/
 void show_frame( cv::Mat img)
 {
+    if( img.empty() || img.total() < 1000)
+        return;
+
     // Draw a plot.
     rectangle(img, Point(bbox_[0], bbox_[1]), Point(bbox_[2], bbox_[3]), 1, 1, 128);
 
@@ -116,7 +129,10 @@ void show_frame( cv::Mat img)
 
     }
     vconcat(img, plt, img);
-    imshow(OPENCV_MAIN_WINDOW,  img);
+    if(! writeToStdout_)
+        imshow(OPENCV_MAIN_WINDOW,  img);
+    else
+        dumpData(img);
 }
 
 void show_frame_color( cv::Mat gray)
@@ -149,19 +165,22 @@ void show_frame_color( cv::Mat gray)
     }
 
     vconcat(img, plt, img);
-    imshow(OPENCV_MAIN_WINDOW,  img);
+    if( ! writeToStdout_ )
+        imshow(OPENCV_MAIN_WINDOW,  img);
+    else
+        dumpData(img);
 }
 
 void SaveAllFrames(vector<Mat>& frames, const size_t trial)
 {
     if(frames.size() < 1 or trial == 0)
     {
-        cout << "[WARN] No frames to save or 0th trial." << endl;
+        cerr << "No frames to save or 0th trial." << endl;
         return;
     }
 
-    cout << "[INFO] Saving " << frames.size() << " frames to disk." << endl;
-    cout << "\t Trial number " << trial << endl;
+    cerr << "[INFO] Saving " << frames.size() << " frames to disk." << endl;
+    cerr << "\t Trial number " << trial << endl;
 
     string outfile = dataDir_ + '/' + boost::str(boost::format("%03d")%trial) + ".tiff";
 
@@ -170,14 +189,14 @@ void SaveAllFrames(vector<Mat>& frames, const size_t trial)
     path p(outfile);
     if(exists(p))
     {
-        cout << "[ERROR] Files " << outfile << " already exists. I will not overwrite " << p << endl;
+        cerr << "[ERROR] Files " << outfile << " already exists. I will not overwrite " << p << endl;
         all_done_ = true;
         return;
     }
 
 
     write_frames_to_tiff(outfile, frames);
-    cout << "[INFO] Saved data to " << outfile << endl;
+    cerr << "[INFO] Saved data to " << outfile << endl;
 
     // Save CSV file.
     string csvFile = dataDir_ + "/session_all_data.csv";
@@ -231,7 +250,7 @@ void AddToStoreHouse(Mat& mat, const vector<string>& arduinoData)
     auto thisTrial = (int) std::stoi(arduinoData[trialNumIdx]);
     if( thisTrial > currentTrial)
     {
-        cout << "[INFO] New trial has started: " << thisTrial << endl;
+        cerr << "[INFO] New trial has started: " << thisTrial << endl;
         currentTrial = thisTrial;
     }
 }
@@ -253,7 +272,7 @@ void ReadLine(string& res)
     // If the line starts with '<' or '>' characters; then dump them to console.
     if(res[0] == '<' || res[1] == '>')
     {
-        cout << "[MSG] " << res << endl;
+        cerr << "[MSG] " << res << endl;
         res = "";
         return;
     }
@@ -275,7 +294,7 @@ void ArduinoClient()
     bool connected = false;
     while(! connected)
     {
-        cout << "[INFO] Trying to connect to arduino: " << portPath_ << endl;
+        cerr << "[INFO] Trying to connect to arduino: " << portPath_ << endl;
         try 
         {
             serial_.Open(portPath_);
@@ -315,23 +334,23 @@ int ResetExposure(INodeMap & nodeMap)
         CEnumerationPtr ptrExposureAuto = nodeMap.GetNode("ExposureAuto");
         if (!IsAvailable(ptrExposureAuto) || !IsWritable(ptrExposureAuto))
         {
-            cout << "Unable to enable automatic exposure (node retrieval). Non-fatal error..." << endl << endl;
+            cerr << "Unable to enable automatic exposure (node retrieval). Non-fatal error..." << endl << endl;
             return -1;
         }
 
         CEnumEntryPtr ptrExposureAutoContinuous = ptrExposureAuto->GetEntryByName("Continuous");
         if (!IsAvailable(ptrExposureAutoContinuous) || !IsReadable(ptrExposureAutoContinuous))
         {
-            cout << "Unable to enable automatic exposure (enum entry retrieval)."
+            cerr << "Unable to enable automatic exposure (enum entry retrieval)."
                 << " Non-fatal error..." << endl << endl;
             return -1;
         }
         ptrExposureAuto->SetIntValue(ptrExposureAutoContinuous->GetValue());
-        cout << "Automatic exposure enabled..." << endl << endl;
+        cerr << "Automatic exposure enabled..." << endl << endl;
     }
     catch (Spinnaker::Exception &e)
     {
-        cout << "Error: " << e.what() << endl;
+        cerr << "Error: " << e.what() << endl;
     }
     return 0;
 }
@@ -376,7 +395,7 @@ int ProcessFrame(void* data, size_t width, size_t height)
     } 
     catch(std::exception& e)
     {
-        cout << "[WARN] " << e.what() << endl;
+        cerr << "[WARN] " << e.what() << endl;
     }
 
     // Append eye value.
@@ -416,10 +435,17 @@ int ProcessFrame(void* data, size_t width, size_t height)
     if( k < ' ')
         return 0;
 
-    cout << "[INFO] Key pressed " << k << endl;
+    if(k == 'q')  // ctrl+c is pressed.
+    {
+        cerr << "[INFO] Pressed q. All done. "<<endl;
+        all_done_ = true;
+        return 0;
+    }
+
+    cerr << "[INFO] Key pressed " << k << endl;
     if(validCommands_.find(k) != std::string::npos)
     {
-        cout << "[INFO] Got valid command. Writing to serial." << k << endl;
+        cerr << "[INFO] Got valid command. Writing to serial." << k << endl;
         serial_ << k << endl;
     }
     return 0;
@@ -433,7 +459,7 @@ int AcquireImages(CameraPtr pCam, INodeMap& nodeMap, INodeMap& nodeMapTLDevice)
         CEnumerationPtr ptrAcquisitionMode = nodeMap.GetNode("AcquisitionMode");
         if (!IsAvailable(ptrAcquisitionMode) || !IsWritable(ptrAcquisitionMode))
         {
-            cout << "Unable to set acquisition mode to continuous "
+            cerr << "Unable to set acquisition mode to continuous "
                  << " (enum retrieval). Aborting..." << endl << endl;
             return -1;
         }
@@ -442,7 +468,7 @@ int AcquireImages(CameraPtr pCam, INodeMap& nodeMap, INodeMap& nodeMapTLDevice)
         CEnumEntryPtr ptrAcquisitionModeContinuous = ptrAcquisitionMode->GetEntryByName("Continuous");
         if (!IsAvailable(ptrAcquisitionModeContinuous) || !IsReadable(ptrAcquisitionModeContinuous))
         {
-            cout << "Unable to set acquisition mode to continuous " <<
+            cerr << "Unable to set acquisition mode to continuous " <<
                  " (entry retrieval). Aborting..." << endl << endl;
             return -1;
         }
@@ -452,7 +478,7 @@ int AcquireImages(CameraPtr pCam, INodeMap& nodeMap, INodeMap& nodeMapTLDevice)
 
         // Set integer value from entry node as new value of enumeration node
         ptrAcquisitionMode->SetIntValue(acquisitionModeContinuous);
-        cout << "Acquisition mode set to continuous..." << endl;
+        cerr << "Acquisition mode set to continuous..." << endl;
 
         // Change the acquition frame rate.
         pCam->BeginAcquisition();
@@ -462,13 +488,13 @@ int AcquireImages(CameraPtr pCam, INodeMap& nodeMap, INodeMap& nodeMapTLDevice)
         if (IsAvailable(ptrStringSerial) && IsReadable(ptrStringSerial))
         {
             deviceSerialNumber = ptrStringSerial->GetValue();
-            cout << "Device serial number retrieved " << deviceSerialNumber
+            cerr << "Device serial number retrieved " << deviceSerialNumber
                  << endl;
         }
     }
     catch (std::exception &e)
     {
-        cout << "Error: " << e.what() << endl;
+        cerr << "Error: " << e.what() << endl;
         return  -1;
     }
 
@@ -476,11 +502,11 @@ int AcquireImages(CameraPtr pCam, INodeMap& nodeMap, INodeMap& nodeMapTLDevice)
     while(! all_done_)
     {
         ImagePtr pResultImage = pCam->GetNextImage();
-        //cout << "Pixal format: " << pResultImage->GetPixelFormatName( ) << endl;
+        //cerr << "Pixal format: " << pResultImage->GetPixelFormatName( ) << endl;
 
         if ( pResultImage->IsIncomplete() ) /* Image is incomplete. */
         {
-            cout << "[WARN] Image incomplete with image status " <<
+            cerr << "[WARN] Image incomplete with image status " <<
                 pResultImage->GetImageStatus() << " ..." << endl;
         }
         else
@@ -497,7 +523,7 @@ int AcquireImages(CameraPtr pCam, INodeMap& nodeMap, INodeMap& nodeMapTLDevice)
                 boost::chrono::duration<double> elapsedSecs = 
                     boost::chrono::system_clock::now() - startTime;
                 fps_ = (double) total_frames_ / elapsedSecs.count();
-                cout << "[INFO] Current FPS : " << fps_ << endl;
+                cerr << "[INFO] Current FPS : " << fps_ << endl;
             }
         }
     }
@@ -511,7 +537,7 @@ int AcquireImages(CameraPtr pCam, INodeMap& nodeMap, INodeMap& nodeMapTLDevice)
 int PrintDeviceInfo(INodeMap & nodeMap)
 {
     int result = 0;
-    cout << endl << "*** DEVICE INFORMATION ***" << endl << endl;
+    cerr << endl << "*** DEVICE INFORMATION ***" << endl << endl;
     try
     {
         FeatureList_t features;
@@ -524,18 +550,17 @@ int PrintDeviceInfo(INodeMap & nodeMap)
             for (it = features.begin(); it != features.end(); ++it)
             {
                 CNodePtr pfeatureNode = *it;
-                cout << pfeatureNode->GetName() << " : ";
+                cerr << pfeatureNode->GetName() << " : ";
                 CValuePtr pValue = (CValuePtr)pfeatureNode;
-                cout << (IsReadable(pValue) ? pValue->ToString() : "Node not readable");
-                cout << endl;
+                cerr << (IsReadable(pValue) ? pValue->ToString() : "Node not readable") << endl;
             }
         }
         else
-            cout << "Device control information not available." << endl;
+            cerr << "Device control information not available." << endl;
     }
     catch (Spinnaker::Exception &e)
     {
-        cout << "Error: " << e.what() << endl;
+        cerr << "Error: " << e.what() << endl;
         result = -1;
     }
     return result;
@@ -557,13 +582,13 @@ static void cvMouseCallback(int event, int x, int y, int, void*)
     static int x1 = bbox_[0], y1 = bbox_[1];
     if((! drawing_rect) && (event == EVENT_LBUTTONDBLCLK))
     {
-        cout << "[INFO] Now go to other corner and double click." << endl;
+        cerr << "[INFO] Now go to other corner and double click." << endl;
         drawing_rect = true;
         x1 = x; y1 = y;
     }
     else if(drawing_rect && (event == EVENT_LBUTTONDBLCLK))
     {
-        cout << "[INFO] Rectangle is complete." << endl;
+        cerr << "[INFO] Rectangle is complete." << endl;
         bbox_[0] = x1; bbox_[1] = y1; bbox_[2] = x; bbox_[3] = y;
         drawing_rect = false;
     }
@@ -584,11 +609,11 @@ int InitSingleCamera(CameraPtr pCam, std::pair<INodeMap*, INodeMap*>& res)
     INodeMap& nodeMap = pCam->GetNodeMap();
 
     // Set width, height
-    cout << "[INFO] Setting frame width to "<< FRAME_WIDTH << endl;
+    cerr << "[INFO] Setting frame width to "<< FRAME_WIDTH << endl;
     CIntegerPtr width = nodeMap.GetNode("Width");
     width->SetValue(FRAME_WIDTH);
 
-    cout << "[INFO] Setting frame height to "<< FRAME_HEIGHT << endl;
+    cerr << "[INFO] Setting frame height to "<< FRAME_HEIGHT << endl;
     CIntegerPtr height = nodeMap.GetNode("Height");
     height->SetValue(FRAME_HEIGHT);
 
@@ -599,44 +624,44 @@ int InitSingleCamera(CameraPtr pCam, std::pair<INodeMap*, INodeMap*>& res)
 
     try
     {
-        cout << "Trying to set frame rate to " << EXPECTED_FPS << endl;
+        cerr << "Trying to set frame rate to " << EXPECTED_FPS << endl;
         ptrAcquisitionFrameRate->SetValue( EXPECTED_FPS );
     }
     catch ( std::exception & e )
     {
-        cout << "Failed to set frame rate. Using default ... " << endl;
-        cout << "\tError was " << e.what( ) << endl;
+        cerr << "Failed to set frame rate. Using default ... " << endl;
+        cerr << "\tError was " << e.what( ) << endl;
     }
 
     if (!IsAvailable(ptrAcquisitionFrameRate) || !IsReadable(ptrAcquisitionFrameRate))
-        cout << "Unable to retrieve frame rate. " << endl << endl;
+        cerr << "Unable to retrieve frame rate. " << endl << endl;
     else
     {
         fps_ = static_cast<float>(ptrAcquisitionFrameRate->GetValue());
-        cout << "[INFO] Expected frame set to " << fps_ << endl;
+        cerr << "[INFO] Expected frame set to " << fps_ << endl;
     }
 
     // Switch off auto-exposure and set it manually.
     CEnumerationPtr ptrExposureAuto = nodeMap.GetNode("ExposureAuto");
     if (!IsAvailable(ptrExposureAuto) || !IsWritable(ptrExposureAuto))
     {
-        cout << "Unable to disable automatic exposure (node retrieval). Aborting..." << endl << endl;
+        cerr << "Unable to disable automatic exposure (node retrieval). Aborting..." << endl << endl;
         return -1;
     }
 
     CEnumEntryPtr ptrExposureAutoOff = ptrExposureAuto->GetEntryByName("Off");
     if (!IsAvailable(ptrExposureAutoOff) || !IsReadable(ptrExposureAutoOff))
     {
-        cout << "Unable to disable automatic exposure (enum entry retrieval). Aborting..." << endl << endl;
+        cerr << "Unable to disable automatic exposure (enum entry retrieval). Aborting..." << endl << endl;
         return -1;
     }
 
     ptrExposureAuto->SetIntValue(ptrExposureAutoOff->GetValue());
-    cout << "Automatic exposure disabled..." << endl;
+    cerr << "Automatic exposure disabled..." << endl;
     CFloatPtr ptrExposureTime = nodeMap.GetNode("ExposureTime");
     if (!IsAvailable(ptrExposureTime) || !IsWritable(ptrExposureTime))
     {
-        cout << "Unable to set exposure time. Aborting..." << endl << endl;
+        cerr << "Unable to set exposure time. Aborting..." << endl << endl;
         return -1;
     }
 
@@ -644,19 +669,19 @@ int InitSingleCamera(CameraPtr pCam, std::pair<INodeMap*, INodeMap*>& res)
     const double exposureTimeMax = ptrExposureTime->GetMax();
 
     ptrExposureTime->SetValue( EXPOSURE_TIME_IN_US );
-    cout << "Exposure time set to " << ptrExposureTime->GetValue( ) << " us..." << endl << endl;
+    cerr << "Exposure time set to " << ptrExposureTime->GetValue( ) << " us..." << endl << endl;
 
     // Turn of automatic gain
     CEnumerationPtr ptrGainAuto = nodeMap.GetNode("GainAuto");
     if (!IsAvailable(ptrGainAuto) || !IsWritable(ptrGainAuto))
     {
-        cout << "Unable to disable automatic gain (node retrieval). Aborting..." << endl << endl;
+        cerr << "Unable to disable automatic gain (node retrieval). Aborting..." << endl << endl;
         return -1;
     }
     CEnumEntryPtr ptrGainAutoOff = ptrGainAuto->GetEntryByName("Off");
     if (!IsAvailable(ptrGainAutoOff) || !IsReadable(ptrGainAutoOff))
     {
-        cout << "Unable to disable automatic gain (enum entry retrieval). Aborting..." << endl << endl;
+        cerr << "Unable to disable automatic gain (enum entry retrieval). Aborting..." << endl << endl;
         return -1;
     }
 
@@ -664,7 +689,7 @@ int InitSingleCamera(CameraPtr pCam, std::pair<INodeMap*, INodeMap*>& res)
     CFloatPtr ptrGain = nodeMap.GetNode("Gain");
     if (!IsAvailable(ptrGain) || !IsWritable(ptrGain))
     {
-        cout << "[WARN] Unable to set gain (node retrieval). Using default ..." << endl;
+        cerr << "[WARN] Unable to set gain (node retrieval). Using default ..." << endl;
     }
     else
     {
@@ -693,11 +718,19 @@ void RunSingleCamera(CameraPtr pCam, INodeMap* pNodeMap, INodeMap* pNodeMapTLDev
     pCam->DeInit();
 }
 
+void quit(int ev, void* data)
+{
+    all_done_ = true;
+}
+
 void initialize()
 {
     // Initialize opencv window.
-    namedWindow(OPENCV_MAIN_WINDOW);
-    setMouseCallback(OPENCV_MAIN_WINDOW, cvMouseCallback);
+    if( ! writeToStdout_)
+    {
+        namedWindow(OPENCV_MAIN_WINDOW);
+        setMouseCallback(OPENCV_MAIN_WINDOW, cvMouseCallback);
+    }
 
     // initialize bbox.
     vector<string> res;
@@ -710,7 +743,7 @@ void initialize()
     path p(dataDir_);
     if(! exists(p))
     {
-        cout << "[INFO] Creating directory " << p << endl;
+        cerr << "[INFO] Creating directory " << p << endl;
         create_directories(p);
     }
 }
@@ -728,6 +761,8 @@ int main(int argc, char** argv)
             , "Serial port")
         ("bbox,b", po::value<string>(&bbox_str_)->default_value(DEFAULT_BBOX)
             , "Bounding box in CSV format e.g. 'x0,y0,x1,y1'.")
+        ("stdout,s", po::bool_switch(&writeToStdout_)->default_value(false)
+            , "Write frame to STDOUT.")
         ("datadir,d", po::value<string>(&dataDir_)->default_value("/tmp")
             , "Directory to save images/data.")
         ;
@@ -738,13 +773,7 @@ int main(int argc, char** argv)
 
     if(vm.count("help")) 
     {
-        cout << desc << endl;
-        return 0;
-    }
-
-    if(vm.count("help")) 
-    {
-        cout << desc << endl;
+        cerr << desc << endl;
         return 0;
     }
 
@@ -755,20 +784,20 @@ int main(int argc, char** argv)
     initialize();
 
     // Print application build information
-    cout << "Application build date: " << __DATE__ << " " << __TIME__ << endl << endl;
+    cerr << "Application build date: " << __DATE__ << " " << __TIME__ << endl << endl;
 
     // Retrieve singleton reference to system object
     system_ = System::GetInstance();
     if( system_->IsInUse( ) )
     {
-        cout << "Warn: Camera is already in use. Reattach and continue";
+        cerr << "Warn: Camera is already in use. Reattach and continue";
         exit( -1 );
     }
 
     // Retrieve list of cameras from the system
     cam_list_ = system_->GetCameras();
     unsigned int numCameras = cam_list_.GetSize();
-    cout << "[INFO] Number of cameras detected: " << numCameras << endl << endl;
+    cerr << "[INFO] Number of cameras detected: " << numCameras << endl << endl;
 
     // Finish if there are no cameras
     if (numCameras == 0)
@@ -785,7 +814,7 @@ int main(int argc, char** argv)
     CameraPtr pCam = cam_list_.GetByIndex( 0 );
 
     auto t = boost::thread(ArduinoClient);
-    cout << "[INFO] Arduino client has been launched." << endl;
+    cerr << "[INFO] Arduino client has been launched." << endl;
 
     pair<INodeMap*, INodeMap*> res;
     try 
@@ -794,7 +823,7 @@ int main(int argc, char** argv)
     }
     catch( std::exception& e)
     {
-        cout << "[WARN] Failed to initialize camera. " << e.what() << endl;
+        cerr << "[WARN] Failed to initialize camera. " << e.what() << endl;
         return -1;
     }
 
@@ -812,6 +841,6 @@ int main(int argc, char** argv)
     if(t.joinable())
         t.join();
 
-    std::cout << "All done" << std::endl;
+    cerr << "All done" << std::endl;
     return 0;
 }

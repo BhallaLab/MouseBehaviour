@@ -9,6 +9,7 @@ from pathlib import Path
 import PySimpleGUI as sg
 import methods as M
 import canvas as C
+import signal
 import itertools
 import subprocess
 import time
@@ -20,7 +21,7 @@ ports_ = [x.device for x in
 defaultPort_ = ports_[0] if ports_ else None
 
 # Default size.
-W_, H_ = 800, 600
+W_, H_ = 800, 400
 
 if not (sys.version_info.major > 2 and sys.version_info.minor > 5):
     print( f"[ERROR] Requires python 3.6+" )
@@ -28,23 +29,26 @@ if not (sys.version_info.major > 2 and sys.version_info.minor > 5):
 
 # Globals.
 class Args: pass
+allDone_ = False
+
 args_ = Args()
 args_.build_dir = (Path(__file__).parent / '_build')
 args_.build_dir.mkdir(exist_ok=True)
 
 
-# Build and Run tab.
+# TODO: fixme: Build and Run tab.
 sizeInput = (W_//50, 1)
+txtSize = (W_//40, 1)
 tab1 = [ 
-        [ 
-            sg.T('AnimalName'), sg.In(key='ANIMAL_NAME', size=sizeInput)
-            , sg.T('ProtoCode'), sg.In(key='PROTO_CODE', size=sizeInput)
-            , sg.T('SessionNum'), sg.In(key='SESSION_NUM', size=sizeInput)
-            , sg.T('SerialPort'), sg.Combo(ports_, default_value=defaultPort_, key='SERIAL_PORT', size=sizeInput)
-            , sg.Button('Build'), sg.Button('Run')
+        [ sg.T("These values are from previous trial. REVIEW THEM!",
+            key='tab1Info') ]
+        , [ sg.T('AnimalName', size=txtSize), sg.In(key='ANIMAL_NAME', size=sizeInput) ]
+        , [ sg.T('ProtoCode', size=txtSize), sg.In(key='PROTO_CODE', size=sizeInput) ]
+        , [ sg.T('SessionNum', size=txtSize), sg.In(key='SESSION_NUM', size=sizeInput) ]
+        , [ sg.T('SerialPort', size=txtSize), sg.Combo(ports_, default_value=defaultPort_, key='SERIAL_PORT', size=sizeInput)]
+        , [ sg.Button('Build'), sg.Button('Run') ]
+        , [ sg.Button('Clean Build Run')]
         ]
-        , [ sg.Canvas(key='__RUN__', size=(W_, H_))]
-    ]
 
 status_ = sg.Text( "STATUS", size=(100,1), key="__STATUS__")
 
@@ -79,7 +83,7 @@ tab2 = [
         ]
 
 layout_ = [
-        [ sg.TabGroup([[sg.Tab('Build&Run', tab1), sg.Tab('Analyze', tab2)]]
+        [ sg.TabGroup([[sg.Tab('Analyze', tab2), sg.Tab('Do Session', tab1)]]
             , key="__TABS__", enable_events = True)]
         , [ sg.Exit(), status_ ]
         ]
@@ -156,6 +160,8 @@ def initBuildEnvironment():
     global args_
     # Find CMakeCache 
     buildDir = args_.build_dir
+    if not buildDir:
+        return
     params = {}
     cmakeCache = buildDir / 'CMakeCache.txt'
     if cmakeCache.exists():
@@ -173,8 +179,22 @@ def initBuildEnvironment():
     # update window params
     for x in ['ANIMAL_NAME', 'SESSION_NUM', 'PROTO_CODE']:
         win_.FindElement(x).Update(params.get(x, ''))
+
+    # Also check if data directory has data from previous trial.
+    if not args_.data_dir:
+        return
+    tiffs = findTiffFiles(args_.data_dir)
+    if len(tiffs) > 0:
+        tab1Info = win_.FindElement("tab1Info")
+        tab1Info.Update( tab1Info.Get() + "\n OLD DATA FOUND!")
     return params
 
+def cleanBuildDir():
+    import shutil
+    global args_
+    buildDir = args_.build_dir
+    shutil.rmtree(buildDir)
+    buildDir.mkdir()
 
 def build():
     global win_, args_
@@ -199,13 +219,36 @@ def build():
 
 def run():
     global win_, args_
+    global allDone_
     buildDir = args_.build_dir
-    p = subprocess.run( [ "make", "run"], cwd = buildDir, universal_newlines=True)
-        
-        
+    proc = subprocess.Popen(['make', 'run'], stdout=subprocess.PIPE
+            , stderr=subprocess.PIPE
+            , cwd=buildDir)
+    while True:
+        line = proc.stdout.readline().strip()
+        if not line:
+            break
+        print(line)
+        if allDone_:
+            proc.send_signal(signal.SIGTERM)
+            break
+    return True
+
+def defaultSessionDir():
+    global args_
+    global win_
+    initBuildEnvironment()
+    animalName = win_.FindElement("ANIMAL_NAME").Get()
+    protoCode = win_.FindElement("PROTO_CODE").Get()
+    sessionNum = win_.FindElement("SESSION_NUM").Get()
+    if animalName and protoCode and sessionNum:
+        return Path().home() / 'DATA' / animalName / f"{animalName}_{protoCode}_{sessionNum}"
+    return ''
 
 def updateDataDirs():
     global args_
+    if not args_.session_dir:
+        args_.session_dir = defaultSessionDir()
     if args_.session_dir:
         win_.FindElement("session_dir").Update(args_.session_dir)
         updateTiffFileList(args_.session_dir)
@@ -218,12 +261,15 @@ def updateDataDirs():
 
 def main():
     global win_
+    global allDone_
     updateDataDirs()
     initBuildEnvironment()
     win_.FindElement("__TABS__").SelectTab(args_.tab)
     while True:
         event, values = win_.Read()
         if event is None or event == 'Exit':
+            allDone_ = True
+            time.sleep(1)
             break
         elif event.lower() == 'find tiff':
             updateTiffFileList(values['session_dir'])
@@ -240,12 +286,21 @@ def main():
             updateStatus("Building ...")
             build()
             updateStatus("Build Over")
+        elif event.lower() == 'clean build run':
+            cleanBuildDir()
+            updateStatus("Building ...")
+            build()
+            updateStatus("Build Over")
+            updateStatus("Starting trial ...")
+            run()
+            updateStatus('Trial is over')
         elif event.lower() == 'run':
             updateStatus("Starting trial ...")
             run()
-            updateStatus("Trial over")
+            updateStatus('Trial is over')
         else:
             print( f"[WARN ] Unsupported event {event}" )
+
     win_.Close()
 
 if __name__ == '__main__':

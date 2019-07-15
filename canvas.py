@@ -39,7 +39,6 @@ def drawNumpyOnCanvas(canvas, frames, data=[]):
         canvas.update()
 
 def showImageFileOnCanvas(canvas, imgpath : Path):
-    print( f"[INFO ] Showing {imgpath}" )
     img = Image.open(str(imgpath))
     W, H = canvasWH(canvas)
     w, h = img.size
