@@ -41,8 +41,9 @@ tab1 = [
             , sg.T('ProtoCode'), sg.In(key='PROTO_CODE', size=sizeInput)
             , sg.T('SessionNum'), sg.In(key='SESSION_NUM', size=sizeInput)
             , sg.T('SerialPort'), sg.Combo(ports_, default_value=defaultPort_, key='SERIAL_PORT', size=sizeInput)
-            , sg.Button('Build')
+            , sg.Button('Build'), sg.Button('Run')
         ]
+        , [ sg.Canvas(key='__RUN__', size=(W_, H_))]
     ]
 
 status_ = sg.Text( "STATUS", size=(100,1), key="__STATUS__")
@@ -195,6 +196,12 @@ def build():
         , f"{sourceDir}"
         ], cwd = buildDir, universal_newlines=True)
     p = subprocess.run( [ "make"], cwd = buildDir, universal_newlines=True)
+
+def run():
+    global win_, args_
+    buildDir = args_.build_dir
+    p = subprocess.run( [ "make", "run"], cwd = buildDir, universal_newlines=True)
+        
         
 
 def updateDataDirs():
@@ -233,6 +240,10 @@ def main():
             updateStatus("Building ...")
             build()
             updateStatus("Build Over")
+        elif event.lower() == 'run':
+            updateStatus("Starting trial ...")
+            run()
+            updateStatus("Trial over")
         else:
             print( f"[WARN ] Unsupported event {event}" )
     win_.Close()
