@@ -1,13 +1,13 @@
 VERSION := $(shell date +"%Y.%m.%d")
 TAG := bhallalab/mousebehaviour:$(VERSION)
-TAG := bhallalab/mousebehaviour:latest
+LATESTTAG := bhallalab/mousebehaviour:latest
+
+BUILD_ARGS= --build-arg http_proxy="http://172.16.223.222:3128" --build-arg https_proxy="http://172.16.223.222:3128"
+
 
 all : $(DOCKERFILE)
-	docker build \
-	    --build-arg http_proxy="http://172.16.223.222:3128" \
-	    --build-arg https_proxy="http://172.16.223.222:3128" \
-	    -t $(TAG) \
-	    .
+	docker build $(BUILD_ARGS) -t $(TAG) .
+	docker build $(BUILD_ARGS) -t $(LATESTTAG)  .
 
 run : 
 	xhost +
@@ -21,4 +21,5 @@ run :
 	    -it $(TAG) 
 
 upload :
-	docker upload $(TAG)
+	docker push $(TAG)
+	docker push $(LATESTTAG)
