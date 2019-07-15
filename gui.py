@@ -10,8 +10,12 @@ import PySimpleGUI as sg
 import methods as M
 import canvas as C
 import itertools
+import subprocess
 import time
 import sys
+
+# Default size.
+W_, H_ = 800, 600
 
 if not (sys.version_info.major > 2 and sys.version_info.minor > 5):
     print( f"[ERROR] Requires python 3.6+" )
@@ -20,7 +24,9 @@ if not (sys.version_info.major > 2 and sys.version_info.minor > 5):
 # Globals.
 class Args: pass
 args_ = Args()
-W_, H_ = 800, 600
+args_.build_dir = (Path(__file__).parent / '_build')
+args_.build_dir.mkdir(exist_ok=True)
+
 
 # Build and Run tab.
 tab1 = [ 
@@ -133,6 +139,36 @@ def analyzeTiffFile(tiff):
     C.showImageFileOnCanvas(canvas2, outfile) 
     time.sleep(0.2)
 
+def initBuildEnvironment():
+    global win_
+    global args_
+    # Find CMakeCache 
+    buildDir = args_.build_dir
+    if (buildDir / 'CMakeCache.txt').exists():
+        print( f"[INFO ] Found CMakeCache " )
+
+def build():
+    global win_, args_
+    buildDir = args_.build_dir
+    animalName = win_.FindElement("ANIMAL_NAME").Get()
+    protoCode = win_.FindElement("PROTO_CODE").Get()
+    sessionNum = win_.FindElement("SESSION_NUM").Get()
+    if not animalName:
+        raise RuntimeError( "'Animal Name' is not specified")
+    if not protoCode:
+        raise RuntimeError( "'Proto Code' is not specified")
+    if not sessionNum:
+        raise RuntimeError( "'Session Num' is not specified")
+
+    sourceDir = Path(__file__).parent.absolute()
+    
+    p = subprocess.run( [ "cmake", f"-DANIMAL_NAME={animalName}"
+        , f"-DPROTO_CODE={protoCode}", f"-DSESSION_NUM={sessionNum}"
+        , f"{sourceDir}"
+        ], cwd = buildDir, universal_newlines=True)
+    print(p)
+        
+
 def updateDataDirs():
     global args_
     if args_.session_dir:
@@ -148,6 +184,7 @@ def updateDataDirs():
 def main():
     global win_
     updateDataDirs()
+    initBuildEnvironment()
     win_.FindElement("__TABS__").SelectTab(args_.tab)
     while True:
         event, values = win_.Read()
@@ -164,6 +201,8 @@ def main():
             analyzeTiffDir(args_.session_dir, args_.data_dir)
         elif event == "__FILELIST__":
             analyzeTiffFile( values['__FILELIST__'][0] )
+        elif event.lower() == 'build':
+            build()
         else:
             print( f"[WARN ] Unsupported event {event}" )
     win_.Close()
