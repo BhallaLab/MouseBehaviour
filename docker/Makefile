@@ -1,5 +1,6 @@
 VERSION := $(shell date +"%Y.%m.%d")
 TAG := bhallalab/mousebehaviour:$(VERSION)
+TAG := bhallalab/mousebehaviour:latest
 
 all : $(DOCKERFILE)
 	docker build \
@@ -18,3 +19,6 @@ run :
 	    -v $(HOME)/.Xauthority:/root/.Xauthority \
 	    -v $(HOME)/DATA:/root/DATA \
 	    -it $(TAG) 
+
+upload :
+	docker upload $(TAG)
