@@ -30,7 +30,7 @@ WORKDIR /root
 
 RUN git clone https://github.com/BhallaLab/MouseBehaviour
 RUN ls -ltra 
-RUN cd $HOME/MouseBehaviour && mkdir _build && cd _build && \
+RUN cd $HOME/MouseBehaviour && timeout 60 git pull && mkdir _build && cd _build && \
     cmake -DANIMAL_NAME=Z1 -DSESSION_NUM=1 -DPROTO_CODE=All1 -DPORT=/dev/ttyACM0 .. && make -j2
 
 # Update git repo; and launch gui. When gui is closed, xterm is still available
