@@ -127,16 +127,18 @@
               
                 <p>Docker is the recommended to run this pipeline. To get the required image,
 execute <code>docker pull bhallalab/mousebehaviour</code> in the terminal.</p>
+<h1 id="docker">Docker</h1>
 <details class="note"><summary>Installing Docker</summary><p><strong>Installing and checking docker</strong></p>
 <p>Follow <a href="https://docs.docker.com/install">these instruction to install docker</a>.
 Also see <a href="https://docs.docker.com/config/daemon/systemd/#httphttps-proxy">these
 instructions</a>
 for adding proxy support to docker. To check that docker works fine, execute
 following in the terminal.</p>
-<pre class="highlight"><code class="language-bash">$ docker run hello-world</code></pre>
+<div class="highlight"><pre><span></span>$ docker run hello-world
+</pre></div>
 
 <p>I saw the following output.</p>
-<pre class="highlight"><code>Unable to find image 'hello-world:latest' locally
+<div class="highlight"><pre><span></span>Unable to find image &#39;hello-world:latest&#39; locally
 latest: Pulling from library/hello-world
 1b930d010525: Pull complete 
 Digest: sha256:6540fc08ee6e6b7b63468dc3317e3303aae178cb8a45ed3123180328bcc1d20f
@@ -144,14 +146,15 @@ Status: Downloaded newer image for hello-world:latest
 
 Hello from Docker!
 . 
-.</code></pre>
+.
+</pre></div>
 
 </details>
-<h1 id="docker">Docker</h1>
 <p>The docker image is available at
 <a href="https://hub.docker.com/r/bhallalab/mousebehavioum">https://hub.docker.com/r/bhallalab/mousebehavioum</a>. You can get it by executing
 the following:</p>
-<pre class="highlight"><code class="language-bash">$ docker pull bhallalab/mousebehaviour</code></pre>
+<div class="highlight"><pre><span></span>$ docker pull bhallalab/mousebehaviour
+</pre></div>
 
 <p>Before we run this image, we must make sure that docker can access
 devices connected to host computer. We also need to collect data 
@@ -165,15 +168,16 @@ graphics. You have to do it just once.</p>
 <p>Make sure that camera and Arduino Uno board are connected to host computer.
 Camera requires <code>USB3.0</code> if you want high frame rate. We were able to get 200
 FPS.</p>
-<pre class="highlight"><code class="language-bash"># camera and arduino must be connected.
-docker run --rm \
-    --net=host --privileged \
-    -v /dev:/dev \
-    -e DISPLAY=$(DISPLAY) \
-    -v /tmp/.X11-unix:/tmp/.X11-unix \
-    -v $(HOME)/.Xauthority:/root/.Xauthority \
-    -v $(HOME)/DATA:/root/DATA \
-    -it bhallalab/mousebehaviour</code></pre>
+<div class="highlight"><pre><span></span><span class="c1"># camera and arduino must be connected.</span>
+docker run --rm <span class="se">\</span>
+    --net<span class="o">=</span>host --privileged <span class="se">\</span>
+    -v /dev:/dev <span class="se">\</span>
+    -e <span class="nv">DISPLAY</span><span class="o">=</span><span class="k">$(</span>DISPLAY<span class="k">)</span> <span class="se">\</span>
+    -v /tmp/.X11-unix:/tmp/.X11-unix <span class="se">\</span>
+    -v <span class="k">$(</span>HOME<span class="k">)</span>/.Xauthority:/root/.Xauthority <span class="se">\</span>
+    -v <span class="k">$(</span>HOME<span class="k">)</span>/DATA:/root/DATA <span class="se">\</span>
+    -it bhallalab/mousebehaviour
+</pre></div>
 
 <p>And voila, you should see this gui. More information is <a href="gui.md">here</a>. When in
 doubt, hover your mouse pointer on gui and a helpful message should pop-up
@@ -193,42 +197,48 @@ code to this Ubuntu-18.04 yet.</p>
 <li><code>pgrimaging</code> To access PointGrey camera (Also see <code>udev</code> related note).
 Following script should do the job.</li>
 </ul>
-<pre class="highlight"><code class="language-bash">$ sudo groupadd -f dialout
+<div class="highlight"><pre><span></span>$ sudo groupadd -f dialout
 $ sudo groupadd -f pgrimaging
-$ sudo usermod -a -G dialout,pgrimaging chuha</code></pre>
+$ sudo usermod -a -G dialout,pgrimaging chuha
+</pre></div>
 
 <p><mark>Logout and login again.</mark> Changes to group takes effect on a fresh login.</p>
 </li>
 <li>
 <p>(<strong>udev</strong>) Add <code>udev</code> rules. We need them for accessing camera events.</p>
-<pre class="highlight"><code class="language-bash">$ mkdir -p /etc/udev/rules.d 
-$ echo "SUBSYSTEM==\"usb\", GROUP=\"pgrimaging\"" &gt;/etc/udev/rules.d/40-pgr.rules
-$ /etc/init.d/udev restart</code></pre>
+<div class="highlight"><pre><span></span>$ mkdir -p /etc/udev/rules.d 
+$ <span class="nb">echo</span> <span class="s2">&quot;SUBSYSTEM==\&quot;usb\&quot;, GROUP=\&quot;pgrimaging\&quot;&quot;</span> &gt;/etc/udev/rules.d/40-pgr.rules
+$ /etc/init.d/udev restart
+</pre></div>
 
 </li>
 <li>
 <p>Install python3.6. The GUI and analysis scripts requires python3.6 or higher.
    It is not available in official repositories, so we need to use a ppa.
-    <pre class="highlight"><code class="language-bash">$ sudo add-apt-repository ppa:deadsnakes/ppa
+    <div class="highlight"><pre><span></span>$ sudo add-apt-repository ppa:deadsnakes/ppa
 $ sudo apt-get update
-$ sudo apt-get install python3.6-tk python3.6-venv python3.6-dev</code></pre></p>
+$ sudo apt-get install python3.6-tk python3.6-venv python3.6-dev
+</pre></div></p>
 </li>
 <li>
 <p>Install required packages using <code>apt</code>.
-    <pre class="highlight"><code class="language-bash">$ sudo apt-get install -y cmake g++ git
-$ sudo apt-get install -y libboost-all-dev libopencv-dev libserial-dev arduino-core</code></pre></p>
+    <div class="highlight"><pre><span></span>$ sudo apt-get install -y cmake g++ git
+$ sudo apt-get install -y libboost-all-dev libopencv-dev libserial-dev arduino-core
+</pre></div></p>
 </li>
 <li>
 <p>Create <code>python3.6</code> virtualenv and enable it.
-    <pre class="highlight"><code class="language-bash">$ python3.6 -m venv ~/PY36
-$ source ~/PY36/bin/activate </code></pre>
+    <div class="highlight"><pre><span></span>$ python3.6 -m venv ~/PY36
+$ <span class="nb">source</span> ~/PY36/bin/activate 
+</pre></div>
    To make sure that python3.6 becomes default python, add <code>source
    ~/PY36/bin/activate</code> to your <code>~/.bashrc</code> or <code>~/.profile</code> file. For more, see
    the official documentations <a href="https://docs.python.org/3.6/tutorial/venv.html">https://docs.python.org/3.6/tutorial/venv.html</a></p>
 </li>
 <li>
 <p>Install required python packages.
-    <pre class="highlight"><code class="language-bash">$ pip install -r  matplotlib scipy tables screeninfo numpy pandas pyserial pysimplegui pillow</code></pre></p>
+    <div class="highlight"><pre><span></span>$ pip install -r  matplotlib scipy tables screeninfo numpy pandas pyserial pysimplegui pillow
+</pre></div></p>
 </li>
 </ol>
 <div class="admonition note">
@@ -260,13 +270,14 @@ terminal and press <code>Ctrl+C</code>. </p>
 <h2 id="what-is-being-printed">What is being printed?</h2>
 <p>See function <code>write_data_line</code> in file <code>Arduino/main.ino</code>. Each line is in csv
 format with 13 fields. </p>
-<pre class="highlight"><code class="language-c">char msg[100];
-sprintf(msg, "%lu,%s,%d,%d,%d,%d,%d,%d,%s,%d,%ld"
-        , timestamp, PROTO_CODE, trial_count_
-        , puff, tone, led
-        , camera, microscope, trial_state_
-        , shock_pin_readout, encoder_value_
-);</code></pre>
+<div class="highlight"><pre><span></span><span class="kt">char</span> <span class="n">msg</span><span class="p">[</span><span class="mi">100</span><span class="p">];</span>
+<span class="n">sprintf</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="s">&quot;%lu,%s,%d,%d,%d,%d,%d,%d,%s,%d,%ld&quot;</span>
+        <span class="p">,</span> <span class="n">timestamp</span><span class="p">,</span> <span class="n">PROTO_CODE</span><span class="p">,</span> <span class="n">trial_count_</span>
+        <span class="p">,</span> <span class="n">puff</span><span class="p">,</span> <span class="n">tone</span><span class="p">,</span> <span class="n">led</span>
+        <span class="p">,</span> <span class="n">camera</span><span class="p">,</span> <span class="n">microscope</span><span class="p">,</span> <span class="n">trial_state_</span>
+        <span class="p">,</span> <span class="n">shock_pin_readout</span><span class="p">,</span> <span class="n">encoder_value_</span>
+<span class="p">);</span>
+</pre></div>
               
             </div>
           </div>
