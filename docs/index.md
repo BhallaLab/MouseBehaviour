@@ -1,3 +1,3 @@
-- [[How to run]]
-- [[Architecture]]
-- [[Designs]]
+- [How to run]]
+- [Architecture]]
+- [Designs]
