@@ -36,4 +36,4 @@ RUN cd $HOME/MouseBehaviour && mkdir _build && cd _build && \
 
 # Update git repo; and launch gui. When gui is closed, xterm is still available
 # to the user.
-CMD cd $HOME/MouseBehaviour && ./gui.py
+CMD cd $HOME/MouseBehaviour && xterm -e "python3 ./gui.py && bash"

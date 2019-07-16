@@ -1,11 +1,13 @@
 VERSION := $(shell date +"%Y.%m.%d")
 TAG := bhallalab/mousebehaviour:$(VERSION)
+LATESTTAG := bhallalab/mousebehaviour:$(VERSION)
 
 all : build
 
 
 build : $(DOCKERFILE)
 	docker build  -t $(TAG)  .
+	docker build  -t $(LATESTTAG)  .
 
 run : build
 	docker run --rm \
@@ -17,3 +19,7 @@ run : build
 	    -v $(HOME)/DATA:/home/chuha/DATA \
 	    --hostname $(shell hostname) \
 	    -it $(TAG) 
+
+upload :
+	docker push $(LATESTTAG)
+	docker push $(TAG)
