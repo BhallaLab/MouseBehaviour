@@ -18,7 +18,7 @@ run :
 	    -v /tmp/.X11-unix:/tmp/.X11-unix \
 	    -v $(HOME)/.Xauthority:/root/.Xauthority \
 	    -v $(HOME)/DATA:/root/DATA \
-	    -it $(TAG) 
+	    -it $(LATESTTAG) 
 
 upload :
 	docker push $(TAG)

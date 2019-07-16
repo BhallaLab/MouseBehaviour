@@ -12,6 +12,7 @@ import canvas as C
 import signal
 import itertools
 import subprocess
+import tkinter as tk
 import time
 import sys
 import serial.tools.list_ports
@@ -21,7 +22,10 @@ ports_ = [x.device for x in
 defaultPort_ = ports_[0] if ports_ else None
 
 # Default size.
-W_, H_ = 800, 400
+root = tk.Tk()
+width = root.winfo_screenwidth() * 2 // 3
+height = root.winfo_screenheight() * 2 // 3
+W_, H_ = width, height
 
 if not (sys.version_info.major > 2 and sys.version_info.minor > 5):
     print( f"[ERROR] Requires python 3.6+" )
