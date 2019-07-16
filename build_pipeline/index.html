@@ -8,23 +8,27 @@
   
   
   <link rel="shortcut icon" href="../img/favicon.ico">
-  <title>Run in docker - MouseBehaviour</title>
+  <title>Build pipeline - MouseBehaviour</title>
   <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   <link rel="stylesheet" href="../css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../css/theme_extra.css" type="text/css" />
   <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+  <link href="../extra.css" rel="stylesheet">
   
   <script>
     // Current page data
-    var mkdocs_page_name = "Run in docker";
-    var mkdocs_page_input_path = "docker.md";
+    var mkdocs_page_name = "Build pipeline";
+    var mkdocs_page_input_path = "build_pipeline.md";
     var mkdocs_page_url = null;
   </script>
   
   <script src="../js/jquery-2.1.1.min.js" defer></script>
   <script src="../js/modernizr-2.8.3.min.js" defer></script>
   <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/yaml.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/c++.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/python.min.js"></script>
   <script>hljs.initHighlightingOnLoad();</script> 
   
 </head>
@@ -53,21 +57,28 @@
     <a class="" href="..">Home</a>
 	    </li>
           
+            <li class="toctree-l1">
+		
+    <a class="" href="../run_pipeline/">Run pipeline</a>
+	    </li>
+          
             <li class="toctree-l1 current">
 		
-    <a class="current" href="./">Run in docker</a>
+    <a class="current" href="./">Build pipeline</a>
     <ul class="subnav">
             
-    <li class="toctree-l2"><a href="#run-inside-docker">Run inside docker</a></li>
+    <li class="toctree-l2"><a href="#hardares">Hardares</a></li>
     
         <ul>
         
-            <li><a class="toctree-l3" href="#check-that-docker-works">Check that docker works</a></li>
+            <li><a class="toctree-l3" href="#electrical">Electrical</a></li>
+        
+            <li><a class="toctree-l3" href="#mechanical">Mechanical</a></li>
         
         </ul>
     
 
-    <li class="toctree-l2"><a href="#run-docker">Run docker</a></li>
+    <li class="toctree-l2"><a href="#softwares">Softwares</a></li>
     
 
     </ul>
@@ -95,8 +106,11 @@
     
       
     
-    <li>Run in docker</li>
+    <li>Build pipeline</li>
     <li class="wy-breadcrumbs-aside">
+      
+        <a href="https://github.com/BhallaLab/MouseBehaviour/edit/master/docs/build_pipeline.md"
+          class="icon icon-github"> Edit on GitHub</a>
       
     </li>
   </ul>
@@ -105,66 +119,25 @@
           <div role="main">
             <div class="section">
               
-                <h1 id="run-inside-docker">Run inside docker</h1>
-<h2 id="check-that-docker-works">Check that docker works</h2>
-<p>Follow <a href="https://docs.docker.com/install">these instruction to install docker</a>.
-Also see <a href="https://docs.docker.com/config/daemon/systemd/#httphttps-proxy">these
-instructions</a>
-for adding proxy support to docker. To check that docker works fine, execute
-following in the terminal.</p>
-<pre><code class="bash">$ docker run hello-world
-</code></pre>
-
-<p>I saw the following output.</p>
-<pre><code>Unable to find image 'hello-world:latest' locally
-latest: Pulling from library/hello-world
-1b930d010525: Pull complete 
-Digest: sha256:6540fc08ee6e6b7b63468dc3317e3303aae178cb8a45ed3123180328bcc1d20f
-Status: Downloaded newer image for hello-world:latest
-
-Hello from Docker!
-This message shows that your installation appears to be working correctly.
-
-To generate this message, Docker took the following steps:
- 1. The Docker client contacted the Docker daemon.
- 2. The Docker daemon pulled the &quot;hello-world&quot; image from the Docker Hub.
-    (amd64)
- 3. The Docker daemon created a new container from that image which runs the
-    executable that produces the output you are currently reading.
- 4. The Docker daemon streamed that output to the Docker client, which sent it
-    to your terminal.
-
-To try something more ambitious, you can run an Ubuntu container with:
- $ docker run -it ubuntu bash
-
-Share images, automate workflows, and more with a free Docker ID:
- https://hub.docker.com/
-
-For more examples and ideas, visit:
- https://docs.docker.com/get-started/
-
-</code></pre>
-
-<h1 id="run-docker">Run docker</h1>
-<p>The image is <code>bhallalab/mousebehaviour</code>. We can not just run this image, we have
-to make sure that docker can access devices connected to host computer. As well
-as we have to make sure that data collected inside the docker is saved on the
-host computer. </p>
-<p><strong>NOTE</strong>: Type <code>xhost +</code> once in the terminal. This makes docker to access
-graphics. You have to do it just once.</p>
-<pre><code class="bash">xhost +   # once 
-docker run --rm \
-    --net=host --privileged \
-    -v /dev:/dev \
-    -e DISPLAY=$(DISPLAY) \
-    -v /tmp/.X11-unix:/tmp/.X11-unix \
-    -v $(HOME)/.Xauthority:/root/.Xauthority \
-    -v $(HOME)/DATA:/root/DATA \
-    -it bhallalab/mousebehaviour
-</code></pre>
-
-<p>And voila, you should see this gui.</p>
-<p><img alt="" src="../images/gui_in_docker.png" /></p>
+                <p>You build this pipeline, you need various components.</p>
+<h1 id="hardares">Hardares</h1>
+<h2 id="electrical">Electrical</h2>
+<ul>
+<li>PCB</li>
+<li>Electrical Components</li>
+</ul>
+<h2 id="mechanical">Mechanical</h2>
+<ul>
+<li>3D designs </li>
+</ul>
+<h1 id="softwares">Softwares</h1>
+<ul>
+<li>KiCAD</li>
+<li>FreeCAD</li>
+<li>python3.6+</li>
+<li>GCC C++ Compiler</li>
+<li>cmake, git</li>
+</ul>
               
             </div>
           </div>
@@ -173,7 +146,7 @@ docker run --rm \
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
       
-        <a href=".." class="btn btn-neutral" title="Home"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../run_pipeline/" class="btn btn-neutral" title="Run pipeline"><span class="icon icon-circle-arrow-left"></span> Previous</a>
       
     </div>
   
@@ -198,14 +171,17 @@ docker run --rm \
   <div class="rst-versions" role="note" style="cursor: pointer">
     <span class="rst-current-version" data-toggle="rst-current-version">
       
+          <a href="https://github.com/BhallaLab/MouseBehaviour/" class="fa fa-github" style="float: left; color: #fcfcfc"> GitHub</a>
       
-        <span><a href=".." style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+        <span><a href="../run_pipeline/" style="color: #fcfcfc;">&laquo; Previous</a></span>
       
       
     </span>
 </div>
     <script>var base_url = '..';</script>
     <script src="../js/theme.js" defer></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
       <script src="../search/main.js" defer></script>
 
 </body>
