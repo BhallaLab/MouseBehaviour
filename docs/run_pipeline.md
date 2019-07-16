@@ -1,6 +1,8 @@
 Docker is the recommended to run this pipeline. To get the required image,
 execute `docker pull bhallalab/mousebehaviour` in the terminal.
 
+# Docker
+
 ??? note "Installing Docker"
 
     __Installing and checking docker__
@@ -28,8 +30,6 @@ execute `docker pull bhallalab/mousebehaviour` in the terminal.
     . 
     .
     ~~~
-
-# Docker
 
 The docker image is available at
 https://hub.docker.com/r/bhallalab/mousebehavioum. You can get it by executing
