@@ -1,6 +1,5 @@
 Various mouse behaviour protocols are implemented in this repository. 
 
-To execute the pipeline, we use a Docker image which is available on docker hub.
-See [Run pipeline](run) section for more details.
+See [Run pipeline](run_pipeline) on how to use this pipeline. 
 
-To build the pipeline, see [Build pipeline](build) section.
+See [Build pipeline](build_pipeline) section if you want to replicate this setup.
