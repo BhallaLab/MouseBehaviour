@@ -1,6 +1,15 @@
 You build this pipeline, you need various components.
 
-# Hardares
+# Softwares
+
+- KiCAD
+- FreeCAD
+- python3.6+
+- GCC C++ Compiler
+- cmake, git
+
+
+# Hardwares
 
 ## Electrical
 
@@ -11,10 +20,3 @@ You build this pipeline, you need various components.
 
 - 3D designs 
 
-# Softwares
-
-- KiCAD
-- FreeCAD
-- python3.6+
-- GCC C++ Compiler
-- cmake, git
