@@ -7,5 +7,3 @@ scipy
 pandas
 tables
 screeninfo
-# This is for docs
-pymdown-extensions
