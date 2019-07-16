@@ -1,3 +1,1 @@
-- [How to run]]
-- [Architecture]]
-- [Designs]
+[docker.md]

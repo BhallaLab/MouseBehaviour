@@ -1,0 +1,5 @@
+site_name: MouseBehaviour
+theme: readthedocs
+nav:
+    - Home: index.md
+    - Run in docker: docker.md
