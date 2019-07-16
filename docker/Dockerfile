@@ -1,6 +1,6 @@
 FROM ubuntu:16.04
 
-
+RUN echo "deb http://ppa.launchpad.net/deadsnakes/ppa/ubuntu xenial main" >> /etc/apt/sources.list.d/deadsnake.list
 RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys F23C5A6CF475977595C89F51BA6932366A755776
 RUN apt-get update
 RUN apt-get install -y cmake g++ xterm wget curl git
@@ -13,6 +13,7 @@ RUN ln -s /usr/bin/python3.6 /usr/local/bin/python
 RUN curl https://bootstrap.pypa.io/get-pip.py | python3 - 
 RUN python3 -m pip install matplotlib scipy numpy pandas pyserial
 RUN python3 -m pip install pysimplegui pillow
+RUN apt-get install -y 
 
 # User and group creations.
 RUN groupadd -f dialout 
