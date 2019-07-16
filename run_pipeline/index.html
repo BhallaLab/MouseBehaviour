@@ -62,7 +62,13 @@
     <a class="current" href="./">Run pipeline</a>
     <ul class="subnav">
             
-    <li class="toctree-l2"><a href="#pipeline-in-docker">Pipeline in Docker</a></li>
+    <li class="toctree-l2"><a href="#docker">Docker</a></li>
+    
+
+    <li class="toctree-l2"><a href="#ubuntu-1604">Ubuntu 16.04</a></li>
+    
+
+    <li class="toctree-l2"><a href="#gui">GUI</a></li>
     
 
     </ul>
@@ -130,12 +136,13 @@ Hello from Docker!
 .</code></pre>
 
 </details>
-<h1 id="pipeline-in-docker">Pipeline in Docker</h1>
-<p>The docker image is available on hub.docker.com. You can get it by executing the
-following:</p>
+<h1 id="docker">Docker</h1>
+<p>The docker image is available at
+<a href="https://hub.docker.com/r/bhallalab/mousebehavioum">https://hub.docker.com/r/bhallalab/mousebehavioum</a>. You can get it by executing
+the following:</p>
 <pre class="highlight"><code class="language-bash">$ docker pull bhallalab/mousebehaviour</code></pre>
 
-<p>To run this image, we must make sure that docker can access
+<p>Before we run this image, we must make sure that docker can access
 devices connected to host computer. We also need to collect data 
 generated inside the docker during experiment and save it to the host machine.</p>
 <div class="admonition note">
@@ -161,6 +168,67 @@ docker run --rm \
 doubt, hover your mouse pointer on gui and a helpful message should pop-up
 (hopefully).</p>
 <p><img alt="" src="../images/gui_in_docker.png" /></p>
+<h1 id="ubuntu-1604">Ubuntu 16.04</h1>
+<p>If you can't use docker, you can build and run the pipeline in Ubuntu-16.04
+based system. The camera firmware version which we have used is compatible with
+Ubuntu-16.04. The vendor also supports Ubuntu-18.04 but we have not ported our
+code to this Ubuntu-18.04 yet.</p>
+<ol>
+<li>Create an admin account, say <code>chuha</code> (Hindi for mouse). Login.</li>
+<li>
+<p>Add <code>chuha</code> to following groups: </p>
+<ul>
+<li><code>dialout</code> To access arduino.</li>
+<li><code>pgrimaging</code> To access PointGrey camera (Also see <code>udev</code> related note).
+Following script should do the job.</li>
+</ul>
+<pre class="highlight"><code class="language-bash">$ sudo groupadd -f dialout
+$ sudo groupadd -f pgrimaging
+$ sudo usermod -a -G dialout,pgrimaging chuha</code></pre>
+
+<p><mark>Logout and login again.</mark> Changes to group takes effect on a fresh login.</p>
+</li>
+<li>
+<p>(<strong>udev</strong>) Add <code>udev</code> rules. We need them for accessing camera events.</p>
+<pre class="highlight"><code class="language-bash">$ mkdir -p /etc/udev/rules.d 
+$ echo "SUBSYSTEM==\"usb\", GROUP=\"pgrimaging\"" &gt;/etc/udev/rules.d/40-pgr.rules
+$ /etc/init.d/udev restart</code></pre>
+
+</li>
+<li>
+<p>Install python3.6. The GUI and analysis scripts requires python3.6 or higher.
+   It is not available in official repositories, so we need to use a ppa.
+    <pre class="highlight"><code class="language-bash">$ sudo add-apt-repository ppa:deadsnakes/ppa
+$ sudo apt-get update
+$ sudo apt-get install python3.6-tk python3.6-venv python3.6-dev</code></pre></p>
+</li>
+<li>
+<p>Install required packages using <code>apt</code>.
+    <pre class="highlight"><code class="language-bash">$ sudo apt-get install -y cmake g++ git
+$ sudo apt-get install -y libboost-all-dev libopencv-dev libserial-dev arduino-core</code></pre></p>
+</li>
+<li>
+<p>Create <code>python3.6</code> virtualenv and enable it.
+    <pre class="highlight"><code class="language-bash">$ python3.6 -m venv ~/PY36
+$ source ~/PY36/bin/activate </code></pre>
+   To make sure that python3.6 becomes default python, add <code>source
+   ~/PY36/bin/activate</code> to your <code>~/.bashrc</code> or <code>~/.profile</code> file. For more, see
+   the official documentations <a href="https://docs.python.org/3.6/tutorial/venv.html">https://docs.python.org/3.6/tutorial/venv.html</a></p>
+</li>
+<li>
+<p>Install required python packages.
+    <pre class="highlight"><code class="language-bash">$ pip install -r  matplotlib scipy tables screeninfo numpy pandas pyserial pysimplegui pillow</code></pre></p>
+</li>
+</ol>
+<div class="admonition note">
+<p class="admonition-title">One script to do this all</p>
+<p>This all is collected in one scripts <code>./scripts/bootstrap.sh</code>. Use it at your
+own risk.</p>
+</div>
+<p>And we are done. Lets launch the gui <code>$ python gui.py</code>.</p>
+<h1 id="gui">GUI</h1>
+<p>GUI has two tabs. First is to analyse the <code>tiff</code> files generated during the
+session and, second one to run the session.</p>
               
             </div>
           </div>
