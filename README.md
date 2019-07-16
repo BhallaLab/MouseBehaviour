@@ -1,4 +1,6 @@
-[![Build Status](https://travis-ci.org/BhallaLab/MouseBehaviour.svg?branch=master)](https://travis-ci.org/BhallaLab/MouseBehaviour)
+[![Build Status](https://travis-ci.org/BhallaLab/MouseBehaviour.svg?branch=master)](https://travis-ci.org/BhallaLab/MouseBehaviour) ![Docker Pulls](https://img.shields.io/docker/pulls/bhallalab/mousebehaviour.svg?style=plastic)
+
+__Documents__ https://bhallalab.github.io/MouseBehaviour/
 
 A `cmake` based C++/Python pipeline to run behavioural experiment.
 
