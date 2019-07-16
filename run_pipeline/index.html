@@ -71,6 +71,17 @@
     <li class="toctree-l2"><a href="#gui">GUI</a></li>
     
 
+    <li class="toctree-l2"><a href="#protocols">Protocols</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l3" href="#send-commands-to-arduino">Send commands to arduino</a></li>
+        
+            <li><a class="toctree-l3" href="#what-is-being-printed">What is being printed?</a></li>
+        
+        </ul>
+    
+
     </ul>
 	    </li>
           
@@ -229,6 +240,33 @@ own risk.</p>
 <h1 id="gui">GUI</h1>
 <p>GUI has two tabs. First is to analyse the <code>tiff</code> files generated during the
 session and, second one to run the session.</p>
+<h1 id="protocols">Protocols</h1>
+<p>A protocol must be listed in <code>./Protocols/BehaviourProtocols.csv</code>. You must
+specify the right protocol code during configuration. </p>
+<h2 id="send-commands-to-arduino">Send commands to arduino</h2>
+<p>To send commands to arduino, make sure that you focus on the window which shows
+camera frames (click on it). </p>
+<p>Press the following character to issue corresponding command.</p>
+<ul>
+<li><code>p</code> <strong>Puff</strong> </li>
+<li><code>t</code> <strong>Tone</strong></li>
+<li><code>l</code> <strong>Led</strong> </li>
+<li><code>c</code> <strong>Shock</strong> </li>
+<li><code>s</code> <strong>Start the session</strong>. After pressing <code>s</code>, arduino will not accept any
+  command from the user. </li>
+</ul>
+<p>To terminal the session, focus on frame window and press <code>q</code>. Or focus on the
+terminal and press <code>Ctrl+C</code>. </p>
+<h2 id="what-is-being-printed">What is being printed?</h2>
+<p>See function <code>write_data_line</code> in file <code>Arduino/main.ino</code>. Each line is in csv
+format with 13 fields. </p>
+<pre class="highlight"><code class="language-c">char msg[100];
+sprintf(msg, "%lu,%s,%d,%d,%d,%d,%d,%d,%s,%d,%ld"
+        , timestamp, PROTO_CODE, trial_count_
+        , puff, tone, led
+        , camera, microscope, trial_state_
+        , shock_pin_readout, encoder_value_
+);</code></pre>
               
             </div>
           </div>
