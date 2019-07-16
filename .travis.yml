@@ -1,8 +1,11 @@
 sudo: required
 dist: xenial
-language: cpp
+language: python
 compiler: gcc
 cache: apt
+
+python:
+    - 3.6
 
 install:
     - echo "nothing to do here"

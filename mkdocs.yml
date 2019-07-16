@@ -2,4 +2,5 @@ site_name: MouseBehaviour
 theme: readthedocs
 nav:
     - Home: index.md
-    - Run in docker: docker.md
+    - Pipeline: docker.md
+    - EDA: eda.md
