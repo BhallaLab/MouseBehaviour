@@ -11,7 +11,7 @@ RUN apt-get install -y python3.6-venv python3.6-tk python3.6-dev
 RUN ln -s /usr/bin/python3.6 /usr/local/bin/python3
 RUN ln -s /usr/bin/python3.6 /usr/local/bin/python
 RUN curl https://bootstrap.pypa.io/get-pip.py | python3 - 
-RUN python3 -m pip install matplotlib scipy numpy pandas pyserial
+RUN python3 -m pip install matplotlib scipy tables screeninfo numpy pandas pyserial
 RUN python3 -m pip install pysimplegui pillow
 RUN apt-get install -y 
 
@@ -30,7 +30,6 @@ WORKDIR /root
 
 RUN git clone https://github.com/BhallaLab/MouseBehaviour
 RUN ls -ltra 
-RUN cd $HOME/MouseBehaviour && python3 -m pip install -r requirements.txt --user
 RUN cd $HOME/MouseBehaviour && mkdir _build && cd _build && \
     cmake -DANIMAL_NAME=Z1 -DSESSION_NUM=1 -DPROTO_CODE=All1 -DPORT=/dev/ttyACM0 .. && make -j2
 

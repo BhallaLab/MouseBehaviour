@@ -4,14 +4,12 @@ language: cpp
 compiler: gcc
 cache: apt
 
-before_script:
-    - sudo ./bootstrap.sh
-
 install:
     - echo "nothing to do here"
 
 script:
     - # checking if any python3 incompatible file is in the source tree.
+    - cd scripts && sudo ./bootstrap.sh && cd ..
     - python3 -m compileall -q .
     - ./.travis_build.sh
     - echo "All done. Phew"
