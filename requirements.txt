@@ -6,3 +6,4 @@ pysimplegui
 scipy
 pandas
 tables
+screeninfo

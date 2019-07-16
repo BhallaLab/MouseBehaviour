@@ -22,9 +22,13 @@ ports_ = [x.device for x in
 defaultPort_ = ports_[0] if ports_ else None
 
 # Default size.
-root = tk.Tk()
-width = root.winfo_screenwidth() * 2 // 3
-height = root.winfo_screenheight() * 2 // 3
+from screeninfo import get_monitors
+try:
+    m = get_monitors()[0]
+    width, height = m.width * 2//3, m.height*2//3
+except Exception:
+    width, height = 9000, 700
+
 W_, H_ = width, height
 
 if not (sys.version_info.major > 2 and sys.version_info.minor > 5):
