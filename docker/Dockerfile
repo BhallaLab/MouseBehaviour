@@ -33,4 +33,7 @@ RUN ls -ltra
 RUN cd $HOME/MouseBehaviour && python3 -m pip install -r requirements.txt --user
 RUN cd $HOME/MouseBehaviour && mkdir _build && cd _build && \
     cmake -DANIMAL_NAME=Z1 -DSESSION_NUM=1 -DPROTO_CODE=All1 -DPORT=/dev/ttyACM0 .. && make -j2
-CMD cd $HOME/MouseBehaviour && xterm
+
+# Update git repo; and launch gui. When gui is closed, xterm is still available
+# to the user.
+CMD cd $HOME/MouseBehaviour && ./gui.py
