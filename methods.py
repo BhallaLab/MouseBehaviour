@@ -180,7 +180,8 @@ def getTrialNumber(path: str) -> int:
 
 def interpolate_uniform(x0, y0, x1):
     # given x0, y0, return x1, y1.
-    f = sci.interp1d(x0, y0, kind=1, fill_value='extrapolate')
+    # Do not interpolate using more than zero order.
+    f = sci.interp1d(x0, y0, kind=0, fill_value='extrapolate')
     return f(x1)
 
 
@@ -280,6 +281,9 @@ def normalizeAndBaseline(res):
         if x in res.columns:
             res[x] -= res[x].min()
             res[x] /= res[x].max()
+            assert res[x].max() == 1.0
+            print( f"[INFO ] Normalized {x}" )
+            
     #  baseline = res[res['tcam'] < 300]
     return res
 
@@ -287,7 +291,7 @@ def plotSession(df):
     gridSize = (20, 2)
 
     # plot upto 2500ms
-    #  df = df[df['tcam'] < 2500]
+    df = df[df['tcam'] < 2500]
 
     ax111 = plt.subplot2grid(gridSize, (0, 0), colspan=1, rowspan=8)
     ax111.grid(False)
