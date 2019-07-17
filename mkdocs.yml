@@ -11,11 +11,13 @@ nav:
     - Home: index.md
     - Run pipeline: run_pipeline.md
     - Build pipeline: build_pipeline.md
+    - Using GUI: gui.md
 
 extra_css: [extra.css]
 
 markdown_extensions:
     - admonition
+    - toc
     - pymdownx.arithmatex
     - pymdownx.betterem:
         smart_enable: all
