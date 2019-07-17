@@ -1,5 +1,7 @@
 # GUI
 
+!!! warning "Work in progress"
+
 GUI has two tabs. First is to analyse the `tiff` files generated during the
 session and, second one to run the session.
 

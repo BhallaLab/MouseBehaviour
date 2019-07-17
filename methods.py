@@ -18,14 +18,26 @@ import sys
 import io
 from pathlib import Path
 from PIL import Image
+import re
 import numpy as np
 import scipy.interpolate as sci
 
-cols = [
-    'tcam', 'tarduino', 'millis', 'proto_code', 'trial_count', 'puff', 'tone',
-    'led', 'camera', 'microscope', 'state', 'shock', 'encoder_val', 'speed',
-    'blink'
-]
+# Arduino data has variable number of entries. Old data may have less than 15
+# fields.
+colsDict ={ 
+        15: [
+            'tcam', 'tarduino', 'millis', 'proto_code', 'trial_count', 'puff', 'tone',
+            'led', 'camera', 'microscope', 'state', 'shock', 'encoder_val', 'speed', 'blink'
+            ],
+        14 : [
+            'tcam', 'tarduino', 'millis', 'proto_code', 'trial_count', 'puff', 'tone',
+            'led', 'camera', 'microscope', 'state', 'encoder_val', 'speed', 'blink'
+            ],
+        13: [
+            'tcam', 'tarduino', 'millis', 'trial_count', 'puff', 'tone',
+            'led', 'camera', 'microscope', 'encoder_value', 'speed', 'state', 'blink'
+            ],
+        }
 
 
 def readTiff(filepath):
@@ -36,18 +48,20 @@ def readTiff(filepath):
         f = np.array(img)
         frames.append(f)
         line = [chr(x) for x in f[0, :]]
-        data.append(''.join(line))
+        data.append((''.join(line)).strip())
     return frames, data
 
 
 def reformat(df):
     global cols
+    df.dropna(subset=['tarduino', 'tcam'], inplace=True)
     df['millis'] = df['millis'].astype(float)
     df['tcam'] -= df['tcam'].iloc[0]
     df['tarduino'] -= df['tarduino'].iloc[0]
     df['millis'] -= df['millis'].iloc[0]
     for x in ['shock', 'encoder_val', 'speed', 'blink']:
-        df[x] = df[x].astype(float)
+        if x in df.columns:
+            df[x] = df[x].astype(float)
 
     # In ms units.
     for t in ['tcam', 'tarduino']:
@@ -89,25 +103,39 @@ def draw_profile_img(df, outfile='profile.png'):
 
 
 def data2df(data):
-    global cols
     withArduino, withoutArduino = [], []
+    nCols = 0
     for l in data:
         l = l.strip()
         if not l:
             continue
         fs = l.split(',')
+        nCols = max(len(fs), nCols)
         if len(fs) == 2:
             withoutArduino.append(l)
         else:
             withArduino.append(l)
+    cols = colsDict[nCols]
     txtA, txtB = '\n'.join(withArduino), '\n'.join(withoutArduino)
-    A = pd.read_csv(io.StringIO(txtA), names=cols, parse_dates=[0, 1, 2])
-    B = pd.read_csv(io.StringIO(txtB),
-                    names=[cols[0], cols[-1]],
-                    parse_dates=[0])
+    A, B = None, None
+    try:
+        A = pd.read_csv(io.StringIO(txtA), names=cols, parse_dates=[0, 1, 2])
+    except Exception as e:
+        print( f"[ERROR] Failed to parse {txtA}" )
+        print(e, cols)
+        quit(1)
+
+    try:
+        B = pd.read_csv(io.StringIO(txtB),
+                        names=[cols[0], cols[-1]],
+                        parse_dates=[0])
+    except Exception as e:
+        print( f"[ERROR] Failed to parse {txtB}" )
+        print(e, cols)
+        quit(1)
 
     # merge both df and sort by tcam.
-    df = pd.concat([A, B], axis=0, ignore_index=True, names=cols, sort=True)
+    df = pd.concat([A, B], axis=0, ignore_index=True, names=cols, sort=False)
     df.sort_values(by=['tcam'], inplace=True)
     return reformat(df)
 
@@ -116,7 +144,11 @@ def plotAndSaveData(data, outfile, obj=None):
     df = data2df(data)
     h5file = f"{outfile}.h5"
     df.to_hdf(h5file, key="session_data")
-    draw_profile_img(df, f"{outfile}.profile.png")
+    try:
+        draw_profile_img(df, f"{outfile}.profile.png")
+    except Exception as e:
+        print( f"[INFO ] Failed to plot profiling. Error was {e}" )
+        
     plt.figure()
     gridSize = (3, 2)
     ax1 = plt.subplot2grid(gridSize, (0, 0), colspan=2)
@@ -125,9 +157,11 @@ def plotAndSaveData(data, outfile, obj=None):
 
     ax1.plot(df['tcam'], df['blink'], color='blue', label="Blink")
     ax1.legend()
-    ax2.plot(df['tarduino'], df['shock'], color='red', label="Shock")
-    ax2.legend()
-    ax3.plot(df['tarduino'], df['speed'], label='Speed')
+    if 'shock' in df.columns:
+        ax2.plot(df['tarduino'], df['shock'], color='red', label="Shock")
+        ax2.legend()
+    if 'speed' in df.columns:
+        ax3.plot(df['tarduino'], df['speed'], label='Speed')
     ax3.legend()
     ax3.set_xlabel('Time (ms)')
     plt.tight_layout()
@@ -136,12 +170,13 @@ def plotAndSaveData(data, outfile, obj=None):
     return Path(h5file), Path(outfile)
 
 
-def getTrialNumber(path: str):
-    try:
-        return int(path.split('.')[0])
-    except Exception:
+def getTrialNumber(path: str) -> int:
+    # remove trial_ prefix from path if any. Old data might have it
+    m = re.search('\d+', path)
+    if m:
+        return int(m[0])
+    else:
         return -1
-
 
 def interpolate_uniform(x0, y0, x1):
     # given x0, y0, return x1, y1.
@@ -151,13 +186,8 @@ def interpolate_uniform(x0, y0, x1):
 
 def showImage(ax, xyz, what='', X=None, Y=None, **kwargs):
     X, Y, Z = xyz
-    im = ax.imshow(Z, interpolation='none', aspect='auto')
+    im = ax.imshow(Z, interpolation='none', aspect='auto', cmap='seismic')
     return im
-    #  im = ax.pcolormesh(X, Y, Z)
-    #  plt.colorbar(im, ax=ax)
-    #  ax.set_xlabel(kwargs.get('xlabel', 'Time (ms)'))
-    #  ax.set_ylabel(kwargs.get('ylabel', r'#Trial'))
-    #  ax.set_title(kwargs.get('title', what))
 
 
 def setXTickLabels(ax, labels, every=10):
@@ -217,17 +247,17 @@ def plotOnAxis(df, ax, what, probeAx=None, summaryAx=None, **kwargs):
     # non-probe axis
     im = showImage(ax, (X, Y, Z), what, newT, trials, **kwargs)
     plt.colorbar(im, ax=ax)
-    ax.set_title(what)
+    ax.set_title(f"{what.upper()}")
     ax.set_ylabel(r'# Trial')
     ax.set_xticks([])
-    setYTickLabels(ax, Y, every=4)
+    #setYTickLabels(ax, Y, every=4)
 
     # Probe trials.
     im = showImage(probeAx, (Xp, Yp, Zp), '', **kwargs)
     cb = plt.colorbar(im, ax=probeAx)
     cb.remove()
-    probeAx.set_ylabel(r'# Probe')
-    setYTickLabels(probeAx, Yp, every=2)
+    probeAx.set_title(r'Probe Trials', loc='right', fontsize='small')
+    #setYTickLabels(probeAx, Yp, every=2)
     setXTickLabels(probeAx, newT, every=100)
 
     if summaryAx is not None:
@@ -243,28 +273,27 @@ def plotOnAxis(df, ax, what, probeAx=None, summaryAx=None, **kwargs):
 
         summaryAx.set_xlabel('Time (ms)')
 
-def summaryPlot(df, ax, what):
-    (X,Y,Z), (Xp,Yp,Zp), trials = splitTrialsAndInterpolate(df, what)
-    newT = X[0]
 
 def normalizeAndBaseline(res):
     # Normalize whole session. 
     for x in ['blink', 'shock']:
-        res[x] -= res[x].min()
-        res[x] /= res[x].max()
-
+        if x in res.columns:
+            res[x] -= res[x].min()
+            res[x] /= res[x].max()
     #  baseline = res[res['tcam'] < 300]
     return res
 
 def plotSession(df):
     gridSize = (20, 2)
 
-    # plot upto 2000ms
-    df = df[df['tcam'] < 2500]
-
+    # plot upto 2500ms
+    #  df = df[df['tcam'] < 2500]
 
     ax111 = plt.subplot2grid(gridSize, (0, 0), colspan=1, rowspan=8)
+    ax111.grid(False)
     ax112 = plt.subplot2grid(gridSize, (8, 0), colspan=1, rowspan=2)
+    ax112.grid(False)
+
     ax121 = plt.subplot2grid(gridSize, (0, 1), colspan=1, rowspan=8)
     ax122 = plt.subplot2grid(gridSize, (8, 1), colspan=1, rowspan=2)
 
@@ -274,14 +303,18 @@ def plotSession(df):
     plt.subplots_adjust(hspace=10, wspace=0.2)
 
     plotOnAxis(df, ax111, 'blink', probeAx=ax112, summaryAx=ax21)
-    plotOnAxis(df, ax121, 'shock', probeAx=ax122, summaryAx=ax22)
+    if 'shock' in df.columns:
+        plotOnAxis(df, ax121, 'shock', probeAx=ax122, summaryAx=ax22)
 
 
 def plotSessionDir(path, outfile):
     assert path.is_dir()
-    m = {getTrialNumber(x.name): pd.read_hdf(x) for x in path.glob("*.h5")}
+    hfs = list(path.glob('*.h5'))
+    print( f"[INFO ] Total {len(hfs)} hdf files found in {path}" )
+    assert hfs
+    m = {getTrialNumber(x.name): pd.read_hdf(x) for x in hfs}
     m = { k : v for k, v in m.items() if k >= 0 }
-    res = pd.concat(m.values(), keys=m.keys())
+    res = pd.concat(m.values(), keys=m.keys(), sort=True)
     res = normalizeAndBaseline(res)
 
     plt.figure(figsize=(15, 10))
@@ -305,7 +338,6 @@ def main():
         test_dir(p)
     else:
         raise RuntimeError(f"Invalid path {p}")
-
 
 if __name__ == '__main__':
     main()

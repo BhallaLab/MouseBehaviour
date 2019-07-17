@@ -9,8 +9,8 @@ theme:
         - python
 nav:
     - Home: index.md
-    - Run pipeline: run_pipeline.md
     - Build pipeline: build_pipeline.md
+    - Run pipeline: run_pipeline.md
     - Using GUI: gui.md
 
 extra_css: [extra.css]

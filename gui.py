@@ -25,7 +25,7 @@ defaultPort_ = ports_[0] if ports_ else None
 from screeninfo import get_monitors
 try:
     m = get_monitors()[0]
-    width, height = m.width * 2//3, m.height*2//3
+    width, height = m.width * 2//3, int(m.height*1.8/3)
 except Exception:
     width, height = 9000, 700
 
@@ -76,13 +76,15 @@ canvasTabs = sg.TabGroup([[
 # Analysis tab.
 tab2 = [ 
         [sg.In(key='session_dir', do_not_clear=True)
-            , sg.FolderBrowse("Browse DataDir", target='session_dir')
+            , sg.FolderBrowse("Select DataDir", target='session_dir')
             , sg.Button("Find TIFF")]
         , [sg.In(key='data_dir', do_not_clear=True)
             , sg.FolderBrowse("Select ResultDir", target='data_dir'),  sg.OK()
             ]
         , [ sg.Button('Analyze All', key='Analyze')
-            ,  sg.ProgressBar(1000, orientation='h', size=(20,20), key='__PROGRESS__'), ]
+            ,  sg.ProgressBar(1000, orientation='h', size=(40,20), key='__PROGRESS__')
+            , sg.Button("Open result folder")
+            ]
         , [ sg.Listbox(values=[], size=(30, H_//20), enable_events=True
             , key="__FILELIST__"
             , tooltip="Select a file to analyze"
@@ -91,9 +93,15 @@ tab2 = [
         ]
 
 layout_ = [
-        [ sg.TabGroup([[sg.Tab('Analyze', tab2), sg.Tab('Do Session', tab1)]]
-            , key="__TABS__", enable_events = True)]
-        , [ sg.Exit(), status_ ]
+        [ sg.TabGroup([[
+            sg.Tab('Analyze Data', tab2
+                , tooltip="Analyze TIFF files")
+            , sg.Tab('Behaviour Session', tab1
+                , tooltip="Run experiment")
+            ]], key="__TABS__", enable_events = True)
+            ]
+        , [sg.Exit(), status_ ]
+        #  , [sg.Output( size=(3*W_//20,2))]
         ]
 
 win_ = sg.Window('MouseBehaviour', layout_).Finalize()
@@ -112,6 +120,14 @@ class TiffFile:
     def plotData(self, data, outfile):
         outfile.parent.mkdir(parents=True, exist_ok=True)
         return M.plotAndSaveData(data, outfile=outfile, obj=self)
+
+def openFolder(dirname):
+    p = Path(dirname)
+    if not p.is_dir():
+        print( "[WARN] Not a directory")
+        return False
+    subprocess.run(["xdg-open", "."], cwd=dirname)
+    return True
 
 def findTiffFiles(datadir, ext="tif"):
     print( f"[INFO ] Analysing data in {datadir}" )
@@ -218,12 +234,11 @@ def build():
         raise RuntimeError( "'Session Num' is not specified")
 
     sourceDir = Path(__file__).parent.absolute()
-    
-    p = subprocess.run( [ "cmake", f"-DANIMAL_NAME={animalName}"
+    subprocess.run( [ "cmake", f"-DANIMAL_NAME={animalName}"
         , f"-DPROTO_CODE={protoCode}", f"-DSESSION_NUM={sessionNum}"
         , f"{sourceDir}"
         ], cwd = buildDir, universal_newlines=True)
-    p = subprocess.run( [ "make"], cwd = buildDir, universal_newlines=True)
+    subprocess.run( [ "make"], cwd = buildDir, universal_newlines=True)
 
 def run():
     global win_, args_
@@ -306,8 +321,12 @@ def main():
             updateStatus("Starting trial ...")
             run()
             updateStatus('Trial is over')
+        elif event.lower() == 'open result folder':
+            openFolder(args_.data_dir)
+        elif event.lower() == '__tabs__':
+            continue
         else:
-            print( f"[WARN ] Unsupported event {event}" )
+            print( f"[WARN ] Unsupported event {event}", file=sys.stderr )
 
     win_.Close()
 
