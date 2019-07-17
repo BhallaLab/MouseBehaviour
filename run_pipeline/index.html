@@ -68,26 +68,17 @@
     <li class="toctree-l2"><a href="#ubuntu-1604">Ubuntu 16.04</a></li>
     
 
-    <li class="toctree-l2"><a href="#gui">GUI</a></li>
-    
-
-    <li class="toctree-l2"><a href="#protocols">Protocols</a></li>
-    
-        <ul>
-        
-            <li><a class="toctree-l3" href="#send-commands-to-arduino">Send commands to arduino</a></li>
-        
-            <li><a class="toctree-l3" href="#what-is-being-printed">What is being printed?</a></li>
-        
-        </ul>
-    
-
     </ul>
 	    </li>
           
             <li class="toctree-l1">
 		
     <a class="" href="../build_pipeline/">Build pipeline</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../gui/">Using GUI</a>
 	    </li>
           
         </ul>
@@ -125,20 +116,34 @@
           <div role="main">
             <div class="section">
               
-                <p>Docker is the recommended to run this pipeline. To get the required image,
-execute <code>docker pull bhallalab/mousebehaviour</code> in the terminal.</p>
+                <p><img alt="Docker Pulls" src="https://img.shields.io/docker/pulls/bhallalab/mousebehaviour.svg" /></p>
+<p>Docker is the recommended for running this pipeline. All dependencies, user
+permissions, and other setups are backed into this image. See the section
+<a href="#ubuntu-1604">Ubuntu 16-04</a> for running this pipeline without docker.</p>
 <h1 id="docker">Docker</h1>
-<details class="note"><summary>Installing Docker</summary><p><strong>Installing and checking docker</strong></p>
+<div class="admonition note">
+<p class="admonition-title">Installing Docker</p>
+<ol>
+<li>You should be in <code>sudo</code> group e.g., you should be able to install
+   softwares. Try this,
+   <pre class="highlight"><code class="language-bash">$ sudo apt upadate</code></pre>
+   If this is successful then you are good to go.</li>
+<li>
+<p>You must be in <code>docker</code> group. Type <code>groups</code> in terminal. If <code>docker</code>
+   appears in the output then you are already in docker group.</p>
+</li>
+<li>
 <p>Follow <a href="https://docs.docker.com/install">these instruction to install docker</a>.
-Also see <a href="https://docs.docker.com/config/daemon/systemd/#httphttps-proxy">these
-instructions</a>
-for adding proxy support to docker. To check that docker works fine, execute
-following in the terminal.</p>
-<div class="highlight"><pre><span></span>$ docker run hello-world
-</pre></div>
+   Also see <a href="https://docs.docker.com/config/daemon/systemd/#httphttps-proxy">these
+   instructions</a>
+   for adding proxy support to docker. To check that docker works fine, execute
+   following in the terminal.</p>
+</li>
+</ol>
+<pre class="highlight"><code class="language-bash">$ docker run hello-world</code></pre>
 
 <p>I saw the following output.</p>
-<div class="highlight"><pre><span></span>Unable to find image &#39;hello-world:latest&#39; locally
+<pre class="highlight"><code class="language-bash">Unable to find image 'hello-world:latest' locally
 latest: Pulling from library/hello-world
 1b930d010525: Pull complete 
 Digest: sha256:6540fc08ee6e6b7b63468dc3317e3303aae178cb8a45ed3123180328bcc1d20f
@@ -146,40 +151,74 @@ Status: Downloaded newer image for hello-world:latest
 
 Hello from Docker!
 . 
-.
-</pre></div>
+.</code></pre>
 
-</details>
+</div>
 <p>The docker image is available at
 <a href="https://hub.docker.com/r/bhallalab/mousebehavioum">https://hub.docker.com/r/bhallalab/mousebehavioum</a>. You can get it by executing
 the following:</p>
-<div class="highlight"><pre><span></span>$ docker pull bhallalab/mousebehaviour
-</pre></div>
+<pre class="highlight"><code class="language-bash">$ docker pull bhallalab/mousebehaviour</code></pre>
 
-<p>Before we run this image, we must make sure that docker can access
-devices connected to host computer. We also need to collect data 
-generated inside the docker during experiment and save it to the host machine.</p>
+<p>This image is over 1.3GB! It is going to take a while to download.</p>
+<p>Now we are ready to run the pipeline. But before we run this image, we must make
+sure that docker can access devices connected to host computer. We also need to
+collect data generated inside the docker during experiment and save it to the
+host machine.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>Type <code>xhost +</code> once in the terminal. This makes docker to access
 graphics. You have to do it just once.</p>
 </div>
-<p>Following command inside the terminal did the job for me. </p>
-<p>Make sure that camera and Arduino Uno board are connected to host computer.
-Camera requires <code>USB3.0</code> if you want high frame rate. We were able to get 200
-FPS.</p>
-<div class="highlight"><pre><span></span><span class="c1"># camera and arduino must be connected.</span>
-docker run --rm <span class="se">\</span>
-    --net<span class="o">=</span>host --privileged <span class="se">\</span>
-    -v /dev:/dev <span class="se">\</span>
-    -e <span class="nv">DISPLAY</span><span class="o">=</span><span class="k">$(</span>DISPLAY<span class="k">)</span> <span class="se">\</span>
-    -v /tmp/.X11-unix:/tmp/.X11-unix <span class="se">\</span>
-    -v <span class="k">$(</span>HOME<span class="k">)</span>/.Xauthority:/root/.Xauthority <span class="se">\</span>
-    -v <span class="k">$(</span>HOME<span class="k">)</span>/DATA:/root/DATA <span class="se">\</span>
-    -it bhallalab/mousebehaviour
-</pre></div>
+<p>The camera and Arduino Uno board must be connected to host computer if you are
+using this image for running behaviour session. They are not required for
+analysis. </p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>For getting decent frames per second, camera needs to be connected to a
+<code>USB3.0</code> port. I was able to get 200 FPS.</p>
+</div>
+<details class="note"><summary>How to find out USB-3.0 port</summary><p>Ref: <a href="https://unix.stackexchange.com/a/112152/5362">https://unix.stackexchange.com/a/112152/5362</a></p>
+<ol>
+<li>It has blue color.</li>
+<li>Use <code>lsusb</code> command to check if you computer has it
+   <pre class="highlight"><code class="language-bash">$ sudo lsusb -v | grep -iE "Bus|^Device Desc|bcdusb"</code></pre>
+   On my system, I get the following output. You can see the a device by <code>Point Grey
+   Research, Inc.</code> connected to USB3.0 (<code>bcdUSB 3.00</code>).</li>
+</ol>
+<pre class="highlight"><code class="language-bash"> Bus 002 Device 003: ID 1e10:4000 Point Grey Research, Inc. 
+ Device Descriptor:
+   bcdUSB               3.00
+       (Bus Powered)
+   (Bus Powered)
+ Bus 002 Device 001: ID 1d6b:0003 Linux Foundation 3.0 root hub
+ Device Descriptor:
+   bcdUSB               3.00
+ Bus 001 Device 006: ID 1a86:7523 QinHeng Electronics HL-340 USB-Serial adapter
+ Device Descriptor:
+   bcdUSB               1.10
+       (Bus Powered)
+   (Bus Powered)
+ Bus 001 Device 002: ID 0bda:5686 Realtek Semiconductor Corp. 
+ Device Descriptor:
+   bcdUSB               2.00
+       (Bus Powered)
+   bcdUSB               2.00
+   (Bus Powered)
+ Bus 001 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
+ Device Descriptor:
+   bcdUSB               2.00</code></pre>
 
-<p>And voila, you should see this gui. More information is <a href="gui.md">here</a>. When in
+</details>
+<pre class="highlight"><code class="language-bash">docker run --rm \
+    --net=host --privileged \
+    -v /dev:/dev \
+    -e DISPLAY=$(DISPLAY) \
+    -v /tmp/.X11-unix:/tmp/.X11-unix \
+    -v $(HOME)/.Xauthority:/root/.Xauthority \
+    -v $(HOME)/DATA:/root/DATA \
+    -it bhallalab/mousebehaviour</code></pre>
+
+<p>And voila, you should see this gui. More information is here <a href="gui">GUI</a>. When in
 doubt, hover your mouse pointer on gui and a helpful message should pop-up
 (hopefully).</p>
 <p><img alt="" src="../images/gui_in_docker.png" /></p>
@@ -197,48 +236,42 @@ code to this Ubuntu-18.04 yet.</p>
 <li><code>pgrimaging</code> To access PointGrey camera (Also see <code>udev</code> related note).
 Following script should do the job.</li>
 </ul>
-<div class="highlight"><pre><span></span>$ sudo groupadd -f dialout
+<pre class="highlight"><code class="language-bash">$ sudo groupadd -f dialout
 $ sudo groupadd -f pgrimaging
-$ sudo usermod -a -G dialout,pgrimaging chuha
-</pre></div>
+$ sudo usermod -a -G dialout,pgrimaging chuha</code></pre>
 
 <p><mark>Logout and login again.</mark> Changes to group takes effect on a fresh login.</p>
 </li>
 <li>
 <p>(<strong>udev</strong>) Add <code>udev</code> rules. We need them for accessing camera events.</p>
-<div class="highlight"><pre><span></span>$ mkdir -p /etc/udev/rules.d 
-$ <span class="nb">echo</span> <span class="s2">&quot;SUBSYSTEM==\&quot;usb\&quot;, GROUP=\&quot;pgrimaging\&quot;&quot;</span> &gt;/etc/udev/rules.d/40-pgr.rules
-$ /etc/init.d/udev restart
-</pre></div>
+<pre class="highlight"><code class="language-bash">$ mkdir -p /etc/udev/rules.d 
+$ echo "SUBSYSTEM==\"usb\", GROUP=\"pgrimaging\"" &gt;/etc/udev/rules.d/40-pgr.rules
+$ /etc/init.d/udev restart</code></pre>
 
 </li>
 <li>
 <p>Install python3.6. The GUI and analysis scripts requires python3.6 or higher.
    It is not available in official repositories, so we need to use a ppa.
-    <div class="highlight"><pre><span></span>$ sudo add-apt-repository ppa:deadsnakes/ppa
+    <pre class="highlight"><code class="language-bash">$ sudo add-apt-repository ppa:deadsnakes/ppa
 $ sudo apt-get update
-$ sudo apt-get install python3.6-tk python3.6-venv python3.6-dev
-</pre></div></p>
+$ sudo apt-get install python3.6-tk python3.6-venv python3.6-dev</code></pre></p>
 </li>
 <li>
 <p>Install required packages using <code>apt</code>.
-    <div class="highlight"><pre><span></span>$ sudo apt-get install -y cmake g++ git
-$ sudo apt-get install -y libboost-all-dev libopencv-dev libserial-dev arduino-core
-</pre></div></p>
+    <pre class="highlight"><code class="language-bash">$ sudo apt-get install -y cmake g++ git
+$ sudo apt-get install -y libboost-all-dev libopencv-dev libserial-dev arduino-core</code></pre></p>
 </li>
 <li>
 <p>Create <code>python3.6</code> virtualenv and enable it.
-    <div class="highlight"><pre><span></span>$ python3.6 -m venv ~/PY36
-$ <span class="nb">source</span> ~/PY36/bin/activate 
-</pre></div>
+    <pre class="highlight"><code class="language-bash">$ python3.6 -m venv ~/PY36
+$ source ~/PY36/bin/activate </code></pre>
    To make sure that python3.6 becomes default python, add <code>source
    ~/PY36/bin/activate</code> to your <code>~/.bashrc</code> or <code>~/.profile</code> file. For more, see
    the official documentations <a href="https://docs.python.org/3.6/tutorial/venv.html">https://docs.python.org/3.6/tutorial/venv.html</a></p>
 </li>
 <li>
 <p>Install required python packages.
-    <div class="highlight"><pre><span></span>$ pip install -r  matplotlib scipy tables screeninfo numpy pandas pyserial pysimplegui pillow
-</pre></div></p>
+    <pre class="highlight"><code class="language-bash">$ pip install -r  matplotlib scipy tables screeninfo numpy pandas pyserial pysimplegui pillow</code></pre></p>
 </li>
 </ol>
 <div class="admonition note">
@@ -247,37 +280,6 @@ $ <span class="nb">source</span> ~/PY36/bin/activate
 own risk.</p>
 </div>
 <p>And we are done. Lets launch the gui <code>$ python gui.py</code>.</p>
-<h1 id="gui">GUI</h1>
-<p>GUI has two tabs. First is to analyse the <code>tiff</code> files generated during the
-session and, second one to run the session.</p>
-<h1 id="protocols">Protocols</h1>
-<p>A protocol must be listed in <code>./Protocols/BehaviourProtocols.csv</code>. You must
-specify the right protocol code during configuration. </p>
-<h2 id="send-commands-to-arduino">Send commands to arduino</h2>
-<p>To send commands to arduino, make sure that you focus on the window which shows
-camera frames (click on it). </p>
-<p>Press the following character to issue corresponding command.</p>
-<ul>
-<li><code>p</code> <strong>Puff</strong> </li>
-<li><code>t</code> <strong>Tone</strong></li>
-<li><code>l</code> <strong>Led</strong> </li>
-<li><code>c</code> <strong>Shock</strong> </li>
-<li><code>s</code> <strong>Start the session</strong>. After pressing <code>s</code>, arduino will not accept any
-  command from the user. </li>
-</ul>
-<p>To terminal the session, focus on frame window and press <code>q</code>. Or focus on the
-terminal and press <code>Ctrl+C</code>. </p>
-<h2 id="what-is-being-printed">What is being printed?</h2>
-<p>See function <code>write_data_line</code> in file <code>Arduino/main.ino</code>. Each line is in csv
-format with 13 fields. </p>
-<div class="highlight"><pre><span></span><span class="kt">char</span> <span class="n">msg</span><span class="p">[</span><span class="mi">100</span><span class="p">];</span>
-<span class="n">sprintf</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="s">&quot;%lu,%s,%d,%d,%d,%d,%d,%d,%s,%d,%ld&quot;</span>
-        <span class="p">,</span> <span class="n">timestamp</span><span class="p">,</span> <span class="n">PROTO_CODE</span><span class="p">,</span> <span class="n">trial_count_</span>
-        <span class="p">,</span> <span class="n">puff</span><span class="p">,</span> <span class="n">tone</span><span class="p">,</span> <span class="n">led</span>
-        <span class="p">,</span> <span class="n">camera</span><span class="p">,</span> <span class="n">microscope</span><span class="p">,</span> <span class="n">trial_state_</span>
-        <span class="p">,</span> <span class="n">shock_pin_readout</span><span class="p">,</span> <span class="n">encoder_value_</span>
-<span class="p">);</span>
-</pre></div>
               
             </div>
           </div>

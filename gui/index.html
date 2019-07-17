@@ -8,7 +8,7 @@
   
   
   <link rel="shortcut icon" href="../img/favicon.ico">
-  <title>Build pipeline - MouseBehaviour</title>
+  <title>Using GUI - MouseBehaviour</title>
   <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   <link rel="stylesheet" href="../css/theme.css" type="text/css" />
@@ -18,8 +18,8 @@
   
   <script>
     // Current page data
-    var mkdocs_page_name = "Build pipeline";
-    var mkdocs_page_input_path = "build_pipeline.md";
+    var mkdocs_page_name = "Using GUI";
+    var mkdocs_page_input_path = "gui.md";
     var mkdocs_page_url = null;
   </script>
   
@@ -62,31 +62,31 @@
     <a class="" href="../run_pipeline/">Run pipeline</a>
 	    </li>
           
+            <li class="toctree-l1">
+		
+    <a class="" href="../build_pipeline/">Build pipeline</a>
+	    </li>
+          
             <li class="toctree-l1 current">
 		
-    <a class="current" href="./">Build pipeline</a>
+    <a class="current" href="./">Using GUI</a>
     <ul class="subnav">
             
-    <li class="toctree-l2"><a href="#softwares">Softwares</a></li>
+    <li class="toctree-l2"><a href="#gui">GUI</a></li>
     
 
-    <li class="toctree-l2"><a href="#hardwares">Hardwares</a></li>
+    <li class="toctree-l2"><a href="#protocols">Protocols</a></li>
     
         <ul>
         
-            <li><a class="toctree-l3" href="#electrical">Electrical</a></li>
+            <li><a class="toctree-l3" href="#send-commands-to-arduino">Send commands to arduino</a></li>
         
-            <li><a class="toctree-l3" href="#mechanical">Mechanical</a></li>
+            <li><a class="toctree-l3" href="#what-is-being-printed">What is being printed?</a></li>
         
         </ul>
     
 
     </ul>
-	    </li>
-          
-            <li class="toctree-l1">
-		
-    <a class="" href="../gui/">Using GUI</a>
 	    </li>
           
         </ul>
@@ -111,10 +111,10 @@
     
       
     
-    <li>Build pipeline</li>
+    <li>Using GUI</li>
     <li class="wy-breadcrumbs-aside">
       
-        <a href="https://github.com/BhallaLab/MouseBehaviour/edit/master/docs/build_pipeline.md"
+        <a href="https://github.com/BhallaLab/MouseBehaviour/edit/master/docs/gui.md"
           class="icon icon-github"> Edit on GitHub</a>
       
     </li>
@@ -124,25 +124,36 @@
           <div role="main">
             <div class="section">
               
-                <p>You build this pipeline, you need various components.</p>
-<h1 id="softwares">Softwares</h1>
+                <h1 id="gui">GUI</h1>
+<p>GUI has two tabs. First is to analyse the <code>tiff</code> files generated during the
+session and, second one to run the session.</p>
+<h1 id="protocols">Protocols</h1>
+<p>A protocol must be listed in <code>./Protocols/BehaviourProtocols.csv</code>. You must
+specify the right protocol code during configuration. </p>
+<h2 id="send-commands-to-arduino">Send commands to arduino</h2>
+<p>To send commands to arduino, make sure that you focus on the window which shows
+camera frames (click on it). </p>
+<p>Press the following character to issue corresponding command.</p>
 <ul>
-<li>KiCAD</li>
-<li>FreeCAD</li>
-<li>python3.6+</li>
-<li>GCC C++ Compiler</li>
-<li>cmake, git</li>
+<li><code>p</code> <strong>Puff</strong> </li>
+<li><code>t</code> <strong>Tone</strong></li>
+<li><code>l</code> <strong>Led</strong> </li>
+<li><code>c</code> <strong>Shock</strong> </li>
+<li><code>s</code> <strong>Start the session</strong>. After pressing <code>s</code>, arduino will not accept any
+  command from the user. </li>
 </ul>
-<h1 id="hardwares">Hardwares</h1>
-<h2 id="electrical">Electrical</h2>
-<ul>
-<li>PCB</li>
-<li>Electrical Components</li>
-</ul>
-<h2 id="mechanical">Mechanical</h2>
-<ul>
-<li>3D designs </li>
-</ul>
+<p>To terminal the session, focus on frame window and press <code>q</code>. Or focus on the
+terminal and press <code>Ctrl+C</code>. </p>
+<h2 id="what-is-being-printed">What is being printed?</h2>
+<p>See function <code>write_data_line</code> in file <code>Arduino/main.ino</code>. Each line is in csv
+format with 13 fields. </p>
+<pre class="highlight"><code class="language-c">char msg[100];
+sprintf(msg, "%lu,%s,%d,%d,%d,%d,%d,%d,%s,%d,%ld"
+        , timestamp, PROTO_CODE, trial_count_
+        , puff, tone, led
+        , camera, microscope, trial_state_
+        , shock_pin_readout, encoder_value_
+);</code></pre>
               
             </div>
           </div>
@@ -150,10 +161,8 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="../gui/" class="btn btn-neutral float-right" title="Using GUI">Next <span class="icon icon-circle-arrow-right"></span></a>
       
-      
-        <a href="../run_pipeline/" class="btn btn-neutral" title="Run pipeline"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../build_pipeline/" class="btn btn-neutral" title="Build pipeline"><span class="icon icon-circle-arrow-left"></span> Previous</a>
       
     </div>
   
@@ -181,10 +190,8 @@
           <a href="https://github.com/BhallaLab/MouseBehaviour/" class="fa fa-github" style="float: left; color: #fcfcfc"> GitHub</a>
       
       
-        <span><a href="../run_pipeline/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+        <span><a href="../build_pipeline/" style="color: #fcfcfc;">&laquo; Previous</a></span>
       
-      
-        <span style="margin-left: 15px"><a href="../gui/" style="color: #fcfcfc">Next &raquo;</a></span>
       
     </span>
 </div>
