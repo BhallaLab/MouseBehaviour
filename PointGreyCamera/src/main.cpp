@@ -118,7 +118,7 @@ void show_frame( cv::Mat img)
         x = (size_t)(i*img.cols/roi_.size());
         yRoi = (size_t)(roi_[i]/5.0)+1;
 
-        yShock = (size_t)(shock_[i]/5.0)+1; // max 206.
+        yShock = (size_t)(shock_[i]/10.0)+1; // max 600.
 
         x = x % plt.cols;
         yRoi = yRoi % plt.rows;
