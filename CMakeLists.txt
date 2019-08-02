@@ -158,7 +158,7 @@ endif()
 add_custom_target(run  
     DEPENDS cam_server upload
     COMMAND LD_LIBRARY_PATH=${CAMERA_SERVER_DIR}/external/lib 
-        nice -n -10 ${CMAKE_BINARY_DIR}/cam_server ${RUN_ARGS}
+        ${CMAKE_BINARY_DIR}/cam_server ${RUN_ARGS}
     COMMENT "Run arduino client and camera client ${RUN_ARGS}"
     WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
     VERBATIM

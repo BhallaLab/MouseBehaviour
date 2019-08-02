@@ -15,7 +15,8 @@ void enableReadingShockPad();
 void disableReadingShockPad();
 
 int NUM_SAMPLES        = 100;
-volatile size_t idx           = 0;
+volatile size_t idx    = 0;
+bool            level  = false;
 
 // Do analog sampling only 1 in 10 times, for a freq of of 100 Hz.
 int SAMPLING_DIVIDER   = 10;
@@ -62,27 +63,35 @@ void enableReadingShockPad()
 
 /* --------------------------------------------------------------------------*/
 /**
- * @Synopsis  Shock monitor is being a called every 100us (0.1ms or 10k). Use
- * this to generate a tone on SHOCK_PWM_PIN.
+ * @Synopsis  Shock monitor is being a called every 100us (0.1ms). Use
+ * this to generate a tone on SHOCK_PWM_PIN of 1k
  */
 /* ----------------------------------------------------------------------------*/
 void shockMonitor() 
 {
-    // Generate 5K tone.
-    if( HIGH == digitalRead( SHOCK_PWM_PIN ))
-        digitalWrite(SHOCK_PWM_PIN, LOW);
-    else
-        digitalWrite(SHOCK_PWM_PIN, HIGH);
-
-    idx++;
-
-    // Read very 10 ms.
+    idx += 1;
     if( idx == 10)
+    {
+        // Generate 5K tone.
+        if( HIGH == digitalRead( SHOCK_PWM_PIN ))
+        {
+            digitalWrite(SHOCK_PWM_PIN, LOW);
+            level = false;
+        }
+        else
+        {
+            digitalWrite(SHOCK_PWM_PIN, HIGH);
+            level = true;
+        }
+        idx = 0;
+    }
+
+    // Read at 9th tick and level is HIGH.
+    if(level && idx == 5)
     {
         noInterrupts();
         shock_pin_readout = analogRead( SHOCK_PAD_READOUT_PIN );
         interrupts();  // enable interrupts again. We are done reading values.
-        idx = 0;
     }
 }
 
