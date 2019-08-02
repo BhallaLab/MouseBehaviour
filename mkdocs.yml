@@ -12,6 +12,8 @@ nav:
     - Build pipeline: build_pipeline.md
     - Run pipeline: run_pipeline.md
     - Using GUI: gui.md
+    - EDA (PCB, Circuit Board, Arduino): eda.md
+    - CAD (3d designs etc): cad.md
 
 extra_css: [extra.css]
 
