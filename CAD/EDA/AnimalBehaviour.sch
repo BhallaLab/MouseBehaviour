@@ -1,13 +1,12 @@
 EESchema Schematic File Version 4
-LIBS:AnimalBehaviour-cache
 EELAYER 29 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
 Sheet 1 1
 Title "MouseBehaviour: EDA Designs"
-Date "2019-07-10"
-Rev "7"
+Date "2019-08-02"
+Rev "8"
 Comp "BhallaLab, NCBS Bangalore"
 Comment1 "Dorababu/Dilawar Singh"
 Comment2 "Helpdesk Ticket No: 197588"
@@ -164,17 +163,6 @@ DGND
 Text GLabel 8600 3175 2    60   Input ~ 0
 CamTTL
 $Comp
-L Device:C C1
-U 1 1 5D263290
-P 1875 2150
-F 0 "C1" H 1990 2196 50  0000 L CNN
-F 1 "47nF" H 1990 2105 50  0000 L CNN
-F 2 "Capacitor_THT:C_Disc_D5.0mm_W2.5mm_P5.00mm" H 1913 2000 50  0001 C CNN
-F 3 "~" H 1875 2150 50  0001 C CNN
-	1    1875 2150
-	1    0    0    -1  
-$EndComp
-$Comp
 L Connector:Conn_Coaxial J5
 U 1 1 5D263EAD
 P 6300 5575
@@ -193,19 +181,8 @@ Wire Wire Line
 	6150 5675 6150 5775
 Wire Wire Line
 	6150 5775 6300 5775
-Wire Wire Line
-	1875 2350 1875 2300
-Wire Wire Line
-	1525 1450 1525 1400
-Wire Wire Line
-	1525 1400 1875 1400
-Wire Wire Line
-	1875 1400 1875 2000
-Text GLabel 1175 1400 0    60   Input ~ 0
+Text GLabel 1725 1875 2    60   Input ~ 0
 ShockRead
-Wire Wire Line
-	1175 1400 1525 1400
-Connection ~ 1525 1400
 $Comp
 L Connector:Jack-DC J3
 U 1 1 5D26C0F3
@@ -223,11 +200,6 @@ Text GLabel 5850 5025 0    60   Input ~ 0
 OUT-
 Text GLabel 1375 2350 0    60   Input ~ 0
 DGND
-Wire Wire Line
-	1525 1850 1675 1850
-Wire Wire Line
-	1675 1850 1675 1600
-NoConn ~ 1525 1750
 NoConn ~ 8300 5025
 $Comp
 L arduino:Arduino_Uno_Shield XA1
@@ -247,12 +219,7 @@ NoConn ~ 3125 1525
 Wire Wire Line
 	1375 2350 1525 2350
 Wire Wire Line
-	1525 1850 1525 1950
-Wire Wire Line
 	1525 2250 1525 2350
-Connection ~ 1525 2350
-Wire Wire Line
-	1525 2350 1875 2350
 Wire Wire Line
 	8350 5675 8350 5825
 Wire Wire Line
@@ -262,10 +229,10 @@ Wire Wire Line
 Wire Wire Line
 	8850 4975 8850 5025
 $Comp
-L Device:R R2
+L Device:R R3
 U 1 1 5D221F97
 P 7450 5025
-F 0 "R2" V 7265 5025 40  0000 C CNN
+F 0 "R3" V 7265 5025 40  0000 C CNN
 F 1 "470E" V 7341 5025 40  0000 C CNN
 F 2 "Resistor_THT:R_Axial_DIN0309_L9.0mm_D3.2mm_P5.08mm_Vertical" V 7380 5025 30  0001 C CNN
 F 3 "" H 7450 5025 30  0000 C CNN
@@ -298,7 +265,7 @@ OUT-
 Text GLabel 4550 5275 2    60   Input ~ 0
 OUT+
 Text GLabel 4550 5075 2    60   Input ~ 0
-ShockRead
+ShockReadIn
 Text GLabel 4550 4875 2    60   Input ~ 0
 ShockPWM
 $Comp
@@ -373,7 +340,7 @@ OUT+
 Text GLabel 3475 5100 2    60   Input ~ 0
 PAD-
 Text GLabel 3475 5000 2    60   Input ~ 0
-ShockRead
+ShockReadIn
 Text GLabel 3475 4850 2    60   Input ~ 0
 PAD+
 Text GLabel 3475 4750 2    60   Input ~ 0
@@ -409,10 +376,10 @@ Wire Wire Line
 Wire Wire Line
 	10425 2500 10225 2500
 $Comp
-L Device:R R4
+L Device:R R5
 U 1 1 5D21C427
 P 10575 2500
-F 0 "R4" V 10390 2500 40  0000 C CNN
+F 0 "R5" V 10390 2500 40  0000 C CNN
 F 1 "470E" V 10466 2500 40  0000 C CNN
 F 2 "Resistor_THT:R_Axial_DIN0309_L9.0mm_D3.2mm_P5.08mm_Vertical" V 10505 2500 30  0001 C CNN
 F 3 "" H 10575 2500 30  0000 C CNN
@@ -638,17 +605,6 @@ F 3 "~" H 8400 3175 50  0001 C CNN
 	1    8400 3175
 	1    0    0    -1  
 $EndComp
-$Comp
-L Device:R_POT_TRIM RV1
-U 1 1 5D22AE7D
-P 1525 1600
-F 0 "RV1" H 1455 1646 50  0000 R CNN
-F 1 "R_POT_TRIM" H 1455 1555 50  0000 R CNN
-F 2 "Potentiometer_THT:Potentiometer_Bourns_3296Y_Vertical" H 1525 1600 50  0001 C CNN
-F 3 "~" H 1525 1600 50  0001 C CNN
-	1    1525 1600
-	1    0    0    -1  
-$EndComp
 Wire Wire Line
 	1225 3175 1375 3175
 $Comp
@@ -666,10 +622,10 @@ Connection ~ 1375 3175
 Wire Wire Line
 	1375 3175 1550 3175
 $Comp
-L Device:R R3
+L Device:R R4
 U 1 1 5D222B56
 P 8350 5525
-F 0 "R3" H 8421 5563 40  0000 L CNN
+F 0 "R4" H 8421 5563 40  0000 L CNN
 F 1 "10K" H 8421 5487 40  0000 L CNN
 F 2 "Resistor_THT:R_Axial_DIN0309_L9.0mm_D3.2mm_P5.08mm_Vertical" V 8280 5525 30  0001 C CNN
 F 3 "" H 8350 5525 30  0000 C CNN
@@ -677,11 +633,11 @@ F 3 "" H 8350 5525 30  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L Device:R R1
+L Device:R R2
 U 1 1 5D261F4B
 P 1525 2100
-F 0 "R1" H 1596 2138 40  0000 L CNN
-F 1 "1K" H 1596 2062 40  0000 L CNN
+F 0 "R2" H 1596 2138 40  0000 L CNN
+F 1 "100K" H 1596 2062 40  0000 L CNN
 F 2 "Resistor_THT:R_Axial_DIN0309_L9.0mm_D3.2mm_P5.08mm_Vertical" V 1455 2100 30  0001 C CNN
 F 3 "" H 1525 2100 30  0000 C CNN
 	1    1525 2100
@@ -756,4 +712,28 @@ F 3 "https://www.amazon.in/MagiDeal-Solid-State-Module-High-level-Output/dp/B077
 	1    2550 5150
 	1    0    0    -1  
 $EndComp
+$Comp
+L Device:R R1
+U 1 1 5D43F35F
+P 1525 1650
+F 0 "R1" H 1596 1688 40  0000 L CNN
+F 1 "10K" H 1596 1612 40  0000 L CNN
+F 2 "Resistor_THT:R_Axial_DIN0309_L9.0mm_D3.2mm_P5.08mm_Vertical" V 1455 1650 30  0001 C CNN
+F 3 "" H 1525 1650 30  0000 C CNN
+	1    1525 1650
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	1525 1800 1525 1875
+Wire Wire Line
+	1525 1400 1525 1500
+Wire Wire Line
+	1725 1875 1525 1875
+Connection ~ 1525 1875
+Wire Wire Line
+	1525 1875 1525 1950
+Text GLabel 1425 1400 0    60   Input ~ 0
+ShockReadIn
+Wire Wire Line
+	1425 1400 1525 1400
 $EndSCHEMATC
