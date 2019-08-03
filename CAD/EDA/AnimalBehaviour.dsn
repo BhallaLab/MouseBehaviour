@@ -45,6 +45,12 @@
     )
   )
   (placement
+    (component Resistor_THT:R_Axial_DIN0309_L9.0mm_D3.2mm_P5.08mm_Vertical
+      (place R1 176500 -110000 front 0 (PN 10M))
+      (place R2 164000 -90500 front 90 (PN 470E))
+      (place R4 125730 -90170 front 90 (PN 470E))
+      (place R3 132000 -105000 front 270 (PN 10K))
+    )
     (component Arduino:Arduino_Uno_Shield
       (place XA1 116000 -126000 front 0 (PN Arduino_Uno_Shield))
     )
@@ -59,12 +65,6 @@
       (place J8 119380 -96520 front 270 (PN TONE))
       (place J4 174500 -68000 front 0 (PN StimIsoIN))
       (place J7 190000 -75500 front 270 (PN CAM))
-    )
-    (component Resistor_THT:R_Axial_DIN0309_L9.0mm_D3.2mm_P5.08mm_Vertical
-      (place R3 152500 -89000 front 0 (PN 470E))
-      (place R5 125730 -90170 front 90 (PN 470E))
-      (place R4 132000 -105000 front 270 (PN 10K))
-      (place R2 169000 -89000 front 90 (PN 100K))
     )
     (component "Connector_Audio:Jack_3.5mm_CUI_SJ1-3533NG_Horizontal_CircularHoles"
       (place J9 113030 -106680 front 90 (PN TONE))
@@ -82,7 +82,7 @@
       (place Assr4ch1 154500 -107500 front 180 (PN PCB_SSR_4Ch_LLT))
     )
     (component "Diode_THT:D_DO-15_P12.70mm_Horizontal"
-      (place D1 172720 -118110 front 90 (PN DIODE))
+      (place D1 136500 -127500 front 90 (PN DIODE))
     )
     (component "Connector_Molex:Molex_KK-254_AE-6410-08A_1x08_P2.54mm_Vertical"
       (place J2 191000 -132500 front 90 (PN "SSR OUT"))
@@ -99,16 +99,35 @@
       (place J14 118110 -119380 front 90 (PN "Ext Supp"))
     )
     (component "Package_TO_SOT_THT:TO-220-3_Horizontal_TabDown"
-      (place Q1 138500 -105000 front 270 (PN IRF540N))
+      (place Q1 144500 -108500 front 270 (PN IRF540N))
     )
     (component "Package_DIP:DIP-6_W7.62mm_Socket"
-      (place U1 143510 -88900 front 270 (PN 4N35))
-    )
-    (component Resistor_THT:R_Axial_DIN0309_L9.0mm_D3.2mm_P5.08mm_Vertical::1
-      (place R1 169000 -98500 front 90 (PN 10K))
+      (place U1 149500 -93000 front 270 (PN 4N35))
     )
   )
   (library
+    (image Resistor_THT:R_Axial_DIN0309_L9.0mm_D3.2mm_P5.08mm_Vertical
+      (outline (path signal 50  6130 1850  -1850 1850))
+      (outline (path signal 50  6130 -1850  6130 1850))
+      (outline (path signal 50  -1850 -1850  6130 -1850))
+      (outline (path signal 50  -1850 1850  -1850 -1850))
+      (outline (path signal 120  1720 0  3980 0))
+      (outline (path signal 100  0 0  5080 0))
+      (outline (path signal 120  1720 0  1643.59 -506.979  1421.13 -968.91  1072.4 -1344.75
+            628.387 -1601.1  128.536 -1715.19  -382.736 -1676.88  -860 -1489.56
+            -1260.85 -1169.9  -1549.67 -746.28  -1700.79 -256.353  -1700.79 256.353
+            -1549.67 746.28  -1260.85 1169.9  -860 1489.56  -382.736 1676.88
+            128.536 1715.19  628.387 1601.1  1072.4 1344.75  1421.13 968.91
+            1643.59 506.979  1720 0))
+      (outline (path signal 100  1600 0  1521.69 -494.427  1294.43 -940.456  940.456 -1294.43
+            494.427 -1521.69  0 -1600  -494.427 -1521.69  -940.456 -1294.43
+            -1294.43 -940.456  -1521.69 -494.427  -1600 0  -1521.69 494.427
+            -1294.43 940.456  -940.456 1294.43  -494.427 1521.69  0 1600
+            494.427 1521.69  940.456 1294.43  1294.43 940.456  1521.69 494.427
+            1600 0))
+      (pin Oval[A]Pad_1600x1600_um 2 5080 0)
+      (pin Round[A]Pad_1600_um 1 0 0)
+    )
     (image Arduino:Arduino_Uno_Shield
       (outline (path signal 150  0 53340  64516 53340))
       (outline (path signal 150  0 0  66040 0))
@@ -270,28 +289,6 @@
       (outline (path signal 100  -1270 2920  -1270 -2880))
       (pin Oval[A]Pad_1740x2200_um 2 2540 0)
       (pin RoundRect[A]Pad_1740x2200_250.95_um 1 0 0)
-    )
-    (image Resistor_THT:R_Axial_DIN0309_L9.0mm_D3.2mm_P5.08mm_Vertical
-      (outline (path signal 50  6130 1850  -1850 1850))
-      (outline (path signal 50  6130 -1850  6130 1850))
-      (outline (path signal 50  -1850 -1850  6130 -1850))
-      (outline (path signal 50  -1850 1850  -1850 -1850))
-      (outline (path signal 120  1720 0  3980 0))
-      (outline (path signal 100  0 0  5080 0))
-      (outline (path signal 120  1720 0  1643.59 -506.979  1421.13 -968.91  1072.4 -1344.75
-            628.387 -1601.1  128.536 -1715.19  -382.736 -1676.88  -860 -1489.56
-            -1260.85 -1169.9  -1549.67 -746.28  -1700.79 -256.353  -1700.79 256.353
-            -1549.67 746.28  -1260.85 1169.9  -860 1489.56  -382.736 1676.88
-            128.536 1715.19  628.387 1601.1  1072.4 1344.75  1421.13 968.91
-            1643.59 506.979  1720 0))
-      (outline (path signal 100  1600 0  1521.69 -494.427  1294.43 -940.456  940.456 -1294.43
-            494.427 -1521.69  0 -1600  -494.427 -1521.69  -940.456 -1294.43
-            -1294.43 -940.456  -1521.69 -494.427  -1600 0  -1521.69 494.427
-            -1294.43 940.456  -940.456 1294.43  -494.427 1521.69  0 1600
-            494.427 1521.69  940.456 1294.43  1294.43 940.456  1521.69 494.427
-            1600 0))
-      (pin Oval[A]Pad_1600x1600_um 2 5080 0)
-      (pin Round[A]Pad_1600_um 1 0 0)
     )
     (image "Connector_Audio:Jack_3.5mm_CUI_SJ1-3533NG_Horizontal_CircularHoles"
       (outline (path signal 50  4700 5700  -4500 5700))
@@ -714,28 +711,6 @@
       (pin Oval[A]Pad_1600x1600_um 3 0 -5080)
       (pin Oval[A]Pad_1600x1600_um 6 7620 0)
     )
-    (image Resistor_THT:R_Axial_DIN0309_L9.0mm_D3.2mm_P5.08mm_Vertical::1
-      (outline (path signal 100  1600 0  1521.69 -494.427  1294.43 -940.456  940.456 -1294.43
-            494.427 -1521.69  0 -1600  -494.427 -1521.69  -940.456 -1294.43
-            -1294.43 -940.456  -1521.69 -494.427  -1600 0  -1521.69 494.427
-            -1294.43 940.456  -940.456 1294.43  -494.427 1521.69  0 1600
-            494.427 1521.69  940.456 1294.43  1294.43 940.456  1521.69 494.427
-            1600 0))
-      (outline (path signal 120  1720 0  1643.59 -506.979  1421.13 -968.91  1072.4 -1344.75
-            628.387 -1601.1  128.536 -1715.19  -382.736 -1676.88  -860 -1489.56
-            -1260.85 -1169.9  -1549.67 -746.28  -1700.79 -256.353  -1700.79 256.353
-            -1549.67 746.28  -1260.85 1169.9  -860 1489.56  -382.736 1676.88
-            128.536 1715.19  628.387 1601.1  1072.4 1344.75  1421.13 968.91
-            1643.59 506.979  1720 0))
-      (outline (path signal 100  0 0  5080 0))
-      (outline (path signal 120  1720 0  3980 0))
-      (outline (path signal 50  -1850 1850  -1850 -1850))
-      (outline (path signal 50  -1850 -1850  6130 -1850))
-      (outline (path signal 50  6130 -1850  6130 1850))
-      (outline (path signal 50  6130 1850  -1850 1850))
-      (pin Round[A]Pad_1600_um 1 0 0)
-      (pin Oval[A]Pad_1600x1600_um 2 5080 0)
-    )
     (padstack Round[A]Pad_1408_um
       (shape (circle F.Cu 1408))
       (shape (circle B.Cu 1408))
@@ -897,19 +872,19 @@
       (pins J3-1 J2-2)
     )
     (net AGND
-      (pins R4-2 J14-3 Q1-3)
+      (pins R3-2 J14-3 Q1-3)
     )
     (net EX_5V
       (pins J14-2 U1-5)
     )
     (net "Net-(Q1-Pad1)"
-      (pins R4-1 Q1-1 U1-4)
+      (pins R3-1 Q1-1 U1-4)
     )
     (net ShockRead
-      (pins XA1-A0 R2-1 R1-2)
+      (pins XA1-A0 J2-6)
     )
     (net ShockPWM
-      (pins XA1-D5 J2-8)
+      (pins R1-2 J2-8)
     )
     (net ShockStimIsolator
       (pins XA1-D7 J4-2 J5-1)
@@ -921,10 +896,10 @@
       (pins XA1-D10 J12-2 J7-1)
     )
     (net Puff
-      (pins XA1-D11 R3-2)
+      (pins XA1-D11 R2-2)
     )
     (net LED
-      (pins XA1-D9 R5-2)
+      (pins XA1-D9 R4-2)
     )
     (net EncB
       (pins XA1-D3 RotaryEncoder1-2)
@@ -942,33 +917,33 @@
       (pins XA1-D8 J8-2 J9-S)
     )
     (net DGND
-      (pins XA1-GND1 RotaryEncoder1-4 J8-1 R2-2 J9-T J13-6 J12-6 J4-1 J1-2 J6-2 J7-2
-        J5-2 J5-2@1 J5-2@2 J5-2@3 J11-2 U1-2)
+      (pins XA1-GND1 RotaryEncoder1-4 J8-1 J9-T J13-6 J12-6 J4-1 J1-2 J6-2 J7-2 J5-2
+        J5-2@1 J5-2@2 J5-2@3 J11-2 U1-2)
     )
     (net "Net-(D1-Pad2)"
       (pins D1-2 J10-2 Q1-2)
     )
     (net "Net-(J11-Pad1)"
-      (pins R5-1 J11-1)
+      (pins R4-1 J11-1)
     )
-    (net ShockReadIn
-      (pins J2-6 R1-1)
+    (net "Net-(R2-Pad1)"
+      (pins R2-1 U1-1)
     )
-    (net "Net-(R3-Pad1)"
-      (pins R3-1 U1-1)
+    (net "Net-(R1-Pad1)"
+      (pins R1-1 XA1-D5)
     )
     (class kicad_default "" 5V AGND CamTTL DGND EX_12V EX_5V EncA EncB ImagingTrig
       LED "Net-(D1-Pad2)" "Net-(J11-Pad1)" "Net-(J12-Pad1)" "Net-(J12-Pad3)"
       "Net-(J12-Pad4)" "Net-(J12-Pad5)" "Net-(J13-Pad1)" "Net-(J13-Pad3)"
-      "Net-(J13-Pad4)" "Net-(J13-Pad5)" "Net-(Q1-Pad1)" "Net-(R1-Pad1)" "Net-(R2-Pad1)"
-      "Net-(R3-Pad1)" "Net-(U1-Pad3)" "Net-(U1-Pad6)" "Net-(XA1-Pad3V3)" "Net-(XA1-Pad5V2)"
+      "Net-(J13-Pad4)" "Net-(J13-Pad5)" "Net-(J3-Pad2)" "Net-(Q1-Pad1)" "Net-(R1-Pad1)"
+      "Net-(R2-Pad1)" "Net-(U1-Pad3)" "Net-(U1-Pad6)" "Net-(XA1-Pad3V3)" "Net-(XA1-Pad5V2)"
       "Net-(XA1-PadA1)" "Net-(XA1-PadA2)" "Net-(XA1-PadA3)" "Net-(XA1-PadA4)"
       "Net-(XA1-PadA5)" "Net-(XA1-PadAREF)" "Net-(XA1-PadD0)" "Net-(XA1-PadD1)"
       "Net-(XA1-PadD13)" "Net-(XA1-PadGND2)" "Net-(XA1-PadGND3)" "Net-(XA1-PadGND4)"
       "Net-(XA1-PadIORF)" "Net-(XA1-PadMISO)" "Net-(XA1-PadMOSI)" "Net-(XA1-PadRST1)"
       "Net-(XA1-PadRST2)" "Net-(XA1-PadSCK)" "Net-(XA1-PadSCL)" "Net-(XA1-PadSDA)"
-      "Net-(XA1-PadVIN)" OUT+ "OUT-" PAD+ "PAD-" Puff ShockPWM ShockRead ShockReadIn
-      ShockRelayCh12 ShockRelayCh34 ShockStimIsolator TONE+
+      "Net-(XA1-PadVIN)" OUT+ "OUT-" PAD+ "PAD-" Puff ShockPWM ShockRead ShockRelayCh12
+      ShockRelayCh34 ShockStimIsolator TONE+
       (circuit
         (use_via Via[0-1]_800:400_um)
       )

@@ -1,12 +1,13 @@
 EESchema Schematic File Version 4
+LIBS:AnimalBehaviour-cache
 EELAYER 29 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
 Sheet 1 1
 Title "MouseBehaviour: EDA Designs"
-Date "2019-08-02"
-Rev "8"
+Date "2019-08-03"
+Rev "9"
 Comp "BhallaLab, NCBS Bangalore"
 Comment1 "Dorababu/Dilawar Singh"
 Comment2 "Helpdesk Ticket No: 197588"
@@ -23,8 +24,6 @@ Text GLabel 5725 1225 2    60   Input ~ 0
 EncB
 Text GLabel 5725 1325 2    60   Input ~ 0
 ShockRelayCh12
-Text GLabel 5725 1425 2    60   Input ~ 0
-ShockPWM
 Text GLabel 5725 1525 2    60   Input ~ 0
 ShockRelayCh34
 Text GLabel 5725 1625 2    60   Input ~ 0
@@ -181,8 +180,6 @@ Wire Wire Line
 	6150 5675 6150 5775
 Wire Wire Line
 	6150 5775 6300 5775
-Text GLabel 1725 1875 2    60   Input ~ 0
-ShockRead
 $Comp
 L Connector:Jack-DC J3
 U 1 1 5D26C0F3
@@ -198,8 +195,6 @@ Text GLabel 5850 4825 0    60   Input ~ 0
 OUT+
 Text GLabel 5850 5025 0    60   Input ~ 0
 OUT-
-Text GLabel 1375 2350 0    60   Input ~ 0
-DGND
 NoConn ~ 8300 5025
 $Comp
 L arduino:Arduino_Uno_Shield XA1
@@ -217,10 +212,6 @@ NoConn ~ 3125 1225
 NoConn ~ 3125 1425
 NoConn ~ 3125 1525
 Wire Wire Line
-	1375 2350 1525 2350
-Wire Wire Line
-	1525 2250 1525 2350
-Wire Wire Line
 	8350 5675 8350 5825
 Wire Wire Line
 	8350 5225 8350 5375
@@ -229,10 +220,10 @@ Wire Wire Line
 Wire Wire Line
 	8850 4975 8850 5025
 $Comp
-L Device:R R3
+L Device:R R2
 U 1 1 5D221F97
 P 7450 5025
-F 0 "R3" V 7265 5025 40  0000 C CNN
+F 0 "R2" V 7265 5025 40  0000 C CNN
 F 1 "470E" V 7341 5025 40  0000 C CNN
 F 2 "Resistor_THT:R_Axial_DIN0309_L9.0mm_D3.2mm_P5.08mm_Vertical" V 7380 5025 30  0001 C CNN
 F 3 "" H 7450 5025 30  0000 C CNN
@@ -254,8 +245,6 @@ NoConn ~ 5725 2925
 NoConn ~ 5725 3225
 Text GLabel 4550 5575 2    60   Input ~ 0
 PAD-
-Text GLabel 4550 5375 2    60   Input ~ 0
-PAD+
 Text GLabel 4550 5175 2    60   Input ~ 0
 PAD-
 Text GLabel 4550 4975 2    60   Input ~ 0
@@ -265,20 +254,9 @@ OUT-
 Text GLabel 4550 5275 2    60   Input ~ 0
 OUT+
 Text GLabel 4550 5075 2    60   Input ~ 0
-ShockReadIn
+ShockRead
 Text GLabel 4550 4875 2    60   Input ~ 0
 ShockPWM
-$Comp
-L Connector_Generic:Conn_01x08 J2
-U 1 1 5D26665C
-P 4350 5275
-F 0 "J2" H 4350 4625 50  0000 C CNN
-F 1 "SSR OUT" H 4350 4750 50  0000 C TNN
-F 2 "Connector_Molex:Molex_KK-254_AE-6410-08A_1x08_P2.54mm_Vertical" H 4350 5275 50  0001 C CNN
-F 3 "~" H 4350 5275 50  0001 C CNN
-	1    4350 5275
-	-1   0    0    1   
-$EndComp
 Text GLabel 1625 5275 0    60   Input ~ 0
 ShockRelayCh12
 Wire Wire Line
@@ -340,7 +318,7 @@ OUT+
 Text GLabel 3475 5100 2    60   Input ~ 0
 PAD-
 Text GLabel 3475 5000 2    60   Input ~ 0
-ShockReadIn
+ShockRead
 Text GLabel 3475 4850 2    60   Input ~ 0
 PAD+
 Text GLabel 3475 4750 2    60   Input ~ 0
@@ -367,8 +345,6 @@ Text GLabel 10075 950  0    60   Input ~ 0
 DGND
 Wire Wire Line
 	10075 950  10225 950 
-Text Notes 1000 1275 0    50   ~ 0
-ShockPad is connected to A0.
 Text GLabel 8775 2375 0    50   Input ~ 0
 TONE-
 Wire Wire Line
@@ -376,10 +352,10 @@ Wire Wire Line
 Wire Wire Line
 	10425 2500 10225 2500
 $Comp
-L Device:R R5
+L Device:R R4
 U 1 1 5D21C427
 P 10575 2500
-F 0 "R5" V 10390 2500 40  0000 C CNN
+F 0 "R4" V 10390 2500 40  0000 C CNN
 F 1 "470E" V 10466 2500 40  0000 C CNN
 F 2 "Resistor_THT:R_Axial_DIN0309_L9.0mm_D3.2mm_P5.08mm_Vertical" V 10505 2500 30  0001 C CNN
 F 3 "" H 10575 2500 30  0000 C CNN
@@ -481,8 +457,6 @@ NoConn ~ 10025 4150
 NoConn ~ 10325 3750
 NoConn ~ 10625 3950
 NoConn ~ 10625 4150
-Text GLabel 7800 725  0    60   Input ~ 0
-PAD+
 Text GLabel 7800 1125 0    60   Input ~ 0
 PAD-
 Text GLabel 1225 3475 0    60   Input ~ 0
@@ -622,25 +596,14 @@ Connection ~ 1375 3175
 Wire Wire Line
 	1375 3175 1550 3175
 $Comp
-L Device:R R4
+L Device:R R3
 U 1 1 5D222B56
 P 8350 5525
-F 0 "R4" H 8421 5563 40  0000 L CNN
+F 0 "R3" H 8421 5563 40  0000 L CNN
 F 1 "10K" H 8421 5487 40  0000 L CNN
 F 2 "Resistor_THT:R_Axial_DIN0309_L9.0mm_D3.2mm_P5.08mm_Vertical" V 8280 5525 30  0001 C CNN
 F 3 "" H 8350 5525 30  0000 C CNN
 	1    8350 5525
-	1    0    0    -1  
-$EndComp
-$Comp
-L Device:R R2
-U 1 1 5D261F4B
-P 1525 2100
-F 0 "R2" H 1596 2138 40  0000 L CNN
-F 1 "100K" H 1596 2062 40  0000 L CNN
-F 2 "Resistor_THT:R_Axial_DIN0309_L9.0mm_D3.2mm_P5.08mm_Vertical" V 1455 2100 30  0001 C CNN
-F 3 "" H 1525 2100 30  0000 C CNN
-	1    1525 2100
 	1    0    0    -1  
 $EndComp
 $Comp
@@ -712,28 +675,40 @@ F 3 "https://www.amazon.in/MagiDeal-Solid-State-Module-High-level-Output/dp/B077
 	1    2550 5150
 	1    0    0    -1  
 $EndComp
+Text GLabel 7800 725  0    60   Input ~ 0
+PAD+
+$Comp
+L Connector_Generic:Conn_01x08 J2
+U 1 1 5D26665C
+P 4350 5275
+F 0 "J2" H 4350 4625 50  0000 C CNN
+F 1 "SSR OUT" H 4350 4750 50  0000 C TNN
+F 2 "Connector_Molex:Molex_KK-254_AE-6410-08A_1x08_P2.54mm_Vertical" H 4350 5275 50  0001 C CNN
+F 3 "~" H 4350 5275 50  0001 C CNN
+	1    4350 5275
+	-1   0    0    1   
+$EndComp
+Text GLabel 4550 5375 2    60   Input ~ 0
+PAD+
+Text Notes 5175 4450 0    50   ~ 0
+R1 Should Match Paw Resisitance.
 $Comp
 L Device:R R1
-U 1 1 5D43F35F
-P 1525 1650
-F 0 "R1" H 1596 1688 40  0000 L CNN
-F 1 "10K" H 1596 1612 40  0000 L CNN
-F 2 "Resistor_THT:R_Axial_DIN0309_L9.0mm_D3.2mm_P5.08mm_Vertical" V 1455 1650 30  0001 C CNN
-F 3 "" H 1525 1650 30  0000 C CNN
-	1    1525 1650
+U 1 1 5D459C44
+P 6850 1625
+F 0 "R1" H 6921 1663 40  0000 L CNN
+F 1 "10M" H 6921 1587 40  0000 L CNN
+F 2 "Resistor_THT:R_Axial_DIN0309_L9.0mm_D3.2mm_P5.08mm_Vertical" V 6780 1625 30  0001 C CNN
+F 3 "" H 6850 1625 30  0000 C CNN
+	1    6850 1625
 	1    0    0    -1  
 $EndComp
+Text GLabel 6850 1875 2    60   Input ~ 0
+ShockPWM
 Wire Wire Line
-	1525 1800 1525 1875
+	6850 1475 6850 1425
 Wire Wire Line
-	1525 1400 1525 1500
+	5725 1425 6850 1425
 Wire Wire Line
-	1725 1875 1525 1875
-Connection ~ 1525 1875
-Wire Wire Line
-	1525 1875 1525 1950
-Text GLabel 1425 1400 0    60   Input ~ 0
-ShockReadIn
-Wire Wire Line
-	1425 1400 1525 1400
+	6850 1775 6850 1875
 $EndSCHEMATC
