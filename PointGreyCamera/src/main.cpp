@@ -58,8 +58,8 @@ string dataDir_ = "/tmp";
 string bbox_str_ = "";
 array<int,4> bbox_={0,0,0,0};
 
-deque<double> roi_(1000, 0.0);
-deque<double> shock_(1000, 0.0);
+deque<double> roi_(640, 0.0);
+deque<double> shock_(640, 0.0);
 
 // Storage for images.
 vector<Mat> frames_;
@@ -91,49 +91,7 @@ void dumpData(const cv::Mat& mat)
     cout << "FRAMEWRITTEN" << endl;
 }
 
-/* --------------------------------------------------------------------------*/
-/**
- * @Synopsis  Show the frame.
- *
- * @Param img
- */
-/* ----------------------------------------------------------------------------*/
-void show_frame( cv::Mat img)
-{
-    if( img.empty() || img.total() < 1000)
-        return;
 
-    // Draw a plot.
-    rectangle(img, Point(bbox_[0], bbox_[1]), Point(bbox_[2], bbox_[3]), 1, 1, 128);
-
-    // Create plot plt and assign 0.
-    static cv::Mat plt(128, img.cols, CV_8UC1);
-    plt = Scalar(0);
-
-    size_t x, yShock, yRoi;
-
-    // Maximum mean value could be 128.
-    for (size_t i = 1; i < roi_.size()-1; i++)
-    {
-        x = (size_t)(i*img.cols/roi_.size());
-        yRoi = (size_t)(roi_[i]/5.0)+1;
-
-        yShock = (size_t)(shock_[i]/10.0)+1; // max 600.
-
-        x = x % plt.cols;
-        yRoi = yRoi % plt.rows;
-        yShock = yShock % plt.rows;
-
-        plt.at<uchar>(yRoi, x) = 255;
-        plt.at<uchar>(yShock, x) = 128;
-
-    }
-    vconcat(img, plt, img);
-    if(! writeToStdout_)
-        imshow(OPENCV_MAIN_WINDOW,  img);
-    else
-        dumpData(img);
-}
 
 void show_frame_color( cv::Mat gray)
 {
@@ -143,23 +101,18 @@ void show_frame_color( cv::Mat gray)
 
     rectangle(img, Point(bbox_[0], bbox_[1]), Point(bbox_[2], bbox_[3]), Scalar(255,255,255));
 
-    static cv::Mat plt(64, img.cols, CV_8UC3);
+    static cv::Mat plt(128, img.cols, CV_8UC3);
 
     plt = Scalar(255, 255, 255);
     size_t x, yShock, yRoi;
 
 
-    for (size_t i = 1; i < roi_.size()-1; i++)
+    for (size_t i=0; i < roi_.size(); i++)
     {
-       x = (size_t)(i*img.cols/roi_.size());
-       yRoi = (size_t)(roi_[i]/4.0)+1;
-
-       yShock = (size_t)(shock_[i]/4.0)+1;
-
+       x = (i*img.cols)/roi_.size();
+       yRoi = roi_[i]/2;
+       yShock = shock_[i]/8;
        x = x % plt.cols;
-       yRoi = yRoi % plt.rows;
-       yShock = yShock % plt.rows;
-
        plt.at<Vec3b>(yRoi, x) = Vec3b(255, 0, 0);  // Blue
        plt.at<Vec3b>(yShock, x)= Vec3b(0, 0, 255); // Red
     }
