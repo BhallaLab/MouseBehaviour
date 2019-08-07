@@ -40,9 +40,6 @@ class Args: pass
 allDone_ = False
 
 args_ = Args()
-args_.build_dir = (Path(__file__).parent / '_build')
-args_.build_dir.mkdir(exist_ok=True)
-
 
 # TODO: fixme: Build and Run tab.
 sizeInput = (W_//50, 1)
@@ -182,10 +179,11 @@ def analyzeTiffFile(tiff):
 def initBuildEnvironment():
     global win_
     global args_
-    # Find CMakeCache 
-    buildDir = args_.build_dir
-    if not buildDir:
-        return
+
+    # Make sure that build-dir exists.
+    buildDir = Path(args_.build_dir)
+    buildDir.mkdir(exist_ok=True)
+
     params = {}
     cmakeCache = buildDir / 'CMakeCache.txt'
     if cmakeCache.exists():
@@ -346,6 +344,10 @@ if __name__ == '__main__':
     parser.add_argument('--data-dir', '-d'
              , required = False, default = None
              , help = 'Where to save the data? Default is session-dir/analysis'
+             )
+    parser.add_argument('--build-dir', '-b'
+             , required = False, default = Path(__file__).parent / '_build'
+             , help = 'build directory.'
              )
     parser.parse_args(namespace=args_)
     main()

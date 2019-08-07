@@ -29,10 +29,5 @@ RUN /etc/init.d/udev restart
 WORKDIR /root
 
 RUN ls -ltra 
-RUN cd $HOME/MouseBehaviour && mkdir -p _build && cd _build && \
-    cmake -DANIMAL_NAME=Z1 -DSESSION_NUM=1 -DPROTO_CODE=All1 -DPORT=/dev/ttyACM0 .. \
-    && make -j2
-
-# Update git repo; and launch gui. When gui is closed, xterm is still available
-# to the user.
-CMD cd $HOME/MouseBehaviour && xterm -e "python3 ./gui.py && bash"
+COPY run_docker.sh /usr/bin/run_docker.sh
+CMD /usr/bin/run_docker.sh

@@ -7,8 +7,8 @@
 
 #include "protocol.h"
 
-#define         SESSION_NUM         24
-#define         ANIMAL_NAME         "G637ks"
+#define         SESSION_NUM         1
+#define         ANIMAL_NAME         "Z1"
 
 /*-----------------------------------------------------------------------------
  *  PINS
