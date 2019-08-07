@@ -29,9 +29,9 @@ RUN /etc/init.d/udev restart
 WORKDIR /root
 
 RUN ls -ltra 
-RUN if [ ! -d $HOME/MouseBehaviour ]; then git clone https://github.com/BhallaLab/MouseBehaviour; fi
-RUN cd $HOME/MouseBehaviour && timeout 60 git pull && mkdir _build && cd _build && \
-    cmake -DANIMAL_NAME=Z1 -DSESSION_NUM=1 -DPROTO_CODE=All1 -DPORT=/dev/ttyACM0 .. && make -j2
+RUN cd $HOME/MouseBehaviour && mkdir -p _build && cd _build && \
+    cmake -DANIMAL_NAME=Z1 -DSESSION_NUM=1 -DPROTO_CODE=All1 -DPORT=/dev/ttyACM0 .. \
+    && make -j2
 
 # Update git repo; and launch gui. When gui is closed, xterm is still available
 # to the user.
