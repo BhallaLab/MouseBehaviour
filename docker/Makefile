@@ -7,6 +7,7 @@ BUILD_ARGS= --build-arg http_proxy="http://172.16.223.222:3128" --build-arg http
 
 
 all : $(DOCKERFILE)
+	cp ../requirements.txt .
 	docker build $(BUILD_ARGS) -t $(TAG) .
 	docker build $(BUILD_ARGS) -t $(LATESTTAG)  .
 
