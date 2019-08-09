@@ -6,6 +6,7 @@ RUN apt-get update
 RUN apt-get install -y cmake g++ xterm wget curl git
 RUN apt-get install -y libboost-all-dev libopencv-dev libserial-dev
 RUN apt-get install -y udev arduino-core libcanberra-gtk-module
+RUN apt-get install -y xdg-utils
 SHELL ["/bin/bash", "-c"]
 RUN apt-get install -y python3.6-venv python3.6-tk python3.6-dev
 RUN ln -s /usr/bin/python3.6 /usr/local/bin/python3

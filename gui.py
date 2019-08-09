@@ -204,11 +204,12 @@ def initBuildEnvironment():
 
     # Also check if data directory has data from previous trial.
     if not args_.data_dir:
-        return
-    tiffs = findTiffFiles(args_.data_dir)
-    if len(tiffs) > 0:
-        tab1Info = win_.FindElement("tab1Info")
-        tab1Info.Update( tab1Info.Get() + "\n OLD DATA FOUND!")
+        print( f"[INFO ] No old data in {args_.data_dir}" )
+        return params
+    #  tiffs = findTiffFiles(args_.data_dir)
+    #  if len(tiffs) > 0:
+        #  tab1Info = win_.FindElement("tab1Info")
+        #  tab1Info.Update( tab1Info.Get() + "\n OLD DATA FOUND!")
     return params
 
 def cleanBuildDir():
@@ -270,15 +271,14 @@ def updateDataDirs():
     global args_
     if not args_.session_dir:
         args_.session_dir = defaultSessionDir()
-    if args_.session_dir:
-        win_.FindElement("session_dir").Update(args_.session_dir)
-        updateTiffFileList(args_.session_dir)
-        if args_.data_dir is None:
-            args_.data_dir = Path(args_.session_dir) / 'analysis'
-        else:
-            args_.data_dir = Path(args_.data_dir)
-    if args_.data_dir:
-        win_.FindElement("data_dir").Update(args_.data_dir)
+
+    win_.FindElement("session_dir").Update(args_.session_dir)
+    updateTiffFileList(args_.session_dir)
+    if args_.data_dir is None or not args_.data_dir:
+        args_.data_dir = Path(args_.session_dir) / 'analysis'
+    else:
+        args_.data_dir = Path(args_.data_dir)
+    win_.FindElement("data_dir").Update(args_.data_dir)
 
 def main():
     global win_
@@ -298,6 +298,7 @@ def main():
             updateDataDirs()
         elif event.lower() == 'ok':
             args_.data_dir = Path(values['data_dir'])
+            print( f"[INFO ] User selected data dir to {args_.data_dir}" )
             updateDataDirs()
         elif event == 'Analyze':
             analyzeTiffDir(args_.session_dir, args_.data_dir)
