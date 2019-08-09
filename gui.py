@@ -38,8 +38,14 @@ if not (sys.version_info.major > 2 and sys.version_info.minor > 5):
 # Globals.
 class Args: pass
 allDone_ = False
-
 args_ = Args()
+
+def getUniqueIdentifier():
+    global win_
+    animalName = win_.FindElement("ANIMAL_NAME").Get()
+    protoCode = win_.FindElement("PROTO_CODE").Get()
+    sessionNum = win_.FindElement("SESSION_NUM").Get()
+    return animalName, protoCode, sessionNum
 
 # TODO: fixme: Build and Run tab.
 sizeInput = (W_//50, 1)
@@ -56,6 +62,9 @@ tab1 = [
         ]
 
 status_ = sg.Text( "STATUS", size=(100,1), key="__STATUS__")
+
+def args_to_str():
+    global args_
 
 def updateStatus(what):
     global status_
@@ -151,7 +160,8 @@ def analyzeTiffDir(sessiondir, datadir):
         analyzeTiffFile(tiff)
 
     # Now analyze the dir.
-    summaryPlotPath = datadir / 'summary.png'
+    defaultSummaryName = '_'.join(getUniqueIdentifier())
+    summaryPlotPath = datadir / f'summary_{defaultSummaryName}.png'
     M.plotSessionDir(datadir, summaryPlotPath)
     # Focus on results tab.
     win_.FindElement("__CANVASES__").SelectTab(1)
@@ -258,23 +268,21 @@ def run():
 
 def defaultSessionDir():
     global args_
-    global win_
     initBuildEnvironment()
-    animalName = win_.FindElement("ANIMAL_NAME").Get()
-    protoCode = win_.FindElement("PROTO_CODE").Get()
-    sessionNum = win_.FindElement("SESSION_NUM").Get()
+    animalName, protoCode, sessionNum = getUniqueIdentifier()
     if animalName and protoCode and sessionNum:
         return Path().home() / 'DATA' / animalName / f"{animalName}_{protoCode}_{sessionNum}"
     return ''
 
 def updateDataDirs():
     global args_
-    if not args_.session_dir:
+    if args_.session_dir is None:
         args_.session_dir = defaultSessionDir()
-
+    else:
+        args_.session_dir = Path(args_.session_dir)
     win_.FindElement("session_dir").Update(args_.session_dir)
     updateTiffFileList(args_.session_dir)
-    if args_.data_dir is None or not args_.data_dir:
+    if args_.data_dir is None:
         args_.data_dir = Path(args_.session_dir) / 'analysis'
     else:
         args_.data_dir = Path(args_.data_dir)
