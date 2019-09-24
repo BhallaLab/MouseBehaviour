@@ -70,21 +70,29 @@ if((NOT ANIMAL_NAME) OR (NOT SESSION_NUM) OR (NOT PROTO_CODE))
     message(FATAL_ERROR 
         "Set ANIMAL_NAME, SESSION_NUM, and PROTO_CODE to cmake; e.g. \n"
         "\tcmake -DANIMAL_NAME=k3 -DSESSION_NUM=1 -DPROTO_CODE=All1 ..\n"
-        "For info on protocols, see file 'Protocols/BehaviourProtocols.csv'"
+        "For info on protocols, see file 'Protocols/BehaviourProtocols.yml'"
         " in the top directory."
         )
 endif()
 
 # For given PROTO_CODE generate config file. find_package(PythonInterp REQUIRED)
 message(STATUS "User asked for protocol code: ${PROTO_CODE}")
-execute_process(COMMAND 
-    ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/Protocols/protocol_to_config.py ${PROTO_CODE}
-    OUTPUT_VARIABLE PROTOCOL_CONFIG
+set(PROTOFILE ${CMAKE_CURRENT_SOURCE_DIR}/Arduino/protocol.h)
+execute_process(COMMAND ${PYTHON_EXECUTABLE} 
+        ${CMAKE_CURRENT_SOURCE_DIR}/Protocols/protocol_to_config.py 
+        ${CMAKE_CURRENT_SOURCE_DIR}/Protocols/BehaviourProtocols.yml ${PROTO_CODE} 
+        -o ${PROTOFILE}
+    RESULT_VARIABLE CONFIG_GENERATION_RESULT
+    ERROR_VARIABLE CONFIG_GENERATION_ERROR
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/Protocols
     OUTPUT_STRIP_TRAILING_WHITESPACE
     )
-message(STATUS "Writing protocol ${PROTO_CODE} config to file.")
-file(WRITE ${CMAKE_CURRENT_SOURCE_DIR}/Arduino/protocol.h "${PROTOCOL_CONFIG}")
+message(STATUS "Generated config file: ${PROTOFILE}")
+
+if(NOT CONFIG_GENERATION_RESULT)
+    message(STATUS "Error is ${CONFIG_GENERATION_ERROR}")
+    message(FATAL_ERROR "Failed to generate config. See above for error msg.")
+endif()
 
 # Set DATA DIRirectory to store data for given animal, session, and protocol
 # code. 

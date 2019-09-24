@@ -1,0 +1,38 @@
+Hr5: 
+    description: My cool protocol
+    NumTrialsInABlock: 60
+    Comments: ""
+    intervals: 
+        PRE: 
+            start: 0
+            end: random.uniform(6000, 8000)
+            value: NONE
+        CS: 
+            start: PRE.end
+            end: PRE.end+200
+            value: TONE
+        US: 
+            start: CS.end-100
+            end: CS.end
+            value: PUFF
+Hr1:
+    description: Hr1
+    NumTrialsInABlock: 60
+    intervals: 
+        PRE: 
+            start: 0
+            end: 8000
+        CS: 
+            start: 8000
+            end:   8050
+            value: PUFF
+        TRACE:
+            start: CS.end 
+            end: CS.end + 250
+        US: 
+            start: TRACE.end 
+            end: TRACE.end + 50
+            value: TONE
+        POST:
+            start: US.end 
+            end: US.end + 8000

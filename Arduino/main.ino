@@ -378,6 +378,7 @@ void do_trial( size_t trial_num, bool isprobe = false )
     print_trial_info( );
     trial_start_time_ = millis( );
 
+#if 0
     /*-----------------------------------------------------------------------------
      * PRE. Start imaging;
      * Usually durations of PRE_ is 8000 ms. For some trials is it randomly
@@ -543,6 +544,7 @@ void do_trial( size_t trial_num, bool isprobe = false )
         write_data_line();
         delay(200);
     }
+#endif 
 }
 
 void loop()
