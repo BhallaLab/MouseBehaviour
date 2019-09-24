@@ -89,10 +89,10 @@ execute_process(COMMAND ${PYTHON_EXECUTABLE}
     )
 message(STATUS "Generated config file: ${PROTOFILE}")
 
-if(NOT CONFIG_GENERATION_RESULT)
-    message(STATUS "Error is ${CONFIG_GENERATION_ERROR}")
-    message(FATAL_ERROR "Failed to generate config. See above for error msg.")
-endif()
+# if(NOT CONFIG_GENERATION_RESULT)
+    # message(STATUS "Error is ${CONFIG_GENERATION_ERROR}")
+    # message(FATAL_ERROR "Failed to generate config. See above for error msg.")
+# endif()
 
 # Set DATA DIRirectory to store data for given animal, session, and protocol
 # code. 
