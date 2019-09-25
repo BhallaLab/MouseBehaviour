@@ -142,7 +142,7 @@ def ymlFile(filepath, protocol, res):
         return False
 
     res.append(f'\n// PROTOCOL: {protocol}')
-    res.append(f'#define PROTO_CODE {protocol}')
+    res.append(f'#define PROTO_CODE "{protocol}"')
     proto = data[protocol]
     numTrials = proto.get('NumTrialInABlock', 60)
     res.append(f'#define PROTO_NumTrialsInABlock {numTrials}')
@@ -151,23 +151,23 @@ def ymlFile(filepath, protocol, res):
     if intervals is None:
         return False
     res.append(''
-            'struct Interval {\n'
-            '    char name[5];\n'
+            'typedef struct Interval {\n'
+            '    const char* name;\n'
             '    int start;\n'
             '    int end;\n'
-            '    char value[10];\n'
-            '    void (*callbackStart) ();\n'
-            '    void (*callbackEnd) ();\n'
-            '};')
+            '    const char* value;\n'
+            '    void (*callbackStart) (const callback_data_t* data, void*);\n'
+            '    void (*callbackEnd) (const callback_data_t* data, void*);\n'
+            '} interval_t;')
 
-    res.append(f'Interval intervals_[{len(intervals)}];')
+    #  res.append(f'interval_t intervals_[{len(intervals)}];')
     for i, (iName, interval) in enumerate(intervals.items()):
-        res.append(f'struct Interval int{iName} = {{ .name="{interval.name}"'
+        res.append(f'interval_t interval{iName} = {{ .name="{interval.name}"'
                 f', .start = {interval.start}, .end = {interval.end}'
                 f', .value = "{interval.value}" '
                 f', .callbackStart = func{iName}Start, .callbackEnd = func{iName}End }};'
                 )
-        res.append(f'intervals_[{i}] = int{iName};')
+        #  res.append(f'intervals_[{i}] = int{iName};')
     return True
 
 

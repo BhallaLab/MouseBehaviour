@@ -37,6 +37,8 @@ bool reboot_                    = false;
 // NOTE: ProtoUSValue should be more than 10 character long.
 char trial_state_[11]            = "PRE_";
 
+callback_data_t callbackData_;
+
 
 /* --------------------------------------------------------------------------*/
 /** WATCHDOG TIMER:
@@ -347,10 +349,10 @@ void do_first_trial( )
  *
  * @param duration
  */
-void do_empty_trial( size_t trial_num, int duration = 10 )
+void do_empty_trial( size_t trialNum, int duration = 10 )
 {
     Serial.print( ">> TRIAL NUM: " );
-    Serial.println( trial_num );
+    Serial.println( trialNum );
     //print_trial_info( );
     delay( duration );
     Serial.println( ">>     TRIAL OVER." );
@@ -367,10 +369,10 @@ void wait_and_print( size_t howlong )  // ms
 /**
  * @brief Do a single trial.
  *
- * @param trial_num. Index of the trial.
+ * @param trialNum. Index of the trial.
  * @param ttype. Type of the trial.
  */
-void do_trial( size_t trial_num, bool isprobe = false )
+void do_trial( size_t trialNum, bool isprobe = false )
 {
     reset_watchdog( );
     check_for_reset( );
@@ -378,19 +380,22 @@ void do_trial( size_t trial_num, bool isprobe = false )
     print_trial_info( );
     trial_start_time_ = millis( );
 
-#if 0
     /*-----------------------------------------------------------------------------
      * PRE. Start imaging;
      * Usually durations of PRE_ is 8000 ms. For some trials is it randomly
      * chosen between 6000 ms and 8000 ms. See protocol.h file and
-     * ./Protocols/BehaviourProtocols.xlsx file.
+     * ./Protocols/BehaviourProtocols.csv file.
+     *
+     * In second version: this time is computed by cmake on the fly.
      *-----------------------------------------------------------------------------*/
-    size_t duration = random(PROTO_PreStimDuration_LOW, PROTO_PreStimDuration_HIGH+1);
+    size_t duration = intervalPRE.end - intervalPRE.start;
+    callbackData_.trialNum = trialNum;
+    callbackData_.isProbe = isprobe;
 
     // From Ananth. He suggested that 60ms delay is required for every protocol. This is
     // apprently shutter delay for the camera and only required for trial number
     // 1.
-    if (trial_num > 0)
+    if (trialNum > 0)
         delay(60); // Shutter delay.
 
     stamp_ = millis( );
@@ -419,31 +424,29 @@ void do_trial( size_t trial_num, bool isprobe = false )
     /*-----------------------------------------------------------------------------
      *  CS: 50 ms duration.
      *-----------------------------------------------------------------------------*/
-    duration = PROTO_CSDuration;
-    if( String("NONE") == String(PROTO_CSValue) )
+    duration = intervalCS.end - intervalCS.start;
+    if( String("NONE") == String(intervalCS.value) )
     {
         sprintf( trial_state_, "NOCS" );
         while((millis( ) - stamp_) <= duration)
-        {
             write_data_line( );
-        }
     }
     else
     {
         stamp_ = millis( );
         sprintf( trial_state_, "CS+" );
-        if(String("LIGHT") == String(PROTO_CSValue))
+        if(String("LIGHT") == String(intervalCS.value))
         {
             led_on( duration );
         }
-        else if(String("TONE") == String(PROTO_CSValue))
+        else if(String("TONE") == String(intervalCS.value))
         {
             play_tone(duration);
         }
-        else if(String("TONE/LIGHT") == String(PROTO_CSValue))
+        else if(String("TONE/LIGHT") == String(intervalCS.value))
         {
             // Because real trial starts from trial #1.
-            if((trial_num-1) % 10 < 5)
+            if((trialNum-1) % 10 < 5)
                 play_tone(duration);
             else
                 led_on(duration);
@@ -456,6 +459,7 @@ void do_trial( size_t trial_num, bool isprobe = false )
 
     stamp_ = millis( );
 
+#if 0
     /*-----------------------------------------------------------------------------
      *  TRACE. The duration of trace varies from trial to trial. If US is shock
      *  then 10ms before the US, switch on the relay pin.
@@ -561,7 +565,7 @@ void loop()
         reset_watchdog();
         trial_count_ = i;
 
-        if(String("TONE/LIGHT") == String(PROTO_CSValue))
+        if(String("TONE/LIGHT") == String(intervalCS.value))
         {
             // FOR Shomu. Mixed trials.
             bool isprobe = false;

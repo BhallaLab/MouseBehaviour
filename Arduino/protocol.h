@@ -9,28 +9,22 @@
 #include "callback.h"    // pre-defined callback. 
 
 // PROTOCOL: Hr1
-#define PROTO_CODE Hr1
+#define PROTO_CODE "Hr1"
 #define PROTO_NumTrialsInABlock 60
 // Description: Hr1
-struct Interval {
-    char name[5];
+typedef struct Interval {
+    const char* name;
     int start;
     int end;
-    char value[10];
-    void (*callbackStart) ();
-    void (*callbackEnd) ();
-};
-Interval intervals_[5];
-struct Interval intPRE = { .name="PRE", .start = 0, .end = 8000, .value = "NONE" , .callbackStart = funcPREStart, .callbackEnd = funcPREEnd };
-intervals_[0] = intPRE;
-struct Interval intCS = { .name="CS", .start = 8000, .end = 8050, .value = "PUFF" , .callbackStart = funcCSStart, .callbackEnd = funcCSEnd };
-intervals_[1] = intCS;
-struct Interval intTRACE = { .name="TRACE", .start = 8050, .end = 8300, .value = "NONE" , .callbackStart = funcTRACEStart, .callbackEnd = funcTRACEEnd };
-intervals_[2] = intTRACE;
-struct Interval intUS = { .name="US", .start = 8300, .end = 8350, .value = "TONE" , .callbackStart = funcUSStart, .callbackEnd = funcUSEnd };
-intervals_[3] = intUS;
-struct Interval intPOST = { .name="POST", .start = 8350, .end = 16350, .value = "NONE" , .callbackStart = funcPOSTStart, .callbackEnd = funcPOSTEnd };
-intervals_[4] = intPOST;
+    const char* value;
+    void (*callbackStart) (const callback_data_t* data, void*);
+    void (*callbackEnd) (const callback_data_t* data, void*);
+} interval_t;
+interval_t intervalPRE = { .name="PRE", .start = 0, .end = 8000, .value = "NONE" , .callbackStart = funcPREStart, .callbackEnd = funcPREEnd };
+interval_t intervalCS = { .name="CS", .start = 8000, .end = 8050, .value = "PUFF" , .callbackStart = funcCSStart, .callbackEnd = funcCSEnd };
+interval_t intervalTRACE = { .name="TRACE", .start = 8050, .end = 8300, .value = "NONE" , .callbackStart = funcTRACEStart, .callbackEnd = funcTRACEEnd };
+interval_t intervalUS = { .name="US", .start = 8300, .end = 8350, .value = "TONE" , .callbackStart = funcUSStart, .callbackEnd = funcUSEnd };
+interval_t intervalPOST = { .name="POST", .start = 8350, .end = 16350, .value = "NONE" , .callbackStart = funcPOSTStart, .callbackEnd = funcPOSTEnd };
 
 
 #endif

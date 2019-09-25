@@ -35,12 +35,12 @@ CFLAGS_STD        =
 
 # CXXFLAGS_STD
 # Set the C++ standard to be used during compilation. Documentation (https://github.com/WeAreLeka/Arduino-Makefile/blob/std-flags/arduino-mk-vars.md#cxxflags_std)
-CXXFLAGS_STD      = -std=c++1y
+CXXFLAGS_STD      = -std=c++11
 
 # We treat most warnings as error. Some warnings are not treated as errors due
 # to various reasons. The arduino library itself has many errors which we become
 # very strict about warnings.
-CXXFLAGS         += -Wall -Wextra -pedantic
+CXXFLAGS         += -Wall -Wextra 
 
 # MONITOR_PORT
 # The port your board is connected to. Using an '*' tries all the ports and finds the right one.
