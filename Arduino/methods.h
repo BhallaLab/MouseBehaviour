@@ -17,6 +17,24 @@
 #ifndef HELPER_H
 #define HELPER_H
 
+// Functions and variable related to rotary encoder.
+#include "RotaryEncoder.h"
+#include "Shocker.h"
+
+unsigned long stamp_            = 0;
+unsigned dt_                    = 2;
+unsigned write_dt_              = 2;
+unsigned trial_count_           = 0;
+unsigned long trial_start_time_ = 0;
+int incoming_byte_              = 0;
+bool reboot_                    = false;
+
+// NOTE: Should be big enough to hold the state. 10 char long is ok.
+// NOTE: ProtoUSValue should be more than 10 character long.
+char trial_state_[11]            = "PRE_";
+
+// Callback structure.
+callback_data_t callbackData_;
 
 
 /* --------------------------------------------------------------------------*/

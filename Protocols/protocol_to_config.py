@@ -26,7 +26,6 @@ def error(msg):
     print(msg, file=sys.stderr)
 
 class Interval():
-
     def __init__(self, name='', start=0, end=0):
         self.name : str = name
         self.start : Time= start
@@ -42,8 +41,8 @@ class Interval():
         self.evaluated = True
         #  print('AFTER', self.start, self.end)
 
-    def __repr__(self):
-        return f"{self.start},{self.end}"
+    #  def __repr__(self):
+        #  return f"{self.start},{self.end}"
 
 def csvFile(protoFile, whichProtocol, res):
     protocols = {}
@@ -158,16 +157,27 @@ def ymlFile(filepath, protocol, res):
             '    const char* value;\n'
             '    void (*callbackStart) (const callback_data_t* data, void*);\n'
             '    void (*callbackEnd) (const callback_data_t* data, void*);\n'
-            '} interval_t;')
+            '} interval_t; \n'
+            'typedef struct Event {\n'
+            '    const char* id;\n'
+            '    const char* value;\n'
+            '    void (*callback) (const callback_data_t* data, void*);\n'
+            '} event_t;\n'
+        )
 
     #  res.append(f'interval_t intervals_[{len(intervals)}];')
+    events = []
     for i, (iName, interval) in enumerate(intervals.items()):
         res.append(f'interval_t interval{iName} = {{ .name="{interval.name}"'
                 f', .start = {interval.start}, .end = {interval.end}'
                 f', .value = "{interval.value}" '
                 f', .callbackStart = func{iName}Start, .callbackEnd = func{iName}End }};'
                 )
+        events.append((interval.start, interval, 'START'))
+        events.append((interval.end, interval, 'END'))
         #  res.append(f'intervals_[{i}] = int{iName};')
+    events.sort(key=lambda x: x[0])
+    print(events)
     return True
 
 
@@ -185,6 +195,7 @@ def main():
     else:
         status = ymlFile(args.input, args.protocol, res)
 
+    quit()
     res.append('\n\n#endif')
     if args.output is None:
         print('\n'.join(res), file=sys.stdout)
