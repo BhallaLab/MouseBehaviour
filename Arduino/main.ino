@@ -347,10 +347,10 @@ void do_first_trial( )
  *
  * @param duration
  */
-void do_empty_trial( size_t trial_num, int duration = 10 )
+void do_empty_trial( size_t trialNum, int duration = 10 )
 {
     Serial.print( ">> TRIAL NUM: " );
-    Serial.println( trial_num );
+    Serial.println( trialNum );
     //print_trial_info( );
     delay( duration );
     Serial.println( ">>     TRIAL OVER." );
@@ -363,62 +363,15 @@ void wait_and_print( size_t howlong )  // ms
         write_data_line();
 }
 
-
+/* --------------------------------------------------------------------------*/
 /**
- * @brief Do a single trial.
- *
- * @param trial_num. Index of the trial.
- * @param ttype. Type of the trial.
+ * @Synopsis  Normal CS-TRACE-US without overlap.
  */
-void do_trial( size_t trial_num, bool isprobe = false )
+/* ----------------------------------------------------------------------------*/
+void doCSUSNonOverlap(size_t trialNum, bool isprobe)
 {
-    reset_watchdog( );
-    check_for_reset( );
-
-    print_trial_info( );
-    trial_start_time_ = millis( );
-
-    /*-----------------------------------------------------------------------------
-     * PRE. Start imaging;
-     * Usually durations of PRE_ is 8000 ms. For some trials is it randomly
-     * chosen between 6000 ms and 8000 ms. See protocol.h file and
-     * ./Protocols/BehaviourProtocols.xlsx file.
-     *-----------------------------------------------------------------------------*/
-    size_t duration = random(PROTO_PreStimDuration_LOW, PROTO_PreStimDuration_HIGH+1);
-
-    // From Ananth. He suggested that 60ms delay is required for every protocol. This is
-    // apprently shutter delay for the camera and only required for trial number
-    // 1.
-    if (trial_num > 0)
-        delay(60); // Shutter delay.
-
     stamp_ = millis( );
-
-    sprintf(trial_state_, "PRE_" );
-    digitalWrite(IMAGING_TRIGGER_PIN, HIGH);   // Imaging START
-    digitalWrite(CAMERA_TTL_PIN, LOW );        // Camera STOP.
-    digitalWrite(LED_PIN, LOW );               // LED STOP.
-
-    while( (millis( ) - trial_start_time_ ) <= duration ) /* PRE_ time */
-    {
-        // 500 ms before the PRE_ ends, start camera pin high. We start
-        // recording as well.
-        if( (millis( ) - stamp_) >= (duration - 500 ) )
-        {
-            if( LOW == digitalRead( CAMERA_TTL_PIN ) )
-            {
-                digitalWrite( CAMERA_TTL_PIN, HIGH );
-            }
-        }
-
-        write_data_line( );
-    }
-    stamp_ = millis( );
-
-    /*-----------------------------------------------------------------------------
-     *  CS: 50 ms duration.
-     *-----------------------------------------------------------------------------*/
-    duration = PROTO_CSDuration;
+    size_t duration = PROTO_CSDuration;
     if( String("NONE") == String(PROTO_CSValue) )
     {
         sprintf( trial_state_, "NOCS" );
@@ -442,7 +395,7 @@ void do_trial( size_t trial_num, bool isprobe = false )
         else if(String("TONE/LIGHT") == String(PROTO_CSValue))
         {
             // Because real trial starts from trial #1.
-            if((trial_num-1) % 10 < 5)
+            if((trialNum-1) % 10 < 5)
                 play_tone(duration);
             else
                 led_on(duration);
@@ -502,8 +455,160 @@ void do_trial( size_t trial_num, bool isprobe = false )
                 write_data_line( );
         }
     }
+}
 
-    // POST has started.
+/* --------------------------------------------------------------------------*/
+/**
+ * @Synopsis  When CS and US are overlapping. Usually CS is totally overlapping
+ * US. See isssue #61 on this repo.
+ *
+ * @Param trialNum
+ * @Param isprobe
+ */
+/* ----------------------------------------------------------------------------*/
+void doCSUSOverlap(size_t trialNum, bool isprobe)
+{
+    stamp_ = millis( );
+    size_t startCSUS = stamp_;
+
+    // This is part of CS till US is not triggered.
+    size_t duration = PROTO_CSDuration - PROTO_CSUSOverlap;
+    stamp_ = millis();
+    sprintf(trial_state_, "CS+");
+    if(String("LIGHT") == String(PROTO_CSValue))
+    {
+        led_on( duration );
+    }
+    else if(String("TONE") == String(PROTO_CSValue))
+    {
+        play_tone(duration);
+    }
+    else if(String("TONE/LIGHT") == String(PROTO_CSValue))
+    {
+        // Because real trial starts from trial #1.
+        if((trialNum-1) % 10 < 5)
+            play_tone(duration);
+        else
+            led_on(duration);
+    }
+    else
+    {
+        Serial.println( "<<<Error: Unknown CS" );
+    }
+    stamp_ = millis( );
+
+    /*-----------------------------------------------------------------------------
+     *  NO TRACE. Now enable US.
+     *-----------------------------------------------------------------------------*/
+    sprintf(trial_state_, "CSUS");
+
+    if(String(PROTO_USValue) == String("SHOCK"))
+    {
+        //Serial.println( ">>>Disabled SHOCKPAD." );
+        disableReadingShockPad();
+        delay(10);
+    }
+
+    /*-----------------------------------------------------------------------------
+     *  US for 50 ms if trial is not a probe type.
+     *-----------------------------------------------------------------------------*/
+    duration = PROTO_USDuration;
+    if(isprobe)
+    {
+        sprintf(trial_state_, "PROB");
+        while( (millis( ) - stamp_) <= duration )
+            write_data_line( );
+    }
+    else
+    {
+        sprintf( trial_state_, PROTO_USValue );
+        if(String(PROTO_USValue) == String("SHOCK"))
+        {
+            //Serial.println( ">>> DELIVER shock");
+            deliverShock(duration);
+        }
+        else if(String(PROTO_USValue) == String("PUFF"))
+            play_puff( duration );
+        else
+        {
+            while( (millis( ) - stamp_) <= duration )
+                write_data_line( );
+        }
+    }
+
+    if(millis() - startCSUS < PROTO_CSDuration)
+    {
+        // US is completely inside CS.
+        sprintf(trial_state_, "CS");
+        while( (millis( ) - startCSUS) <= PROTO_CSDuration )
+            write_data_line();
+    }
+} 
+
+/**
+ * @brief Do a single trial.
+ *
+ * @param trialNum. Index of the trial.
+ * @param ttype. Type of the trial.
+ */
+void do_trial( size_t trialNum, bool isprobe = false )
+{
+    reset_watchdog( );
+    check_for_reset( );
+
+    print_trial_info( );
+    trial_start_time_ = millis( );
+
+    /*-----------------------------------------------------------------------------
+     * PRE. Start imaging;
+     * Usually durations of PRE_ is 8000 ms. For some trials is it randomly
+     * chosen between 6000 ms and 8000 ms. See protocol.h file and
+     * ./Protocols/BehaviourProtocols.xlsx file.
+     *-----------------------------------------------------------------------------*/
+    size_t duration = random(PROTO_PreStimDuration_LOW, PROTO_PreStimDuration_HIGH+1);
+
+    // From Ananth. He suggested that 60ms delay is required for every protocol. This is
+    // apprently shutter delay for the camera and only required for trial number
+    // 1.
+    if (trialNum > 0)
+        delay(60); // Shutter delay.
+
+    stamp_ = millis( );
+
+    sprintf(trial_state_, "PRE_" );
+    digitalWrite(IMAGING_TRIGGER_PIN, HIGH);   // Imaging START
+    digitalWrite(CAMERA_TTL_PIN, LOW );        // Camera STOP.
+    digitalWrite(LED_PIN, LOW );               // LED STOP.
+
+    while( (millis( ) - trial_start_time_ ) <= duration ) /* PRE_ time */
+    {
+        // 500 ms before the PRE_ ends, start camera pin high. We start
+        // recording as well.
+        if( (millis( ) - stamp_) >= (duration - 500 ) )
+        {
+            if( LOW == digitalRead( CAMERA_TTL_PIN ) )
+            {
+                digitalWrite( CAMERA_TTL_PIN, HIGH );
+            }
+        }
+
+        write_data_line( );
+    }
+
+    /*-----------------------------------------------------------------------------
+     * There are two cases here.
+     *  1) CS - Trace - US
+     *  2) CS and US is inside it.
+     *-----------------------------------------------------------------------------*/
+    if(PROTO_CSUSOverlap == 0)
+        doCSUSNonOverlap(trialNum, isprobe);
+    else
+        doCSUSOverlap(trialNum, isprobe);
+
+
+    //-----------------------------------------------------------------------------
+    //  POST
+    //-----------------------------------------------------------------------------
     stamp_ = millis( );
     sprintf( trial_state_, "POST" );
     if(String(PROTO_USValue) == String("SHOCK"))
