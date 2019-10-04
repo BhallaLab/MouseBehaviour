@@ -170,8 +170,11 @@ def plot_trial_data(trial_data_, trialdir, outfile):
     for mat, c, label in zip((csMat,probeMat), ('blue','red'), ('CS+','PROBE')):
         Y = np.mean(mat, axis=0)
         Yerr = np.std(mat, axis=0)
-        ax2.plot(1000*newTVec, Y, color=c, label=label)
-        ax2.fill_between(1000*newTVec, Y-Yerr, Y+Yerr, color=c, alpha=0.2)
+        try:
+            ax2.plot(1000*newTVec, Y, color=c, label=label)
+            ax2.fill_between(1000*newTVec, Y-Yerr, Y+Yerr, color=c, alpha=0.2)
+        except Exception as e:
+            print(e)
         plt.legend(loc='best', framealpha=0.4)
     plt.tight_layout(pad=2)
     plt.savefig(outfile)
