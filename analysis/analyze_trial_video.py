@@ -32,7 +32,7 @@ def parse_timestamp(tstamp):
     return date
 
 def get_status_timeslice(data, status):
-    status = [x for x in data if x[-4] == status]
+    status = [x for x in data if x[-5] == status]
     if not status:
         return None, None
     if len(status) > 2:
@@ -128,8 +128,8 @@ def process(**kwargs):
     tvec, blinkVec, velocityVec = [], [], []
     for l in datalines:
         if len(l) > 5:
-            if l[-4] == 'CS+':
-                tone, led = int(l[5]), int(l[6])
+            if l[-5] == 'CS+':
+                tone, led = int(l[6]), int(l[7])
                 if led == 1:
                     trialType = 'LIGHT NO SOUND'
                 elif tone == 1:
@@ -147,7 +147,7 @@ def process(**kwargs):
 
     mean_ = sum(blinkVec) / len(blinkVec)
     cspST, cspET = get_status_timeslice(arduinoData, 'CS+')
-    assert cspST
+    assert cspST, arduinoData
     usST, usET = get_status_timeslice(arduinoData, 'PUFF')
     probeTs = get_status_timeslice(arduinoData, 'PROB')
 
@@ -165,7 +165,7 @@ def process(**kwargs):
 
     temp = os.path.join(os.path.dirname(tifffile), '_results')
     datadir = kwargs.get('outdir',  temp)
-    if not os.path.isdir(datadir):
+    if datadir and not os.path.isdir(datadir):
         os.makedirs(datadir)
 
     if kwargs.get('plot', False):
@@ -218,13 +218,14 @@ if __name__ == '__main__':
     description = '''Analyze a single tiff file'''
     parser = argparse.ArgumentParser(description=description)
     parser.add_argument('--input', '-i', required=True, help='Input TIFF file'
-                        )
-    parser.add_argument('--outdir', '-o', required=False, help='Output directory'
-                        )
+            )
+    parser.add_argument('--outdir', '-o', default=''
+            , required=False, help='Output directory'
+            )
     parser.add_argument('--classifier', '-c', required=False, default='', help='Classifier file'
-                        )
+            )
     parser.add_argument('--plot', '-p', action='store_true', default=False, help='Plot while analysing.'
-                        )
+            )
 
     class Args:
         pass

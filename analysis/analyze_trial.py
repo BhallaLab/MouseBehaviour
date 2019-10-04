@@ -67,7 +67,7 @@ def process(**kwargs):
     datadir = kwargs['datadir']
     print('[INFO] Processing %s' % datadir)
     resdir = kwargs.get('outdir', os.path.join(datadir, config.tempdir))
-    if not os.path.exists(resdir):
+    if resdir and not os.path.exists(resdir):
         os.makedirs(resdir)
     tiffs = []
     for d, sd, fs in os.walk(datadir):
