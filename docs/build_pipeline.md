@@ -6,6 +6,7 @@ You build this pipeline, you need various components.
 - FreeCAD
 - python3.6+
 - GCC C++ Compiler
+- GCC toolchain for Arduino
 - cmake, git
 
 
@@ -18,5 +19,4 @@ You build this pipeline, you need various components.
 
 ## Mechanical
 
-- 3D designs 
-
+- 3D designs
