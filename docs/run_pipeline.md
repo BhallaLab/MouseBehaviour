@@ -42,7 +42,7 @@ permissions, and other setups are backed into this image. See the section
        ```
 
 The docker image is available at
-https://hub.docker.com/r/bhallalab/mousebehavioum. You can get it by executing
+https://hub.docker.com/r/bhallalab/mousebehaviour. You can get it by executing
 the following:
 
 ~~~bash
