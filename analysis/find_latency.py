@@ -11,7 +11,7 @@ pd.plotting.register_matplotlib_converters()
 
 def main():
     infile = sys.argv[1]
-    outfilePrefix = os.path.basename(infile)
+    outfilePrefix = os.path.basename(infile) + '.latency'
 
     df = pd.read_csv(infile, usecols=[0,1,2], parse_dates=[0,1]
             , names=['t0', 't1', 't2'])
@@ -52,7 +52,7 @@ def main():
 
     ref = pd.DataFrame()
     ref['tcam'] = t0
-    ref['tArdRecievend'] = t1
+    ref['tArdReceived'] = t1
     ref['tArd'] = t2
     ref.to_csv(f'{outfilePrefix}.csv', index=False)
 
