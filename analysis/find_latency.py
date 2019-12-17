@@ -42,8 +42,9 @@ def main():
     ax2.set_ylabel('Time (ms)')
     ax2.legend()
 
-    ax3.hist(t0-t1, alpha=0.5, density=True)
-    ax3.hist(t1-t2, alpha=0.5, density=True)
+    ax3.hist(t0-t1, alpha=0.5, density=True, label='tCam-tArdReceived')
+    ax3.hist(t1-t2, alpha=0.5, density=True, label='tArdReceived-tArd')
+    ax3.legend()
     ax3.set_xlabel('Time (ms)')
 
     plt.tight_layout()
