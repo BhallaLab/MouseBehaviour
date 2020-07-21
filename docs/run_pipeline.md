@@ -108,10 +108,10 @@ analysis.
 docker run --rm \
     --net=host --privileged \
     -v /dev:/dev \
-    -e DISPLAY=$(DISPLAY) \
+    -e DISPLAY=$DISPLAY \
     -v /tmp/.X11-unix:/tmp/.X11-unix \
-    -v $(HOME)/.Xauthority:/root/.Xauthority \
-    -v $(HOME)/DATA:/root/DATA \
+    -v $HOME/.Xauthority:/root/.Xauthority \
+    -v $HOME/DATA:/root/DATA \
     -it bhallalab/mousebehaviour
 ~~~
 
