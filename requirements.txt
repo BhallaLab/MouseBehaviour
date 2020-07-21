@@ -3,7 +3,7 @@ numpy
 pandas==0.25.0
 Pillow==6.1.0
 pyserial==3.4
-PySimpleGUI==4.1.0
+PySimpleGUI==4.11.0
 scipy
 screeninfo==0.4
 tables
