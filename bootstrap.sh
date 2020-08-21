@@ -16,14 +16,12 @@ sudo apt install -y  python3-matplotlib python3-scipy python3-pip \
     python3-setuptools python3-dev 
 sudo -E python3 -m pip install -r ../requirements.txt
 
+sudo dpkg -i ./spinnaker-2.0.0.147-amd64/lib*.deb
+
 echo "Now adding user to all the cool groups"
 sudo gpasswd -a $USER dialout
 if [ ! -f /etc/udev/rules.d/40-pgr.rules ]; then
     echo "Configuring for camera"
-    # DO NOT run it on travis.
-    if [ -z $TRAVIS ]; then
-        sudo bash ./PointGreyCamera/external/spin-conf
-    fi
 fi
 
 sudo mkdir -p /mnt/ramdisk
