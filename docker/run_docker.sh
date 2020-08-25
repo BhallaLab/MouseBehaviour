@@ -3,7 +3,7 @@ set -x
 set -e
 REPOHOME=$HOME/MouseBehaviour
 BUILDIR=$REPOHOME/_docker_build
-rm -rf $BUILDIR && mkdir $BUILDIR
+rm -rf $BUILDIR && mkdir -p $BUILDIR
 
 # Build 
 cd $BUILDIR
