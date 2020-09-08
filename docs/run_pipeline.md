@@ -1,8 +1,10 @@
 ![Docker Pulls](https://img.shields.io/docker/pulls/bhallalab/mousebehaviour.svg)
 
+__This section is outdated after this pipeline was upgraded to 18.04.__
+
 Docker is the recommended for running this pipeline. All dependencies, user
 permissions, and other setups are backed into this image. See the section
-[Ubuntu 16-04](#ubuntu-1604) for running this pipeline without docker.
+[Ubuntu 18-04](#ubuntu-1604) for running this pipeline without docker.
 
 # Docker
 
@@ -121,12 +123,9 @@ doubt, hover your mouse pointer on gui and a helpful message should pop-up
 
 ![](images/gui_in_docker.png)
 
-# Ubuntu 16.04
+# Ubuntu 18.04
 
-If you can't use docker, you can build and run the pipeline in Ubuntu-16.04
-based system. The camera firmware version which we have used is compatible with
-Ubuntu-16.04. The vendor also supports Ubuntu-18.04 but we have not ported our
-code to this Ubuntu-18.04 yet.
+The camera firmware requires Ubuntu-18.04. 
 
 1. Create an admin account, say `chuha` (Hindi for mouse). Login.
 2. Add `chuha` to following groups: 
@@ -135,27 +134,17 @@ code to this Ubuntu-18.04 yet.
     Following script should do the job.
 
     ~~~bash
-    $ sudo groupadd -f dialout
-    $ sudo groupadd -f pgrimaging
-    $ sudo usermod -a -G dialout,pgrimaging chuha
+    $ sudo ../spinnaker-2.0.0.147-amd64/configure_spinnaker.sh
+    $ sudo ../spinnaker-2.0.0.147-amd64/configure_usbfs.sh
     ~~~
 
     ==Logout and login again.== Changes to group takes effect on a fresh login.
 
-3. (__udev__) Add `udev` rules. We need them for accessing camera events.
-
-     ~~~bash
-     $ mkdir -p /etc/udev/rules.d 
-     $ echo "SUBSYSTEM==\"usb\", GROUP=\"pgrimaging\"" >/etc/udev/rules.d/40-pgr.rules
-     $ /etc/init.d/udev restart
-     ~~~
-
 - Install python3.6. The GUI and analysis scripts requires python3.6 or higher.
-   It is not available in official repositories, so we need to use a ppa.
+
     ~~~bash
-    $ sudo add-apt-repository ppa:deadsnakes/ppa
     $ sudo apt-get update
-    $ sudo apt-get install python3.6-tk python3.6-venv python3.6-dev
+    $ sudo apt-get install python3-tk python3-venv python3-dev
     ~~~
 
 -  Install required packages using `apt`.
@@ -164,23 +153,14 @@ code to this Ubuntu-18.04 yet.
     $ sudo apt-get install -y libboost-all-dev libopencv-dev libserial-dev arduino-core
     ~~~
 
-- Create `python3.6` virtualenv and enable it.
-    ~~~bash
-    $ python3.6 -m venv ~/PY36
-    $ source ~/PY36/bin/activate 
-    ~~~
-   To make sure that python3.6 becomes default python, add `source
-   ~/PY36/bin/activate` to your `~/.bashrc` or `~/.profile` file. For more, see
-   the official documentations https://docs.python.org/3.6/tutorial/venv.html
-
 - Install required python packages.
     ~~~bash
-    $ pip install -r  matplotlib scipy tables screeninfo numpy pandas pyserial pysimplegui pillow
+    $ pip3 install -r  matplotlib scipy tables screeninfo numpy pandas pyserial pysimplegui pillow
     ~~~
 
 !!! note "One script to do this all"
-    This all is collected in one scripts `./scripts/bootstrap.sh`. Use it at your
+    This all is collected in one scripts `./bootstrap.sh`. Use it at your
     own risk.
 
-And we are done. Lets launch the gui `$ python gui.py`.
+And we are done. Lets launch the gui `$ python3 gui.py`.
 

@@ -82,6 +82,7 @@ string get_timestamp()
     return to_iso_extended_string(t);
 }
 
+#if 0
 void dumpData(const cv::Mat& mat)
 {
     // size_t n = mat.total();
@@ -90,6 +91,7 @@ void dumpData(const cv::Mat& mat)
     cv::imwrite("frame.png", mat);
     cout << "FRAMEWRITTEN" << endl;
 }
+#endif
 
 
 
@@ -120,8 +122,8 @@ void show_frame_color( cv::Mat gray)
     vconcat(img, plt, img);
     if( ! writeToStdout_ )
         imshow(OPENCV_MAIN_WINDOW,  img);
-    else
-        dumpData(img);
+    //else
+    //    dumpData(img);
 }
 
 void SaveAllFrames(vector<Mat>& frames, const size_t trial)

@@ -21,10 +21,11 @@ set( CMAKE_MODULE_PATH  ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake )
 
 set(CMAKE_CXX_COMPILER g++)
 
-find_package(OpenCV REQUIRED)
+find_package(OpenCV COMPONENTS core highgui imgproc videoio  REQUIRED)
 message(STATUS "OpenCV version ${OpenCV_VERSION}")
 
-find_package(Boost REQUIRED COMPONENTS chrono iostreams program_options system filesystem)
+find_package(Boost COMPONENTS chrono iostreams program_options system thread
+    filesystem REQUIRED)
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(LIBSERIAL REQUIRED libserial)
 pkg_check_modules(LIBTIFF4 REQUIRED libtiff-4)
@@ -32,20 +33,18 @@ pkg_check_modules(LIBTIFF4 REQUIRED libtiff-4)
 include_directories(${OpenCV_INCLUDE_DIRS} )
 include_directories(${LIBSERIAL_INCLUDE_DIRS})
 include_directories(${LIBTIFF4_INCLUDE_DIRS})
-set(SPINNAKER_SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/external)
 
 set(CMAKE_BUILD_TYPE Release)
 
 add_definitions(-std=c++11 -Wall -Wno-unknown-pragmas)
 add_definitions(-Wno-unused-variable -Wno-unused-function)
 
-include_directories(${SPINNAKER_SRC_DIR} ${SPINNAKER_SRC_DIR}/include)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
-find_library( SPINNAKER_LIB Spinnaker 
-    PATHS ${SPINNAKER_SRC_DIR}/lib
-    NO_CMAKE_PATHS 
-    )
+find_library( SPINNAKER_LIB Spinnaker )
+find_path(SPINNAKER_INCLUDE_PATHS Spinnaker.h
+    PATH_SUFFIXES spinnaker)
+include_directories(${SPINNAKER_INCLUDE_PATHS})
 
 message(STATUS "Found ${SPINNAKER_LIB}")
 add_executable(cam_server ./src/videoio.cpp ./src/main.cpp)

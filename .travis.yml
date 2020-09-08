@@ -1,5 +1,5 @@
 sudo: required
-dist: xenial
+dist: bionic
 language: python
 compiler: gcc
 cache: apt
@@ -12,7 +12,7 @@ install:
 
 script:
     - # checking if any python3 incompatible file is in the source tree.
-    - cd scripts && sudo ./bootstrap.sh && cd ..
+    - sudo ./bootstrap.sh && cd ..
     - python3 -m compileall -q .
     - ./.travis_build.sh
     - echo "All done. Phew"
