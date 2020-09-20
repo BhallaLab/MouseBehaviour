@@ -2,39 +2,36 @@
 
 __Documents__ https://bhallalab.github.io/MouseBehaviour
 
-A `cmake` based C++/Python pipeline to run behavioural experiment.
+A C++/Python pipeline to run behavioural experiment.
 
 # Protocols
 
 A protocols must be listed in `./Protocols/BehaviourProtocols.csv`. You must specify the right
-protocol code duging configuration. See section __How to run the pipeline__ below.
+protocol code duging cmake configuration. See section __How to run the pipeline__ below.
 
 # How to run the pipeline 
 
-Both the arduino and the camera should be connected to the computer before starting the 
+The Arduino uno board and the camera should be connected to the computer before starting the 
 session.
 
 ## Download and setup (done once) 
 
-This code will __only__ work on Ubuntu-16.04. Install arduino, c++ compiler
-(gcc), cmake, and boost libraries.
+This application works __only__ on Ubuntu-18.04 because of the camera firmware available in this repository 
+from PointGrey Inc works only with Ubuntu 18.04. 
+
+Install arduino, c++ compiler (gcc), cmake, and boost libraries.
 
 Script `bootstrap.sh` will try to install all dependencies. Required
 libraries for PointGrey camera is in the source.
     
     $ git clone  https://github.com/BhallaLab/MouseBehaviour.git
     $ cd MouseBehaviour 
-    $ sudo -E ./bootstrap.sh  # on first time post login. If it fails, manual configuration is needed.
-
-The script `bootstap.sh` will try to configure your system. You must have `sudo`
-permissions because we need to add to various groups (`pgrimaging` and `dialout`)
-before you can access camera and serial port. __In case, something odd happens,
-raise an issue on github__.
+    $ sudo -E ./bootstrap.sh  # If it fails, manual configuration is needed.
 
 Once bootstrap is successful, logout and login. Changes made to your groups comes
 into effect only after a fresh login. To verify that you are in appropriate groups, type `groups`
-command in terminal. Make sure that `pgrimaging` and `dialout` appears in the
-group list.  If not, things have not gone properly. 
+command in terminal. Make sure that `flirimaging` and `dialout` appears in the
+group list.
 
 To build and upload to arduino:
 
